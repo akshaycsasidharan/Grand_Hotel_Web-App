@@ -6,9 +6,13 @@ const userHelper = require("../helpers/userHelper");
 module.exports = {
   
   loginPage: (req, res, next) => {
-    console.log("@@@@@@@@@2helloooooo");
-
+    // console.log("@@@@@@@@@2helloooooo");
     res.render("user/login");
+  },
+
+  signuppage:(req,res) => {
+
+    res.render("user/signupPage");
   }
 
 };

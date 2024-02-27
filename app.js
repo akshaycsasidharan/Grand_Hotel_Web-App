@@ -8,7 +8,8 @@ let Hbs = require("handlebars");
 // var fileupload = require("express-fileupload");
 
 var userRouter = require("./routes/user");
-// var adminRouter = require("./routes/admin");
+var adminRouter = require("./routes/admin");
+var hotelRouter = require("./routes/hotel");
 
 var app = express();
 
@@ -42,9 +43,11 @@ app.use((req, res, next) => {
 })
 // app.use(fileupload());
 
-app.use("/", userRouter);
+app.use("/user", userRouter);
 
-// app.use("/admin", adminRouter);
+app.use("/admin", adminRouter);
+
+app.use("/hotel",hotelRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
