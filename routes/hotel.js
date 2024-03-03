@@ -4,7 +4,11 @@ var router = express.Router();
 
 const {
  
-  hotelloginPage
+  hotelloginPage,
+  hotellogin,
+  signuppage,
+  signup,
+  dashboard
 
 } = require("../controllers/hotelController");
 
@@ -12,6 +16,13 @@ const {
 
 router.get("/", hotelloginPage);
 
+router.post("/", hotellogin);
+
+router.get("/hotelsignup",signuppage);
+
+router.post("/hotelsignup",signup);
+
+router.get("/dashboard",dashboard);
 
 
 module.exports = router;

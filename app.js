@@ -7,6 +7,7 @@ var hbs = require("express-handlebars");
 let Hbs = require("handlebars");
 // var fileupload = require("express-fileupload");
 
+
 var userRouter = require("./routes/user");
 var adminRouter = require("./routes/admin");
 var hotelRouter = require("./routes/hotel");
@@ -43,7 +44,7 @@ app.use((req, res, next) => {
 })
 // app.use(fileupload());
 
-app.use("/user", userRouter);
+app.use("/", userRouter);
 
 app.use("/admin", adminRouter);
 
@@ -53,6 +54,7 @@ app.use("/hotel",hotelRouter);
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -64,5 +66,6 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
 
 module.exports = app;

@@ -1,76 +1,22 @@
-{{! <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 
-    <link rel="stylesheet" href="stylesheets/style.css">
-
-
-<body>
-
-
-<div class="container">
-  <div class="frame">
-    <div class="nav">
-      <ul class"links">
-        <li class="signin-active"><a class="btn">Sign in</a></li>
-      </ul>
-    </div>
-    <div ng-app ng-init="checked = false">
-        
-		<form class="form-signin" action="/admin/login" method="post" name="form">
-          <label for="email">Email</label>
-          <input class="form-styling" type="text" name="email" placeholder=""/>
-          <label for="password">Password</label>
-          <input class="form-styling" type="text" name="password" placeholder=""/>
-          
-          <button type="submit" class="btn-signup">Submit</button> 
-          
-          <a class="create"  href="/signup">Create a new account</a>
-		</form>
-    
-</body>
-</html> 
- }}
-
-
-<html lang="en">
-
-  <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-account-login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:33 GMT -->
-  <head>
-    <meta charset="utf-8" />
-    <title>Evara Dashboard</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta property="og:title" content="" />
-    <meta property="og:type" content="" />
-    <meta property="og:url" content="" />
-    <meta property="og:image" content="" />
-
-    <link rel="stylesheet" href="stylesheets/style.css" />
-  </head>
-
+{{>admin-loginheader}}
   <body>
     <main>
       <section class="content-main mt-80 mb-80">
-        <form
-          class="form-signin"
-          action="/admin/login"
-          method="post"
-          name="form"
-        >
+        
 
           <div class="card mx-auto card-login">
             <div class="card-body">
               <h4 class="card-title mb-4">admin Sign in</h4>
-              <form>
-                <div class="mb-3">
+<form
+          class="form-signin"
+          action="/admin/adminlogin"
+          method="post"
+          name="form"
+        >                <div class="mb-3">
                   <input
                     class="form-control"
+                    name="email"
                     placeholder="Username or email"
                     type="text"
                   />
@@ -79,6 +25,7 @@
                 <div class="mb-3">
                   <input
                     class="form-control"
+                    name="password"
                     placeholder="Password"
                     type="password"
                   />
@@ -99,7 +46,7 @@
                 <!-- form-group form-check .// -->
                 <div class="mb-4">
                   <button type="submit" class="btn btn-primary w-100">
-                    Login
+                    submit
                   </button>
                 </div>
                 <!-- form-group// -->
@@ -133,30 +80,9 @@
                   </svg>
                   Sign in using Google
                 </a>
-                <a href="#" class="btn w-100 btn-light font-sm">
-                  <svg
-                    aria-hidden="true"
-                    class="icon-svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M3 1a2 2 0 00-2 2v12c0 1.1.9 2 2 2h12a2 2 0 002-2V3a2 2 0 00-2-2H3zm6.55 16v-6.2H7.46V8.4h2.09V6.61c0-2.07 1.26-3.2 3.1-3.2.88 0 1.64.07 1.87.1v2.16h-1.29c-1 0-1.19.48-1.19 1.18V8.4h2.39l-.31 2.42h-2.08V17h-2.5z"
-                      fill="#4167B2"
-                    ></path>
-                  </svg>
-                  Sign in using Facebook
-                </a>
               </div>
-              {{! <a class="create"  href="/signup">Create a new account</a> }}
-
-              <p class="text-center mb-4">Don't have account?
-                <a href="/signup">Sign up</a></p>
             </div>
           </div>
-        </form>
-
       </section>
     </main>
 

@@ -1,18 +1,66 @@
-// userinte login pg, functionalities signup,
-
 const { CURSOR_FLAGS } = require("mongodb");
 const userHelper = require("../helpers/userHelper");
+const { render } = require("../app");
 
 module.exports = {
-  
+
+  signuppage:(req,res) => {
+
+    res.render("user/signupPage");
+  },
+
+  signup:(req,res) => {
+    // console.log("##################3",req.body);
+
+    try {
+      userHelper.doSignup(req.body).then((response) => {
+        // console.log(response);
+        res.redirect("/login");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
+  },
+
+
+
   loginPage: (req, res, next) => {
     // console.log("@@@@@@@@@2helloooooo");
     res.render("user/login");
   },
 
-  signuppage:(req,res) => {
 
-    res.render("user/signupPage");
+  login: (req, res, next) => {
+    try {
+      userHelper.doLogin(req.body).then((response) => {
+        if (response.status) {
+  
+          res.redirect("/allRooms");
+        } else {
+          res.redirect("/login");
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+
+
+  homepage:(req,res) => {
+    res.render("user/homePage");
+  },
+
+
+  allrooms:(req,res) => {
+    res.render("user/allRooms");
+  },
+
+
+  room:(req,res)=>{
+    res.render("user/room");
   }
+
 
 };
