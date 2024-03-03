@@ -18,7 +18,7 @@ module.exports = {
             throw new Error("given passwords are not same");
           }
   
-          let signupData = {
+          let hotelsignupData = {
             // name: hotelsData.name,
             email: hotelsData.email,
             password: encryptedpassword,
@@ -28,9 +28,10 @@ module.exports = {
           };
 
           const db = await connectToMongoDB();
+          
           await db
             .collection(collection.HOTEL_COLLECTION)
-            .insertOne(signupData)
+            .insertOne(hotelsignupData)
             .then((data) => {
               resolve(data.insertedId);
             });

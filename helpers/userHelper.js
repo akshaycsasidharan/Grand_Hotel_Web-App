@@ -19,6 +19,7 @@ module.exports = {
       let signupData = {
         email: userData.email,
         password: encryptedpassword,
+        blocked:false
       };
 
       const db = await connectToMongoDB();
@@ -31,6 +32,8 @@ module.exports = {
         });
     });
   },
+
+  
   doLogin: (loginData) => {
     return new Promise(async (resolve, reject) => {
       let loginstatus = false;

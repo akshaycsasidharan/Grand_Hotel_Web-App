@@ -7,20 +7,19 @@ const {
   hotelloginPage,
   hotellogin,
   signuppage,
-  signup,
+  hotelsignup,
   dashboard
 
 } = require("../controllers/hotelController");
 
 
+router.get("/hotelssignup",signuppage);
+
+router.post("/hotelsignup",hotelsignup);
 
 router.get("/", hotelloginPage);
 
-router.post("/", hotellogin);
-
-router.get("/hotelsignup",signuppage);
-
-router.post("/hotelsignup",signup);
+router.post("/hotellogin", hotellogin);
 
 router.get("/dashboard",dashboard);
 

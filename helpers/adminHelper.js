@@ -18,6 +18,16 @@ module.exports = {
         resolve();
       }
     })
-  }
-  
+  },
+
+  getHotelsData: () => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+      let getdata = await db
+        .collection(collection.USER_COLLECTION)
+        .find({})
+        .toArray();
+      resolve(getdata);
+    });
+  },  
 }

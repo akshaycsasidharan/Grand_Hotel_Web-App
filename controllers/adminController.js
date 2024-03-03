@@ -31,10 +31,14 @@ module.exports = {
   },
 
   dashboard: (req, res, next) => {
-    // console.log("@@@@@@@@@2helloooooo");
 
-    res.render("admin/dashBoard");
-  },
+  adminHelper.getHotelsData().then(async() => {
+    res.render("admin/dashBoard", {
+      
+    })
+  })
+},
+
 
 
 };
