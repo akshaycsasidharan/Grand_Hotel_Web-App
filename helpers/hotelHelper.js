@@ -19,7 +19,7 @@ module.exports = {
           }
   
           let hotelsignupData = {
-            // name: hotelsData.name,
+            name: hotelsData.name,
             email: hotelsData.email,
             password: encryptedpassword,
             blocked: false,
@@ -38,33 +38,25 @@ module.exports = {
         });
       },
 
-      hotelLogin: (hotelloginData) => {
-        // console.log("logindataaaaaaaaaaaaaaaaaa",loginData);
-        
-        return new Promise(async (resolve, reject) => {
-          let loginstatus = false;
-          let response = {};
+      hotelLogin: async (hotelloginData) => {
+        try {
           const db = await connectToMongoDB();
-          let user = await db
+          const user = await db
             .collection(collection.HOTEL_COLLECTION)
             .findOne({ email: hotelloginData.email });
-    
+      
           if (user) {
-            bcrypt.compare(hotelloginData.password, user.password).then((status) => {
-              if (status) {
-                // console.log("login success");
-                response.user = user;
-                response.status = true;
-                resolve(response);
-              } else {
-                resolve({ status: false });
-              }
-            });
-          } else {
-            resolve({ status: false });
+            const status = await bcrypt.compare(hotelloginData.password, user.password);
+            if (status) {
+              return { user, status: true };
+            }
           }
-        });
+          return { status: false };
+        } catch (error) {
+          throw error;
+        }
       },
+      
 
 
 

@@ -10,33 +10,53 @@ module.exports = {
   },
 
   adminlogin: (req, res, next) => {
-
-    // console.log("@@@@@@@@@@@22222",req.body);
-
     try {
-      adminHelper.doAdminLogin(req.body).then(() => {
-        if (response) {
-          res.redirect("/admin");
-
-          // res.redirect("/admin/dashBoard");
-        } else {
-          res.redirect("/admin/dashBoard");
-
-          // res.redirect("/admin");
-        }
-      });
+        adminHelper.doAdminLogin(req.body)
+            .then((response) => {
+                if (response) {
+                  res.redirect("/admin/dashBoard"); 
+                } else {
+                  res.redirect("/admin"); 
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                res.redirect("/error"); 
+            });
     } catch (error) {
-      console.log(error);
+        console.error(error);
+        res.redirect("/error");
     }
-  },
+},
 
-  dashboard: (req, res, next) => {
-
-  adminHelper.getHotelsData().then(async() => {
+  dashboard: (req, res) => {
+  adminHelper.getHotelsData().then(async(hotelsdata) => {
+    // console.log("@@@@@@@@@@@@@@@@@@@hotelssssssssssdata",hotelsdata);
     res.render("admin/dashBoard", {
-      
+      hotelsdata
     })
   })
+},
+
+block: (req, res, next) => {
+  const id = req.params.id; 
+  adminHelper.blockUser(id).then(() => {
+    res.redirect("/admin/dashBoard");
+  }).catch(error => {
+    // console.error(error);
+    res.status(500).send("Error blocking user");
+  });
+},
+
+
+unblock: (req, res) => {
+  const id = req.params.id; 
+  adminHelper.unblockUser(id).then(() => {
+    res.redirect("/admin/dashBoard");
+  }).catch(error => {
+    // console.error(error);
+    res.status(500).send("Error unblocking user");
+  });
 },
 
 

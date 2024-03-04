@@ -10,7 +10,7 @@ module.exports = {
   },
 
   hotelsignup: (req, res) => {
-    console.log("@@@@@@@@@2222",req.body);
+    // console.log("@@@@@@@@@2222",req.body);
     try {
       hotelHelper.hoteldoSignup(req.body).then((response) => {
         res.redirect("/hotel");
@@ -27,15 +27,16 @@ hotelloginPage: (req, res, next) => {
 },
 
 hotellogin: (req, res) => {
-  console.log("!!!!!!!!!!!!!!!!reeeeqqq.body",req.body);
   try {
     hotelHelper.hotelLogin(req.body).then((response) => {
-      if (response.status) {
-        // res.redirect("/dashboard");
-        res.render("hotel/hotelDashboard");
+      console.log("Response:", response);
 
+      if (response.status && !response.blocked) {
+        // Render hotelDashboard if not blocked
+        res.render("hotel/hotelDashboard");
       } else {
-        res.redirect("/hotel");
+        // Redirect to the hotel login page or handle blocked user
+        res.render("hotel/hotelLogin");
       }
     });
   } catch (error) {
@@ -43,7 +44,10 @@ hotellogin: (req, res) => {
   }
 },
 
-dashboard:(req,res,next)=>{
+
+
+
+hoteldashboard:(req,res,next)=>{
   res.render("hotel/hotelDashboard");
 },
 

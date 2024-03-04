@@ -430,7 +430,7 @@
             </div>
             <div class="card mb-4">
                 <header class="card-header">
-                    <h4 class="card-title">Hotel Booking Details</h4>
+                    <h4 class="card-title">Hotel Details</h4>
                 </header>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -438,40 +438,50 @@
                             <table class="table align-middle table-nowrap mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" class="text-center">
-                                            <div class="form-check align-middle">
-                                                <input class="form-check-input" type="checkbox" id="transactionCheck01">
-                                                <label class="form-check-label" for="transactionCheck01"></label>
-                                            </div>
-                                        </th>
-                                        {{!-- <th class="align-middle" scope="col">Order ID</th> --}}
+                                        <th></th>
+                                        {{!-- <th class="align-middle" scope="col">ID</th> --}}
                                         <th class="align-middle" scope="col">Hotel Name</th>
                                         <th class="align-middle" scope="col">Email</th>
-                                        {{!-- <th class="align-middle" scope="col">Payment Status</th> --}}
-                                        {{!-- <th class="align-middle" scope="col">Payment Method</th> --}}
                                         <th class="align-middle" scope="col">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
 
                  {{!-- -===================================================== --}}
+                                <tbody>
+
+                            {{#each hotelsdata}}
+
                                     <tr>
-                                        <td class="text-center">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="transactionCheck02">
-                                                <label class="form-check-label" for="transactionCheck02"></label>
-                                            </div>
-                                        </td>
-                                        <td>Akshay c s</td>
+                                        {{!-- <td>{{this._id}}</td> --}}
+                                        <td></td>
+                                        <td>{{this.name}}</td>
+
+                                        <td>{{this.email}}</td>
+                                        
                                         <td>
-                                            akshaycs0480@gmail.com
-                                        </td>
-                                        <td>
-                                            <a href="#" class="btn btn-xs"> Block</a>
-                                        </td>
-                                    </tr>
+
+                            {{#if this.blocked}} 
+
+                            <!-- Use a form for the unblock button -->
+                            <form action="/admin/unblock/{{this._id}}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-success" style="width: 85px;">unblock</button>
+                            </form>
+
+                            {{else}}
+
+                            <form action="/admin/block/{{this._id}}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger" style="width: 85px;">block</button>
+                            </form>
+
+                            {{/if}}      
+
+                            </td>
+
+                             </tr>
+
+                             {{/each}}
                                     
-                                </tbody>
+                </tbody>
 
               {{!-- -===================================================== --}}
 

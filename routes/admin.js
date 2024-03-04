@@ -7,8 +7,11 @@ var adminHelper = require("../helpers/adminHelper");
 
 const {
   adminloginPage,
-  dashboard,
   adminlogin,
+  dashboard,
+  block,
+  unblock
+
 } = require("../controllers/adminController");
 
 
@@ -19,5 +22,9 @@ router.get("/", adminloginPage);
 router.post("/adminlogin", adminlogin);
 
 router.get("/dashboard", dashboard);
+
+router.post("/block/:id",block);
+
+ router.post("/unblock/:id",unblock);
 
 module.exports = router;
