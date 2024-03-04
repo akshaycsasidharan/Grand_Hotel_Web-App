@@ -31,20 +31,16 @@ hotellogin: (req, res) => {
     hotelHelper.hotelLogin(req.body).then((response) => {
       console.log("Response:", response);
 
-      if (response.status && !response.blocked) {
-        // Render hotelDashboard if not blocked
-        res.render("hotel/hotelDashboard");
+      if (response.status && !response.user.blocked) {
+        res.redirect("hoteldashboard");
       } else {
-        // Redirect to the hotel login page or handle blocked user
-        res.render("hotel/hotelLogin");
+        res.redirect("/hotel");
       }
     });
   } catch (error) {
     console.log(error);
   }
 },
-
-
 
 
 hoteldashboard:(req,res,next)=>{
