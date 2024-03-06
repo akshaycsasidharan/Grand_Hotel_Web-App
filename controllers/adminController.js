@@ -61,4 +61,28 @@ unblock: (req, res) => {
 
 
 
+
+
+customers: (req,res) => {
+  adminHelper.getcutomerdata().then(async(customerdata) => {
+    res.render("admin/customerDetails", {
+      customerdata
+    });
+  });
+},
+
+
+hotelpage: (req,res) => {
+
+  adminHelper.getHotelsData().then(async(hoteldata) => {
+
+    res.render("admin/hotels", {
+      hoteldata
+    });
+
+  })
+
+}
+
+
 };

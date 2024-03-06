@@ -17,6 +17,7 @@ module.exports = {
       }
 
       let signupData = {
+        name : userData.name,
         email: userData.email,
         password: encryptedpassword,
         blocked:false

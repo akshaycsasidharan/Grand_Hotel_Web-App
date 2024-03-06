@@ -22,7 +22,7 @@ module.exports = {
             name: hotelsData.name,
             email: hotelsData.email,
             password: encryptedpassword,
-            blocked: false,
+            blocked: true,
             vote: false,
             usercount:0,
           };

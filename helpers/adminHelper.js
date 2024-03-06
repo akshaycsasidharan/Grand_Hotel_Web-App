@@ -5,86 +5,107 @@ const { ObjectId } = require("mongodb");
 // const { response } = require("../app");
 
 module.exports = {
-
   doAdminLogin: (admindata) => {
     let adminPassword = process.env.PASSWORD;
     let adminEmail = process.env.EMAIL;
 
     return new Promise((resolve, reject) => {
-        if (admindata.email == adminEmail && admindata.password == adminPassword) {
-            resolve(true); 
-        } else {
-            reject("Invalid credentials");
-        }
+      if (
+        admindata.email == adminEmail &&
+        admindata.password == adminPassword
+      ) {
+        resolve(true);
+      } else {
+        reject("Invalid credentials");
+      }
     });
-},
+  },
 
-getHotelsData: async () => {
-  try {
-    const db = await connectToMongoDB();
-    const hotelsData = await db
-      .collection(collection.HOTEL_COLLECTION)
-      .find({})
-      .toArray();
+  getHotelsData: async () => {
+    try {
+      const db = await connectToMongoDB();
+      const hotelsData = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .find({})
+        .toArray();
 
+      return hotelsData;
+    } catch (error) {
+      throw error;
+    }
+  },
 
-    return hotelsData;
-  } catch (error) {
-    throw error; // Propagate the error to the calling function
-  }
-},
+  blockUser: (userid) => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
 
-blockUser: (userid) => {
-  return new Promise(async (resolve, reject) => {
-    const db = await connectToMongoDB();
+      await db
+        .collection(collection.HOTEL_COLLECTION)
+        .updateOne(
+          { _id: new ObjectId(userid) },
+          {
+            $set: {
+              blocked: true,
+            },
+          }
+        )
+        .then((result) => {
+          if (result.matchedCount > 0) {
+            resolve();
+          } else {
+            reject(new Error("User not found or not updated"));
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 
-    await db
-      .collection(collection.HOTEL_COLLECTION)
-      .updateOne(
-        { _id: new ObjectId(userid) },
-        {
-          $set: {
-            blocked: true,
-          },
-        }
-      )
-      .then((result) => {
-        if (result.matchedCount > 0) {
-          resolve();
-        } else {
-          reject(new Error("User not found or not updated"));
-        }
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-},
+  unblockUser: (userid) => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
 
-unblockUser: (userid) => {
-  return new Promise(async (resolve, reject) => {
-    const db = await connectToMongoDB();
+      await db
+        .collection(collection.HOTEL_COLLECTION)
+        .updateOne(
+          { _id: new ObjectId(userid) },
+          {
+            $set: { blocked: false },
+          }
+        )
+        .then((result) => {
+          if (result.matchedCount > 0) {
+            resolve();
+          } else {
+            reject(new Error("User not found or not updated"));
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
 
-    await db
-      .collection(collection.HOTEL_COLLECTION)
-      .updateOne(
-        { _id: new ObjectId(userid) },
-        {
-          $set: { blocked: false },
-        }
-      )
-      .then((result) => {
-        if (result.matchedCount > 0) {
-          resolve();
-        } else {
-          reject(new Error("User not found or not updated"));
-        }
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-},
+  getcutomerdata: async () => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+      let customerdata = await db
+        .collection(collection.USER_COLLECTION)
+        .find({})
+        .toArray();
+      resolve(customerdata);
+    });
+  },
 
-
-}
+  getHotelsData: async () => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+      let hoteldata = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .find({})
+        .toArray();
+      resolve(hoteldata);
+    });
+  },
+};

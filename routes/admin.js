@@ -1,8 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var { connectToMongoDB } = require("../config/connection");
-var collection = require("../config/collection");
-var adminHelper = require("../helpers/adminHelper");
+
 
 
 const {
@@ -10,7 +8,10 @@ const {
   adminlogin,
   dashboard,
   block,
-  unblock
+  unblock,
+  customers,
+  hotelpage,
+
 
 } = require("../controllers/adminController");
 
@@ -26,5 +27,10 @@ router.get("/dashboard", dashboard);
 router.post("/block/:id",block);
 
  router.post("/unblock/:id",unblock);
+
+ router.get("/customers",customers);
+
+ router.get("/hotels", hotelpage);
+
 
 module.exports = router;
