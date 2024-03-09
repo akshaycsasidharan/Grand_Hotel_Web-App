@@ -6,7 +6,7 @@ var logger = require("morgan");
 var hbs = require("express-handlebars");
 let Hbs = require("handlebars");
 // var fileupload = require("express-fileupload");
-
+var jwt = require("jsonwebtoken");
 
 var userRouter = require("./routes/user");
 var adminRouter = require("./routes/admin");

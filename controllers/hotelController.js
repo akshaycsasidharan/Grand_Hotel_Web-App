@@ -21,7 +21,6 @@ module.exports = {
 },
 
 
-
 hotelloginPage: (req, res, next) => {
   res.render("hotel/hotelLogin");
 },
@@ -46,5 +45,64 @@ hotellogin: (req, res) => {
 hoteldashboard:(req,res,next)=>{
   res.render("hotel/hotelDashboard");
 },
+
+// addhotel:(req,res) => {
+//   res.render("hotel/addRooms")
+// },
+
+addrooms:(req,res) => {
+  res.render("hotel/addRooms")
+},
+
+editrooms:(req,res) => {
+  res.render("hotel/editRooms");
+},
+
+addfacilities:(req,res)=>{
+  res.render("hotel/addFacilities");
+},
+
+editfacilities:(req,res)=>{
+  res.render("hotel/editFacilities");
+},
+
+customers:(req,res) => {
+  hotelHelper.showcustomers().then(async(customerdata) => {
+    res.render("hotel/hotelCustomers",{
+      customerdata
+
+    });
+
+  })
+},
+
+transactions:(req,res) => {
+  res.render("hotel/transactions");
+},
+
+reviews:(req,res) => {
+  res.render("hotel/reviews");
+},
+
+roomspage:(req,res) => {
+  res.render("hotel/rooms");
+},
+
+facilities:(req,res) => {
+  res.render("hotel/facilities");
+}
+
+// customers: (req,res) => {
+//   adminHelper.getcutomerdata().then(async(customerdata) => {
+//     res.render("hotel/customerDetails", {
+//       customerdata
+//     });
+//   });
+// },
+
+
+
+
+
 
 }

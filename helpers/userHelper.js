@@ -48,10 +48,14 @@ module.exports = {
         bcrypt.compare(loginData.password, user.password).then((status) => {
           if (status) {
             console.log("login success");
+            const token = jwt.sign({userId : user._id, useremail : user.email }, 'secret', {expiresIn : "24"});
+            response.token = token;
             response.user = user;
             response.status = true;
+            response.message = "Login Success";
             resolve(response);
           } else {
+            response.message = "the user cant login";
             resolve({ status: false });
           }
         });

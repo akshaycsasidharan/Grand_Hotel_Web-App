@@ -31,22 +31,21 @@ module.exports = {
   },
 
 
+login: (req, res, next) => {
+  try {
+    userHelper.doLogin(req.body).then((response) => {
+      console.log("#############33",response);
+      if (response.status) {
 
-  login: (req, res, next) => {
-    try {
-      userHelper.doLogin(req.body).then((response) => {
-        if (response.status) {
-  
-          res.redirect("/allRooms");
-        } else {
-          res.redirect("/login");
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  },
-
+        res.redirect("/allRooms"); 
+      } else {
+        res.render("user/login", { error: response.message });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+},
 
 
   homepage:(req,res) => {

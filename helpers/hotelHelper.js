@@ -56,9 +56,16 @@ module.exports = {
           throw error;
         }
       },
-      
 
+      showcustomers:async() => {
 
-
-    
+        return new Promise(async (resolve, reject) => {
+          const db = await connectToMongoDB();
+          let customerdata = await db
+            .collection(collection.USER_COLLECTION)
+            .find({})
+            .toArray();
+          resolve(customerdata);
+        });  
+}
 }
