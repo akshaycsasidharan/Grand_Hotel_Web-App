@@ -2,6 +2,8 @@ var { connectToMongoDB } = require("../config/connection");
 var collection = require("../config/collection");
 const bcrypt = require("bcrypt");
 const { ObjectId } = require("mongodb");
+const jwt = require("jsonwebtoken");
+
 
 module.exports = {
   doSignup: (userData) => {

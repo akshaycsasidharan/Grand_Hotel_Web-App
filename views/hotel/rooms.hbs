@@ -67,311 +67,49 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>#ID</th>
+                                    {{!-- <th>#ID</th> --}}
                                     <th scope="col">Room No</th>
                                     <th scope="col">Image</th>
                                     <th scope="col">Room Type</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Status</th>
+                                    {{!-- <th scope="col">Price</th> --}}
+                                    {{!-- <th scope="col">Status</th> --}}
                                     <th scope="col">Capacity</th>
                                     <th scope="col" class="text-end"> Action </th>
                                 </tr>
                             </thead>
                             <tbody>
+
+                                {{#each viewdata}}
                                 <tr>
-                                    <td>0901</td>
-                                    <td><b>A110</b></td>
-                                    <td></td>
-                                    <td><span class="badge rounded-pill alert-warning">ac</span></td>
+                                    {{!-- <td>{{this._id}}</td> --}}
+                                    
+                                    <td><b>{{this.Roomnumber}}</b></td>
+                                    <td>
+                                        <img style="width: 50px; height:50px" src="/images/sign-images/{{this.Image}}" alt="">
+                                    </td>
+                                    <td><span class="badge rounded-pill alert-warning">{{this.RoomType}}</span></td>
                                     <!-- <td><template class="__cf_email__" data-cfemail="aec3cfdcd8c7c0eecbd6cfc3dec2cb80cdc1c3">[email&#160;protected]</template></td> -->
-                                    <td>$9.00</td>
-                                    <td><span class="badge rounded-pill alert-warning">Pending</span></td>
-                                    <td>4</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2323</td>
-                                    <td><b>B203</b></td>
-                                    <td></td>
+                                    {{!-- <td>{{}}</td> --}}
+                                    {{!-- <td><span class="badge rounded-pill alert-warning">Pending</span></td> --}}
+                                    <td>{{this.Capacity}}</td>
 
-                                    <td><span class="badge rounded-pill alert-warning">ac</span></td>
-                                    <td>$46.61</td>
-                                    <td><span class="badge rounded-pill alert-warning">Pending</span></td>
-                                    <td>4</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
+                                    <td>
+                                    <form action="/hotel/delete/{{this._id}}" method="post" style="display:inline;">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-danger"
+                                        data-toggle="modal"
+                                        data-target="#exampleModalCenter"
+                                    >
+                                        Delete
+                                    </button>
+                                    </form>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>1233</td>
-                                    <td><b>C501</b></td>
-                                    <td></td>
 
-                                    <td><span class="badge rounded-pill alert-warning">Normal</span></td>
-                                    <td>$12.00</td>
-                                    <td><span class="badge rounded-pill alert-danger">Canceled</span></td>
-                                    <td>5</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1233</td>
-                                    <td><b>A201</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">Family</span></td>
-                                    <td>$12.00</td>
-                                    <td><span class="badge rounded-pill alert-danger">Canceled</span></td>
-                                    <td>6</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2323</td>
-                                    <td><b>D403</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">ac</span></td>
-                                    <td>$589.99</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>2</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2112</td>
-                                    <td><b>E400</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">Family</span></td>
-                                    <td>$16.58</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>7</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>7897</td>
-                                    <td><b>G302</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">Normal</span></td>
-                                    <td>$10.00</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>13</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2323</td>
-                                    <td><b>K120</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">ac</span></td>
-                                    <td>$105.55</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>2</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2324</td>
-                                    <td><b>Z032</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">Normal</span></td>
-                                    <td>$710.68</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>8</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2325</td>
-                                    <td><b>A220</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">ac</span></td>
-                                    <td>$710.68</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>2</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2326</td>
-                                    <td><b>S123</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">ac</span></td>
-                                    <td>$767.50</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>10</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2327</td>
-                                    <td><b>M111</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">Family</span></td>
-                                    <td>$406.27</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>1</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2328</td>
-                                    <td><b>K908</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">Family</span></td>
-                                    <td>$601.13</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>2</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2329</td>
-                                    <td><b>T222</b></td>
-                                    <td></td>
-
-                                    <td><span class="badge rounded-pill alert-warning">Normal</span></td>
-                                    <td>$948.55</td>
-                                    <td><span class="badge rounded-pill alert-success">Received</span></td>
-                                    <td>03</td>
-                                    <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div> <!-- dropdown //end -->
-                                    </td>
-                                </tr>
+                                {{/each}}
+                                
+             
                             </tbody>
                         </table>
                     </div> <!-- table-responsive //end -->

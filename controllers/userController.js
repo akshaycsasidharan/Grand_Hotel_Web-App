@@ -36,7 +36,7 @@ login: (req, res, next) => {
     userHelper.doLogin(req.body).then((response) => {
       console.log("#############33",response);
       if (response.status) {
-
+        // req.jwt.loggedIn =true;
         res.redirect("/allRooms"); 
       } else {
         res.render("user/login", { error: response.message });

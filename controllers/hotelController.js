@@ -1,7 +1,7 @@
 const { CURSOR_FLAGS } = require("mongodb");
 const { render } = require("../app");
 const hotelHelper = require("../helpers/hotelHelper");
-
+const multer = require("multer");
 
 module.exports = {
   
@@ -46,20 +46,86 @@ hoteldashboard:(req,res,next)=>{
   res.render("hotel/hotelDashboard");
 },
 
-// addhotel:(req,res) => {
-//   res.render("hotel/addRooms")
-// },
 
-addrooms:(req,res) => {
+addroomspage:(req,res) => {
   res.render("hotel/addRooms")
 },
 
-editrooms:(req,res) => {
-  res.render("hotel/editRooms");
+addrooms:(req,res) => {
+
+      console.log("reqqqqqqqqqqqqqqqqqq",req.body);
+
+  try {
+    hotelHelper.addrooms(req.body,req.file).then((response) => {
+      // console.log("%%%%%%%%%%%%%%%%%",response);
+        res.redirect("/hotel/rooms");
+    })
+
+  } catch (error) {
+    console.log(error);
+    
+  }
+
 },
 
-addfacilities:(req,res)=>{
-  res.render("hotel/addFacilities");
+roomspage:(req,res) => {
+
+  hotelHelper.viewrooms().then(async(viewdata) => {
+
+    res.render("hotel/rooms",{
+      viewdata,
+    });
+  })
+
+},
+
+deleteroom: (req, res) => {
+  let id = req.params.id;
+  hotelHelper.roomdelete(id).then(() => {
+    res.redirect("/hotel/rooms"); // Corrected redirect path
+  });
+},
+
+deletefacilities: (req,res) => {
+  let id = req.params.id;
+  hotelHelper.facilitiesdelete(id).then(() => {
+    res.redirect("/hotel/facilities"); 
+  });
+},
+
+addfacilitiespage:(req,res) => {
+  res.render("hotel/addFacilities")
+},
+
+addfacilities: (req, res) => {
+  console.log("@@@@@@@@@@@@@@@@@@", req.body);
+  try {
+      hotelHelper.addfacility(req.body, req.file).then((response) => {
+          // console.log("%%%%%%%%%%%%%%%%%",response);
+          res.redirect("/hotel/facilities");
+      })
+  } catch (error) {
+      console.log(error);
+  }
+},
+
+facilities:(req,res) => {
+
+  hotelHelper.viewfacilities().then(async(facilitiesdata)=>{
+
+    res.render("hotel/facilities",{
+      facilitiesdata,
+    });
+
+
+  })
+},
+
+
+
+
+editrooms:(req,res) => {
+  res.render("hotel/editRooms");
 },
 
 editfacilities:(req,res)=>{
@@ -83,24 +149,6 @@ transactions:(req,res) => {
 reviews:(req,res) => {
   res.render("hotel/reviews");
 },
-
-roomspage:(req,res) => {
-  res.render("hotel/rooms");
-},
-
-facilities:(req,res) => {
-  res.render("hotel/facilities");
-}
-
-// customers: (req,res) => {
-//   adminHelper.getcutomerdata().then(async(customerdata) => {
-//     res.render("hotel/customerDetails", {
-//       customerdata
-//     });
-//   });
-// },
-
-
 
 
 
