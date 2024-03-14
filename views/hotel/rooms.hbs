@@ -41,7 +41,7 @@
             </div>
             <div class="card mb-4">
                 <header class="card-header">
-                    <div class="row gx-3">
+                    {{!-- <div class="row gx-3">
                         <div class="col-lg-4 col-md-6 me-auto">
                             <input type="text" placeholder="Search..." class="form-control">
                         </div>
@@ -60,7 +60,7 @@
                                 <option>Show 40</option>
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
                 </header> <!-- card-header end// -->
                 <div class="card-body">
                     <div class="table-responsive">
@@ -74,7 +74,7 @@
                                     {{!-- <th scope="col">Price</th> --}}
                                     {{!-- <th scope="col">Status</th> --}}
                                     <th scope="col">Capacity</th>
-                                    <th scope="col" class="text-end"> Action </th>
+                                    <th scope="col"> Action </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,9 +88,7 @@
                                         <img style="width: 50px; height:50px" src="/images/sign-images/{{this.Image}}" alt="">
                                     </td>
                                     <td><span class="badge rounded-pill alert-warning">{{this.RoomType}}</span></td>
-                                    <!-- <td><template class="__cf_email__" data-cfemail="aec3cfdcd8c7c0eecbd6cfc3dec2cb80cdc1c3">[email&#160;protected]</template></td> -->
-                                    {{!-- <td>{{}}</td> --}}
-                                    {{!-- <td><span class="badge rounded-pill alert-warning">Pending</span></td> --}}
+                                    
                                     <td>{{this.Capacity}}</td>
 
                                     <td>
@@ -105,16 +103,27 @@
                                     </button>
                                     </form>
                                     </td>
+                                    <td>
+                                    <form action="/hotel/edit/{{this._id}}" method="get" style="display:inline;">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-success"
+                                        data-toggle="modal"
+                                        data-target="#exampleModalCenter"
+                                    >
+                                        Edit
+                                    </button>
+                                    </form>
+                                    </td>
                                 </tr>
 
                                 {{/each}}
                                 
-             
                             </tbody>
                         </table>
-                    </div> <!-- table-responsive //end -->
-                </div> <!-- card-body end// -->
-            </div> <!-- card end// -->
+                    </div> 
+                </div> 
+            </div> 
             <div class="pagination-area mt-15 mb-50">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-start">

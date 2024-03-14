@@ -3,6 +3,7 @@ var { connectToMongoDB } = require("../config/connection");
 var collection = require("../config/collection");
 const bcrypt = require("bcrypt");
 const { ObjectId } = require("mongodb");
+const { facility } = require("../controllers/hotelController");
 
 module.exports = {
   hoteldoSignup: (hotelsData) => {
@@ -95,23 +96,22 @@ module.exports = {
 
   addfacility: (facilitiesdata, file) => {
     return new Promise(async (resolve, reject) => {
-        let datafacilities = {
-            Facilities: facilitiesdata.Facilities, 
-            Image: file.filename,
-            deleted: false,
-        };
+      let datafacilities = {
+        Facilities: facilitiesdata.Facilities,
+        Image: file.filename,
+        facility:false
+      };
 
-        const db = await connectToMongoDB();
+      const db = await connectToMongoDB();
 
-        const result = await db
-            .collection(collection.HOTEL_COLLECTION)
-            .insertOne(datafacilities)
-            .then((data) => {
-                resolve(data.insertedId);
-            });
+      const result = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .insertOne(datafacilities)
+        .then((data) => {
+          resolve(data.insertedId);
+        });
     });
-},
-
+  },
 
   viewrooms: () => {
     return new Promise(async (resolve, reject) => {
@@ -120,22 +120,21 @@ module.exports = {
         .collection(collection.HOTEL_COLLECTION)
         .find({ deleted: false })
         .toArray();
-        resolve(roomsview);
+      resolve(roomsview);
     });
   },
 
-  viewfacilities:() =>{
+
+  viewfacility: () => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
-      let facilitiesview = db
-        .collection(collection.HOTEL_COLLECTION)
-        .find({ deleted: false })
+    let facilitiesview = db.collection(collection.HOTEL_COLLECTION)
+        .find({ facility: false })
         .toArray();
-        resolve(facilitiesview);
+        resolve(facilitiesview)
     });
   },
 
-  
   roomdelete: (deleteid) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -155,12 +154,98 @@ module.exports = {
     });
   },
 
+  editroom: (roomid) => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+      await db
+        .collection(collection.HOTEL_COLLECTION)
+        .findOne({ _id: new ObjectId(roomid) })
+        .then((result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(new Error("Candidate not found"));
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  roomedit: (userid, idroom, file) => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+      await db
+        .collection(collection.HOTEL_COLLECTION)
+        .updateOne(
+          { _id: new ObjectId(userid) },
+          {
+            $set: {
+              Roomnumber: idroom.Roomnumber,
+              RoomType: idroom.RoomType,
+              Floor: idroom.Floor,
+              Capacity: idroom.Capacity,
+              Image: file.filename,
+            },
+          }
+        )
+        .then((response) => {
+          // console.log("@@@@@@@@@response########", response);
+          resolve();
+        });
+    });
+  },
+
+  editfacility: (facilityid) => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+      await db
+        .collection(collection.HOTEL_COLLECTION)
+        .findOne({ _id: new ObjectId(facilityid) })
+        .then((result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(new Error("Candidate not found"));
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+
+  facilityedit: (facilityid, idfacilities, file) => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+      await db
+        .collection(collection.HOTEL_COLLECTION)
+        .updateOne(
+          { _id: new ObjectId(facilityid) },
+          {
+            $set: {
+              Facilities: idfacilities.Facilities,
+              Image: file.filename,
+            },
+          }
+        )
+        .then((response) => {
+          // console.log("@@@@@@@@@response########", response);
+          resolve();
+        });
+    });
+  },
+
   facilitiesdelete: (facilityid) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
         .collection(collection.HOTEL_COLLECTION)
-        .updateOne({ _id: new ObjectId(facilityid) }, { $set: { deleted: true } })
+        .updateOne(
+          { _id: new ObjectId(facilityid) },
+          { $set: { facility: true } }
+        )
         .then((result) => {
           if (result.matchedCount > 0) {
             resolve();
@@ -172,8 +257,5 @@ module.exports = {
           reject(error);
         });
     });
-  }
-
-
-
+  },
 };

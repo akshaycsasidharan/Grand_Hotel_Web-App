@@ -28,59 +28,50 @@
                 <div class="col-9">
                     <div class="content-header">
                         <h2 class="content-title">Edit Rooms</h2>
-                        <div>
-                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
-                            <button class="btn btn-md rounded font-sm hover-up">Add</button>
-                        </div>
+                       
                     </div>
                 </div>
+
+                 <form class="form-signin" action="/hotel/editrooms/{{result._id}}" method="post" enctype="multipart/form-data" >
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
                             <div class="mb-4">
                                 <label for="product_title" class="form-label">Room Number</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_title">
+                                <input type="text" name="Roomnumber" placeholder="Type  here" class="form-control" id="product_title">
                             </div>
 
                             <div class="mb-4">
                                 <label for="product_title" class="form-label">Room Type</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_title">
+                                <input type="text" name="RoomType" placeholder="Type here" class="form-control" id="product_title">
                             </div>
 
                             <div class="mb-4">
                                 <label for="product_title" class="form-label">Floor</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_title">
+                                <input type="text" name="Floor" placeholder="Type here" class="form-control" id="product_title">
                             </div>
 
                             <div class="mb-4">
                                 <label for="product_title" class="form-label">Capacity</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_title">
+                                <input type="text" name="Capacity" placeholder="Type here" class="form-control" id="product_title">
                             </div>
                     <div class="card mb-4">
                         <div class="card-body">
                             <div>
                                 <label class="form-label">Images</label>
-                                <input class="form-control" type="file">
+                                <input class="form-control" name="image" type="file">
                             </div>
                         </div>
-                    </div> <!-- card end// -->
-                </div>
-            </div>
-        </section>
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                    document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
+                         <div>
+                        <button type="submit" style="width: 500px;" class="btn btn-md rounded  font-sm hover-up">Update</button>
                     </div>
+                    </div> 
                 </div>
             </div>
-        </footer>
+            </div>
+         </form>
+        </section>
+        
     </main>
     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>

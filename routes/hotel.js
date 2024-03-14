@@ -25,9 +25,11 @@ const {
   transactions,
   reviews,
   roomspage,
-  facilities,
+  facility,
   deleteroom,
-  deletefacilities
+  deletefacilities,
+  roomedit,
+  facilityedit
 } = require("../controllers/hotelController");
 
 
@@ -49,7 +51,7 @@ router.post("/delete/:id",deleteroom);
 
 router.post("/deleted/:id",deletefacilities);
 
-router.get("/facilities",facilities);
+router.get("/facilities",facility);
 
 router.get("/addrooms",addroomspage);
 
@@ -57,11 +59,16 @@ router.post("/addrooms",upload.single('image'),addrooms);
 
 router.get("/addfacilities",addfacilitiespage);
 
-router.post("/addfacilities",upload.single('image'),addfacilities);
+router.post("/addfacilities", upload.single('image'), addfacilities);
 
-router.get("/editrooms",editrooms);
+router.get("/edit/:id",editrooms);
 
-router.get("/editfacilities",editfacilities);
+router.post("/editrooms/:id",upload.single('image'),roomedit);
+
+router.get("/editfacility/:id",editfacilities);
+
+router.post("/editfacilities/:id",upload.single('image'),facilityedit);
+
 
 router.get("/transactions",transactions);
 
