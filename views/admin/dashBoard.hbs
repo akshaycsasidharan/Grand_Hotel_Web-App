@@ -269,38 +269,6 @@
                                 {{!-- -===================================================== --}}
                                 <tbody>
 
-                            {{#each hotelsdata}}
-
-                                    <tr>
-                                        {{!-- <td>{{this._id}}</td> --}}
-                                        <td></td>
-                                        <td>{{this.name}}</td>
-
-                                        <td>{{this.email}}</td>
-                                        
-                                        <td>
-
-                            {{#if this.blocked}} 
-
-                            <!-- Use a form for the unblock button -->
-                            <form action="/admin/unblock/{{this._id}}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-success" style="width: 140px;">approve</button>
-                            </form>
-
-                            {{else}}
-
-                            <form action="/admin/block/{{this._id}}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-danger" style="width: 140px;">Disapprove</button>
-                            </form>
-
-                            {{/if}}      
-
-                            </td>
-
-                             </tr>
-
-                             {{/each}}
-                                    
                 </tbody>
 
               {{!-- -===================================================== --}}

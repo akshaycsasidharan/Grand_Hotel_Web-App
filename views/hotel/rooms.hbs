@@ -33,10 +33,9 @@
             <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">All Room</h2>
-                    <p>Lorem ipsum dolor sit amet.</p>
                 </div>
-                <div>
-                    <input type="text" placeholder="Search order ID" class="form-control bg-white">
+                 <div>
+                    <a href="/hotel/addrooms" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Add Room</a>
                 </div>
             </div>
             <div class="card mb-4">
@@ -74,7 +73,7 @@
                                     {{!-- <th scope="col">Price</th> --}}
                                     {{!-- <th scope="col">Status</th> --}}
                                     <th scope="col">Capacity</th>
-                                    <th scope="col"> Action </th>
+                                            <th scope="col" style="padding-left:40px">Action </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -90,19 +89,6 @@
                                     <td><span class="badge rounded-pill alert-warning">{{this.RoomType}}</span></td>
                                     
                                     <td>{{this.Capacity}}</td>
-
-                                    <td>
-                                    <form action="/hotel/delete/{{this._id}}" method="post" style="display:inline;">
-                                    <button
-                                        type="submit"
-                                        class="btn btn-danger"
-                                        data-toggle="modal"
-                                        data-target="#exampleModalCenter"
-                                    >
-                                        Delete
-                                    </button>
-                                    </form>
-                                    </td>
                                     <td>
                                     <form action="/hotel/edit/{{this._id}}" method="get" style="display:inline;">
                                     <button
@@ -112,6 +98,17 @@
                                         data-target="#exampleModalCenter"
                                     >
                                         Edit
+                                    </button>
+                                    </form>
+                                    
+                                    <form action="/hotel/delete/{{this._id}}" method="post" style="display:inline;">
+                                    <button
+                                        type="submit"
+                                        class="btn btn-danger"
+                                        data-toggle="modal"
+                                        data-target="#exampleModalCenter"
+                                    >
+                                        Delete
                                     </button>
                                     </form>
                                     </td>
@@ -124,7 +121,7 @@
                     </div> 
                 </div> 
             </div> 
-            <div class="pagination-area mt-15 mb-50">
+            {{!-- <div class="pagination-area mt-15 mb-50">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-start">
                         <li class="page-item active"><a class="page-link" href="#">01</a></li>
@@ -135,22 +132,9 @@
                         <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
                     </ul>
                 </nav>
-            </div>
+            </div> --}}
         </section> <!-- content-main end// -->
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-                    document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
-                    </div>
-                </div>
-            </div>
-        </footer>
+       
     </main>
     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>

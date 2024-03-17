@@ -2,6 +2,7 @@ const { CURSOR_FLAGS } = require("mongodb");
 const userHelper = require("../helpers/userHelper");
 const { render } = require("../app");
 
+
 module.exports = {
 
   signuppage:(req,res) => {
@@ -24,7 +25,6 @@ module.exports = {
   },
 
 
-
   loginPage: (req, res, next) => {
     // console.log("@@@@@@@@@2helloooooo");
     res.render("user/login");
@@ -36,7 +36,6 @@ login: (req, res, next) => {
     userHelper.doLogin(req.body).then((response) => {
       console.log("#############33",response);
       if (response.status) {
-        // req.jwt.loggedIn =true;
         res.redirect("/allRooms"); 
       } else {
         res.render("user/login", { error: response.message });
@@ -49,6 +48,8 @@ login: (req, res, next) => {
 
 
   homepage:(req,res) => {
+
+
     res.render("user/homePage");
   },
 

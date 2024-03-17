@@ -5,6 +5,7 @@ const { ObjectId } = require("mongodb");
 // const { response } = require("../app");
 
 module.exports = {
+
   doAdminLogin: (admindata) => {
     let adminPassword = process.env.PASSWORD;
     let adminEmail = process.env.EMAIL;
@@ -26,7 +27,7 @@ module.exports = {
       const db = await connectToMongoDB();
       const hotelsData = await db
         .collection(collection.HOTEL_COLLECTION)
-        .find({})
+        .find({blocked:false})
         .toArray();
 
       return hotelsData;
@@ -34,6 +35,7 @@ module.exports = {
       throw error;
     }
   },
+
 
   blockUser: (userid) => {
     return new Promise(async (resolve, reject) => {
@@ -62,6 +64,7 @@ module.exports = {
     });
   },
 
+
   unblockUser: (userid) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -87,6 +90,7 @@ module.exports = {
     });
   },
 
+
   getcutomerdata: async () => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -98,14 +102,8 @@ module.exports = {
     });
   },
 
-  getHotelsData: async () => {
-    return new Promise(async (resolve, reject) => {
-      const db = await connectToMongoDB();
-      let hoteldata = await db
-        .collection(collection.HOTEL_COLLECTION)
-        .find({})
-        .toArray();
-      resolve(hoteldata);
-    });
-  },
+
+  
+
+
 };

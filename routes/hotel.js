@@ -1,5 +1,7 @@
 var express = require("express");
 var router = express.Router();
+const  verifyhotelToken  = require("../middleware/hotelMiddleware");
+
 
 const {
 
@@ -25,7 +27,7 @@ const {
   transactions,
   reviews,
   roomspage,
-  facility,
+  facilitypage,
   deleteroom,
   deletefacilities,
   roomedit,
@@ -35,13 +37,13 @@ const {
 
 router.get("/hotelssignup",signuppage);
 
-router.post("/hotelsignup",hotelsignup);
+router.post("/hotelsignup",upload.single('image'),hotelsignup);
 
 router.get("/", hotelloginPage);
 
 router.post("/hotellogin", hotellogin);
 
-router.get("/hoteldashboard",hoteldashboard);
+router.get("/hoteldashboard",verifyhotelToken,hoteldashboard);
 
 router.get("/customers",customers);
 
@@ -51,7 +53,7 @@ router.post("/delete/:id",deleteroom);
 
 router.post("/deleted/:id",deletefacilities);
 
-router.get("/facilities",facility);
+router.get("/facilities",facilitypage);
 
 router.get("/addrooms",addroomspage);
 
@@ -68,7 +70,6 @@ router.post("/editrooms/:id",upload.single('image'),roomedit);
 router.get("/editfacility/:id",editfacilities);
 
 router.post("/editfacilities/:id",upload.single('image'),facilityedit);
-
 
 router.get("/transactions",transactions);
 

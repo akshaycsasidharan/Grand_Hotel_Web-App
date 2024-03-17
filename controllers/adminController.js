@@ -3,11 +3,13 @@ const { render, response } = require("../app");
 const adminHelper = require("../helpers/adminHelper");
 
 module.exports = {
+  
   adminloginPage: (req, res, next) => {
     // console.log("@@@@@@@@@2helloooooo");
 
     res.render("admin/adminLogin");
   },
+
 
   adminlogin: (req, res, next) => {
     try {
@@ -29,14 +31,22 @@ module.exports = {
     }
 },
 
-  dashboard: (req, res) => {
+
+dashboard:(req,res) => {
+     res.render("admin/dashBoard")
+},
+
+
+hotelpage: (req,res) => {
   adminHelper.getHotelsData().then(async(hotelsdata) => {
     // console.log("@@@@@@@@@@@@@@@@@@@hotelssssssssssdata",hotelsdata);
-    res.render("admin/dashBoard", {
+    res.render("admin/hotels", {
       hotelsdata
     })
   })
+
 },
+
 
 block: (req, res, next) => {
   const id = req.params.id; 
@@ -60,9 +70,6 @@ unblock: (req, res) => {
 },
 
 
-
-
-
 customers: (req,res) => {
   adminHelper.getcutomerdata().then(async(customerdata) => {
     res.render("admin/customerDetails", {
@@ -72,17 +79,14 @@ customers: (req,res) => {
 },
 
 
-hotelpage: (req,res) => {
+transactionspage:(req,res) => {
+  res.render("admin/transactions");
+},
 
-  adminHelper.getHotelsData().then(async(hoteldata) => {
-
-    res.render("admin/hotels", {
-      hoteldata
-    });
-
-  })
-
+reviewspage:(req,res) => {
+  res.render("admin/reviews");
 }
+
 
 
 };

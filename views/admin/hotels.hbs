@@ -22,8 +22,8 @@
                                     <thead>
 
                                         <tr>
-                                            <th>ID</th>
                                             <th>Hotels name</th>
+                                            <th>Image</th>
                                             <th>Email</th>
                                             <th>Approve</th>
                                         </tr>
@@ -31,17 +31,40 @@
                                     </thead>
                                     <tbody>
 
-                                        {{#each hoteldata}}
+                                            {{#each hotelsdata}}
 
-                                         <tr>
-                                            <td><b>{{this._id}}</b></td>
-                                            <td><b>{{this.name}}</b></td>
-                                            <td>{{this.email}}</td>
-                                            <td>{{this.blocked}}</td>
+                                    <tr>
+                                        {{!-- <td>{{this._id}}</td> --}}
+                                        <td>{{this.name}}</td>
+                                        <td>
+                                        <img style="width: 50px; height:50px" src="/images/sign-images/{{this.Image}}" alt="">
+                                        </td> 
 
-                                        </tr>
+                                        <td>{{this.email}}</td>
+                                        
+                                        <td>
 
-                                        {{/each}}
+                            {{#if this.blocked}} 
+
+                            <!-- Use a form for the unblock button -->
+                            <form action="/admin/unblock/{{this._id}}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-success" style="width: 140px;">approve</button>
+                            </form>
+
+                            {{else}}
+
+                            <form action="/admin/block/{{this._id}}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger" style="width: 140px;">Disapprove</button>
+                            </form>
+
+                            {{/if}}      
+
+                            </td>
+
+                             </tr>
+
+                             {{/each}}
+                                    
                                     </tbody>
                                 </table>
                             </div> 
@@ -65,7 +88,7 @@
 
         </section>
          <!-- content-main end// -->
-        <footer class="main-footer font-xs">
+        {{!-- <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
                     <script>
@@ -78,7 +101,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer> --}}
     </main>
     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>

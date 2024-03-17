@@ -11,6 +11,8 @@ const {
   unblock,
   customers,
   hotelpage,
+  transactionspage,
+  reviewspage
 
 
 } = require("../controllers/adminController");
@@ -26,11 +28,15 @@ router.get("/dashboard", dashboard);
 
 router.post("/block/:id",block);
 
- router.post("/unblock/:id",unblock);
+router.post("/unblock/:id",unblock);
 
- router.get("/customers",customers);
+router.get("/customers",customers);
 
- router.get("/hotels", hotelpage);
+router.get("/hotels", hotelpage);
+
+router.get("/transactions", transactionspage);
+
+router.get("/reviews", reviewspage);
 
 
 module.exports = router;

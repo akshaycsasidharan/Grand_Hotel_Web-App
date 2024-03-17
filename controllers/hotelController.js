@@ -3,6 +3,7 @@ const { render } = require("../app");
 const hotelHelper = require("../helpers/hotelHelper");
 const multer = require("multer");
 
+
 module.exports = {
   signuppage: (req, res, next) => {
     res.render("hotel/hotelSignup");
@@ -11,7 +12,8 @@ module.exports = {
   hotelsignup: (req, res) => {
     // console.log("@@@@@@@@@2222",req.body);
     try {
-      hotelHelper.hoteldoSignup(req.body).then((response) => {
+      hotelHelper.hoteldoSignup(req.body,req.file).then((response) => {
+        console.log("$$$$$$$$$$",response);
         res.redirect("/hotel");
       });
     } catch (error) {
@@ -23,27 +25,31 @@ module.exports = {
     res.render("hotel/hotelLogin");
   },
 
-  hotellogin: (req, res) => {
+  hotellogin: async (req, res) => {
     try {
-      hotelHelper.hotelLogin(req.body).then((response) => {
-        console.log("Response:", response);
+      const response = await hotelHelper.hotelLogin(req.body);
+      console.log("Response:", response);
 
-        if (response.status && !response.user.blocked) {
-          res.redirect("hoteldashboard");
-        } else {
-          res.redirect("/hotel");
-        }
-      });
+      if (response.status && !response.user.blocked && response.token) {
+        res.render("hotel/hotelDashboard");
+      } else {
+        res.redirect("/hotel");
+      }
     } catch (error) {
       console.log(error);
+      res.redirect("/error-page");
     }
   },
+
+
+  
+  
 
   hoteldashboard: (req, res, next) => {
     res.render("hotel/hotelDashboard");
   },
 
-  addroomspage: (req, res) => {
+  addroomspage : (req, res) => {
     res.render("hotel/addRooms");
   },
 
@@ -52,10 +58,9 @@ module.exports = {
   },
 
   addrooms: (req, res) => {
-
     try {
       hotelHelper.addrooms(req.body, req.file).then((response) => {
-        console.log("%%%%%%%%%%%%%%%%%",response);
+        console.log("%%%%%%%%%%%%%%%%%", response);
         res.redirect("/hotel/rooms");
       });
     } catch (error) {
@@ -83,17 +88,14 @@ module.exports = {
     });
   },
 
-
-  facility:(req,res) => {
-    console.log("###########33",req.body);
+  facilitypage: (req, res) => {
+    console.log("###########33", req.body);
 
     hotelHelper.viewfacility().then((facilitiesdata) => {
-      res.render("hotel/facilities",{
+      res.render("hotel/facilities", {
         facilitiesdata,
-      })
-
-    })
-
+      });
+    });
   },
 
   editrooms: (req, res) => {
@@ -120,13 +122,11 @@ module.exports = {
   },
 
   facilityedit: (req, res) => {
-
     let idfacility = req.params.id;
     hotelHelper.facilityedit(idfacility, req.body, req.file).then(() => {
       res.redirect("/hotel/facilities");
     });
   },
-
 
   deleteroom: (req, res) => {
     let id = req.params.id;
@@ -154,7 +154,9 @@ module.exports = {
     res.render("hotel/transactions");
   },
 
+
   reviews: (req, res) => {
     res.render("hotel/reviews");
   },
+  
 };

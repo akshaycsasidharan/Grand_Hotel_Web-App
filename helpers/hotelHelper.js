@@ -4,9 +4,12 @@ var collection = require("../config/collection");
 const bcrypt = require("bcrypt");
 const { ObjectId } = require("mongodb");
 const { facility } = require("../controllers/hotelController");
+const { response } = require("express");
+const jwt = require("jsonwebtoken");
+
 
 module.exports = {
-  hoteldoSignup: (hotelsData) => {
+  hoteldoSignup: (hotelsData,file) => {
     return new Promise(async (resolve, reject) => {
       console.log("!!!!!!!!!!!!!!!11hotelsssdataaaa", hotelsData);
 
@@ -22,6 +25,7 @@ module.exports = {
         name: hotelsData.name,
         email: hotelsData.email,
         password: encryptedpassword,
+        Image:file.filename,
         blocked: true,
         vote: false,
         usercount: 0,
@@ -38,6 +42,7 @@ module.exports = {
     });
   },
 
+
   hotelLogin: async (hotelloginData) => {
     try {
       const db = await connectToMongoDB();
@@ -46,12 +51,10 @@ module.exports = {
         .findOne({ email: hotelloginData.email });
 
       if (user) {
-        const status = await bcrypt.compare(
-          hotelloginData.password,
-          user.password
-        );
+        const status = await bcrypt.compare(hotelloginData.password, user.password);
         if (status) {
-          return { user, status: true };
+          const token = jwt.sign({ userId: user._id, userEmail: user.email }, 'secret', { expiresIn: '24h' });
+          return { token, user, status: true };
         }
       }
       return { status: false };
@@ -59,6 +62,8 @@ module.exports = {
       throw error;
     }
   },
+
+
 
   showcustomers: async () => {
     return new Promise(async (resolve, reject) => {
@@ -70,6 +75,7 @@ module.exports = {
       resolve(customerdata);
     });
   },
+
 
   addrooms: (roomdata, file) => {
     // console.log("3#########@@@@@@@@@@2",roomdata);
@@ -94,6 +100,7 @@ module.exports = {
     });
   },
 
+
   addfacility: (facilitiesdata, file) => {
     return new Promise(async (resolve, reject) => {
       let datafacilities = {
@@ -112,6 +119,7 @@ module.exports = {
         });
     });
   },
+
 
   viewrooms: () => {
     return new Promise(async (resolve, reject) => {
@@ -135,6 +143,7 @@ module.exports = {
     });
   },
 
+
   roomdelete: (deleteid) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -154,6 +163,7 @@ module.exports = {
     });
   },
 
+
   editroom: (roomid) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -172,6 +182,7 @@ module.exports = {
         });
     });
   },
+
 
   roomedit: (userid, idroom, file) => {
     return new Promise(async (resolve, reject) => {
@@ -197,6 +208,7 @@ module.exports = {
     });
   },
 
+
   editfacility: (facilityid) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -215,6 +227,7 @@ module.exports = {
         });
     });
   },
+
 
   facilityedit: (facilityid, idfacilities, file) => {
     return new Promise(async (resolve, reject) => {
@@ -236,6 +249,7 @@ module.exports = {
         });
     });
   },
+  
 
   facilitiesdelete: (facilityid) => {
     return new Promise(async (resolve, reject) => {
