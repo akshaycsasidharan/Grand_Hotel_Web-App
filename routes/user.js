@@ -11,7 +11,9 @@ const {
   homepage,
   allrooms,
   room,
-  login
+  login,
+  booking,
+  bookingrooms
 
 } = require("../controllers/userController");
 
@@ -26,11 +28,13 @@ router.get("/login", loginPage);
 
 router.post("/login", login);
 
-router.get("/allrooms",allrooms);
-
+router.get("/allrooms/:id",allrooms);
 
 router.get("/room/:id",room);
 
+router.get("/booking",booking);
+
+router.post("/bookingroom",bookingrooms);
 
 
 module.exports = router;

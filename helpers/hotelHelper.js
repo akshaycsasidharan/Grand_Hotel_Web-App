@@ -29,6 +29,8 @@ module.exports = {
         blocked: true,
         vote: false,
         usercount: 0,
+        mobilenumber:hotelsData.mobilenumber,
+        Place:hotelsData.Place,
       };
 
       const db = await connectToMongoDB();
@@ -70,7 +72,7 @@ module.exports = {
       const db = await connectToMongoDB();
       let customerdata = await db
         .collection(collection.USER_COLLECTION)
-        .find({})
+        .find({booked:true})
         .toArray();
       resolve(customerdata);
     });

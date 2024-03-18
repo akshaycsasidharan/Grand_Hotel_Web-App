@@ -96,7 +96,7 @@ module.exports = {
       const db = await connectToMongoDB();
       let customerdata = await db
         .collection(collection.USER_COLLECTION)
-        .find({})
+        .find({blocked:false})
         .toArray();
       resolve(customerdata);
     });

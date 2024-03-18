@@ -35,6 +35,29 @@ module.exports = {
     });
   },
 
+  dobooking: (bookingdata) => {
+    return new Promise(async (resolve, reject) => {
+      let datasbooking = {
+        name: bookingdata.name,
+        email: bookingdata.email,
+        checkin: bookingdata.checkin,
+        checkout: bookingdata.checkout,
+        booked: true,
+      };
+
+      const db = await connectToMongoDB();
+
+      await db
+        .collection(collection.USER_COLLECTION)
+        .insertOne(datasbooking)
+        .then((data) => {
+          resolve(data.insertedId);
+        });
+    });
+  },
+
+
+
   doLogin: (loginData) => {
     return new Promise(async (resolve, reject) => {
       let loginstatus = false;

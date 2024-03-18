@@ -29,41 +29,40 @@
     <br>
     <br>
     <section class="hp-room-section">
+        <br><br>
         <div class="container-fluid">
             <div class="hp-room-items">
+                
                 <div class="row">
-                                                    {{#each hotelssdata}}
+                    {{#each hotelssdata}}
 
                     <div class="col-lg-3 col-md-6">
                         <div class="hp-room-item set-bg" data-setbg="/images/sign-images/{{this.Image}}">
                             <div class="hr-text">
                                 <h3>{{this.name}}</h3>
-                                <h2>199$<span>/Pernight</span></h2>
+                                {{!-- <h2>199$<span>/Pernight</span></h2> --}}
                                 <table>
                                     <tbody>
                                         <tr>
-                                            <td class="r-o">Size:</td>
-                                            <td>30 ft</td>
+                                            <td class="r-o">Place:</td>
+                                            <td>{{this.Place}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="r-o">Capacity:</td>
-                                            <td>Max persion 5</td>
+                                            <td class="r-o">Mob No:</td>
+                                            <td>{{this.mobilenumber}}</td>
                                         </tr>
                                         <tr>
-                                            <td class="r-o">Bed:</td>
-                                            <td>King Beds</td>
+                                            <td class="r-o">Email:</td>
+                                            <td>{{this.email}}</td>
                                         </tr>
-                                        <tr>
-                                            <td class="r-o">Services:</td>
-                                            <td>Wifi, Television, Bathroom,...</td>
-                                        </tr>
+                                        
                                     </tbody>
                                 </table>
-                                <a href="/allrooms" class="primary-btn">More Details</a>
+                                <a href="/allrooms/{{this._id}}" class="primary-btn">More Details</a>
                             </div>
                         </div>
                     </div>
-                                                    {{/each}}
+                     {{/each}}
 
                 </div>
             </div>

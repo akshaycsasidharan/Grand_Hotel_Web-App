@@ -26,6 +26,8 @@
                                             <th>Customer Name</th>
                                             {{!-- <th>Image</th> --}}
                                             <th>Email</th>
+                                            <th>Check-In-Date</th>
+                                            <th>Check-Out-Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -34,10 +36,9 @@
 
                                          <tr>
                                             <td><b>{{this.name}}</b></td>
-                                        {{!-- <td>
-                                        <img style="width: 50px; height:50px" src="/images/sign-images/{{this.Image}}" alt="">
-                                        </td>                       --}}
                                         <td>{{this.email}}</td>
+                                        <td>{{this.checkin}}</td>
+                                        <td>{{this.checkout}}</td>
                                         </tr>
 
                                         {{/each}}

@@ -4,7 +4,6 @@ const { render } = require("../app");
 const multer = require("multer");
 
 
-
 module.exports = {
 
   signuppage:(req,res) => {
@@ -48,26 +47,37 @@ login: (req, res, next) => {
   }
 },
 
+booking:(req,res) =>{
+  res.render("user/booking");
+},
+
+bookingrooms:(req,res) => {
+
+try {
+  userHelper.dobooking(req.body).then((result) => {
+    console.log(result);
+    res.redirect("/booking");
+  });
+} catch (error) {
+  console.log(error);
+}
+
+},
 
   homepage:(req,res) => {
-
     userHelper.showhotels().then((hotelssdata) => {
-
       res.render("user/homePage",{
         hotelssdata,
       });
-
     })
-
   },
 
-  allrooms:(req,res) => {
 
+  allrooms:(req,res) => {
     userHelper.showrooms().then((roomsdata) => {
       res.render("user/allRooms",{
         roomsdata
       });
-
     })
 
   },
