@@ -1,6 +1,8 @@
 const { CURSOR_FLAGS } = require("mongodb");
 const userHelper = require("../helpers/userHelper");
 const { render } = require("../app");
+const multer = require("multer");
+
 
 
 module.exports = {
@@ -49,19 +51,39 @@ login: (req, res, next) => {
 
   homepage:(req,res) => {
 
+    userHelper.showhotels().then((hotelssdata) => {
 
-    res.render("user/homePage");
+      res.render("user/homePage",{
+        hotelssdata,
+      });
+
+    })
+
   },
-
 
   allrooms:(req,res) => {
-    res.render("user/allRooms");
+
+    userHelper.showrooms().then((roomsdata) => {
+      res.render("user/allRooms",{
+        roomsdata
+      });
+
+    })
+
   },
 
 
-  room:(req,res)=>{
-    res.render("user/room");
+  room: (req, res) => {
+    let id = req.params.id;
+    try {
+         userHelper.roomsDetails(id).then((roomDetails)=>{
+          res.render("user/room", { roomDetails });
+         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching room details");
+    }
   }
 
 
-};
+}

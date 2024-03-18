@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const  verifyToken  = require("../middleware/userMiddleware");
+// const  verifyToken  = require("../middleware/userMiddleware");
 
 
 const {
@@ -29,7 +29,7 @@ router.post("/login", login);
 router.get("/allrooms",allrooms);
 
 
-router.get("/room",verifyToken,room);
+router.get("/room/:id",room);
 
 
 

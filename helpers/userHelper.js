@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
-
 module.exports = {
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
@@ -19,10 +18,10 @@ module.exports = {
       }
 
       let signupData = {
-        name : userData.name,
+        name: userData.name,
         email: userData.email,
         password: encryptedpassword,
-        blocked:false
+        blocked: false,
       };
 
       const db = await connectToMongoDB();
@@ -36,7 +35,6 @@ module.exports = {
     });
   },
 
-  
   doLogin: (loginData) => {
     return new Promise(async (resolve, reject) => {
       let loginstatus = false;
@@ -50,7 +48,11 @@ module.exports = {
         bcrypt.compare(loginData.password, user.password).then((status) => {
           if (status) {
             console.log("login success");
-            const usertoken = jwt.sign({userId : user._id, useremail : user.email }, 'secret', {expiresIn : "24h"});
+            const usertoken = jwt.sign(
+              { userId: user._id, useremail: user.email },
+              "secret",
+              { expiresIn: "24h" }
+            );
             response.token = usertoken;
             response.user = user;
             response.status = true;
@@ -67,4 +69,39 @@ module.exports = {
     });
   },
 
+  showhotels: async () => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+
+      let Datahotel = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .find({ blocked: false })
+        .toArray();
+      resolve(Datahotel);
+    });
+  },
+
+  showrooms: async () => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+
+      let hotelroom = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .find({ deleted: false })
+        .toArray();
+      resolve(hotelroom);
+    });
+  },
+
+  roomsDetails: async (roomid) => {
+    try {
+      const db = await connectToMongoDB();
+      const roomDetails = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .findOne({ _id: new ObjectId(roomid) });
+      return roomDetails;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

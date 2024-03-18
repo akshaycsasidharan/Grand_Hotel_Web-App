@@ -27,7 +27,7 @@ module.exports = {
       const db = await connectToMongoDB();
       const hotelsData = await db
         .collection(collection.HOTEL_COLLECTION)
-        .find({blocked:false})
+        .find({})
         .toArray();
 
       return hotelsData;

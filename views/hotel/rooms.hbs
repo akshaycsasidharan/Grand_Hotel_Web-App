@@ -72,7 +72,9 @@
                                     <th scope="col">Room Type</th>
                                     {{!-- <th scope="col">Price</th> --}}
                                     {{!-- <th scope="col">Status</th> --}}
-                                    <th scope="col">Capacity</th>
+                                    <th scope="col">Capacity</th> 
+                                     <th scope="col">Price</th>
+
                                             <th scope="col" style="padding-left:40px">Action </th>
                                 </tr>
                             </thead>
@@ -89,6 +91,7 @@
                                     <td><span class="badge rounded-pill alert-warning">{{this.RoomType}}</span></td>
                                     
                                     <td>{{this.Capacity}}</td>
+                                    <td>{{this.Price}}</td>
                                     <td>
                                     <form action="/hotel/edit/{{this._id}}" method="get" style="display:inline;">
                                     <button

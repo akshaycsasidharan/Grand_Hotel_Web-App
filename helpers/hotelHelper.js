@@ -84,6 +84,7 @@ module.exports = {
         Roomnumber: roomdata.Roomnumber,
         RoomType: roomdata.RoomType,
         Floor: roomdata.Floor,
+        Price:roomdata.Price,
         Capacity: roomdata.Capacity,
         Image: file.filename,
         deleted: false,
