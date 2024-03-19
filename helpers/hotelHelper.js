@@ -47,23 +47,24 @@ module.exports = {
 
   hotelLogin: async (hotelloginData) => {
     try {
-      const db = await connectToMongoDB();
-      const user = await db
-        .collection(collection.HOTEL_COLLECTION)
-        .findOne({ email: hotelloginData.email });
+        const db = await connectToMongoDB();
+        const user = await db
+            .collection(collection.HOTEL_COLLECTION)
+            .findOne({ email: hotelloginData.email });
 
-      if (user) {
-        const status = await bcrypt.compare(hotelloginData.password, user.password);
-        if (status) {
-          const token = jwt.sign({ userId: user._id, userEmail: user.email }, 'secret', { expiresIn: '24h' });
-          return { token, user, status: true };
+        if (user) {
+            const status = await bcrypt.compare(hotelloginData.password, user.password);
+            if (status) {
+                const token = jwt.sign({ user }, 'secret', { expiresIn: '1d' }); // Pass user object to jwt.sign
+                console.log("!!!!!!!!!!!!tokeennn", token);
+                return { user, status: true, token }; // Include token in the return object
+            }
         }
-      }
-      return { status: false };
+        return { status: false };
     } catch (error) {
-      throw error;
+        throw error;
     }
-  },
+},
 
 
 

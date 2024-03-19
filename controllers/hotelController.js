@@ -30,7 +30,7 @@ module.exports = {
       const response = await hotelHelper.hotelLogin(req.body);
       console.log("Response:", response);
 
-      if (response.status && !response.user.blocked && response.token) {
+      if (response.status && !response.user.blocked ) {
         res.render("hotel/hotelDashboard");
       } else {
         res.redirect("/hotel");
