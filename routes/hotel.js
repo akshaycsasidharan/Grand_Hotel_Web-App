@@ -45,15 +45,15 @@ router.post("/hotellogin", hotellogin);
 
 router.get("/hoteldashboard",verifyhotelToken,hoteldashboard);
 
-router.get("/customers",verifyhotelToken,customers);
+router.get("/customers",customers);
 
-router.get("/rooms",verifyhotelToken,roomspage);
+router.get("/rooms",roomspage);
 
 router.post("/delete/:id",deleteroom);
 
 router.post("/deleted/:id",deletefacilities);
 
-router.get("/facilities",verifyhotelToken,facilitypage);
+router.get("/facilities",facilitypage);
 
 router.get("/addrooms",addroomspage);
 
@@ -73,7 +73,7 @@ router.post("/editfacilities/:id",upload.single('image'),facilityedit);
 
 router.get("/transactions",verifyhotelToken,transactions);
 
-router.get("/reviews",verifyhotelToken,reviews);
+router.get("/reviews",reviews);
 
 
 module.exports = router;
