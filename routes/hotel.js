@@ -45,7 +45,7 @@ router.post("/hotellogin", hotellogin);
 
 router.get("/hoteldashboard",verifyhotelToken,hoteldashboard);
 
-router.get("/customers",customers);
+router.get("/customers",verifyhotelToken,customers);
 
 router.get("/rooms",roomspage);
 

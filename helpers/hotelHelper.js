@@ -55,9 +55,13 @@ module.exports = {
         if (user) {
             const status = await bcrypt.compare(hotelloginData.password, user.password);
             if (status) {
-                const token = jwt.sign({ user }, 'secret', { expiresIn: '1d' }); // Pass user object to jwt.sign
+                const token = jwt.sign({ name:user.name }, 'secret', { expiresIn: '40s' }); // Pass user object to jwt.sign
+                const refreshtoken = jwt.sign({ name:user.name }, 'refreshsecret', { expiresIn: '48h' }); // Pass user object to jwt.sign
+
                 console.log("!!!!!!!!!!!!tokeennn", token);
-                return { user, status: true, token }; // Include token in the return object
+                console.log("!!!!!!!!!!!!tokeennn", refreshtoken);
+
+                return { user, status: true, token,refreshtoken }; // Include token in the return object
             }
         }
         return { status: false };
