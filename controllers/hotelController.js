@@ -29,9 +29,10 @@ module.exports = {
     try {
       const response = await hotelHelper.hotelLogin(req.body);
       console.log("Response:", response);
-
-      if (response.status && !response.user.blocked ) {
-        res.render("hotel/hotelDashboard");
+  
+      if (response.status == 200 && !response.user.blocked) {
+        // Render the dashboard view and pass user data to it
+        res.status(200).render("hotel/hotelDashboard", { user: response.user });
       } else {
         res.redirect("/hotel");
       }
@@ -40,11 +41,31 @@ module.exports = {
       res.redirect("/error-page");
     }
   },
+  
+
+
+  // hotellogin: (req, res) => {
+  //   hotelHelper.hotelLogin(req.body).then((response) => {
+  //     if (response.status) {
+  //       req.session.loggedIn = true;
+  //       req.session.user = response.user;
+  //       return  res.render("hotel/hotelDashboard");
+
+  //     } else if (response.block) {
+  //       req.session.block = true;
+  //       res.redirect("/hotel");
+  //     } else {
+  //       req.session.loginErr = true;
+  //       res.redirect("/hotel");
+  //     }
+
+  //   });
+
+  // },
 
 
   
   
-
   hoteldashboard: (req, res, next) => {
     res.render("hotel/hotelDashboard");
   },

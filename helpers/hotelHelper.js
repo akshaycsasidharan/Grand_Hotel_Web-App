@@ -47,28 +47,59 @@ module.exports = {
 
   hotelLogin: async (hotelloginData) => {
     try {
-        const db = await connectToMongoDB();
-        const user = await db
-            .collection(collection.HOTEL_COLLECTION)
-            .findOne({ email: hotelloginData.email });
-
-        if (user) {
-            const status = await bcrypt.compare(hotelloginData.password, user.password);
-            if (status) {
-                const token = jwt.sign({ name:user.name }, 'secret', { expiresIn: '40s' }); // Pass user object to jwt.sign
-                const refreshtoken = jwt.sign({ name:user.name }, 'refreshsecret', { expiresIn: '48h' }); // Pass user object to jwt.sign
-
-                console.log("!!!!!!!!!!!!tokeennn", token);
-                console.log("!!!!!!!!!!!!tokeennn", refreshtoken);
-
-                return { user, status: true, token,refreshtoken }; // Include token in the return object
-            }
+      const db = await connectToMongoDB();
+      const user = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .findOne({ email: hotelloginData.email });
+  
+      if (user) {
+        const status = await bcrypt.compare(hotelloginData.password, user.password);
+        if (status) {
+          const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1d' });
+          return { user, status: true, token };
+        } else {
+          return { status: 406, message: "Invalid email/password" };
         }
-        return { status: false };
+      } else {
+        return { status: 404, message: "User not found" };
+      }
     } catch (error) {
-        throw error;
+      throw error;
     }
-},
+  },
+
+
+// hotelLogin: (hotelloginData) => {
+//   return new Promise(async (resolve, reject) => {
+//     let loginStatus = false;
+//     let response = {};
+//     let user = await db
+//       .get()
+//       .collection(collection.HOTEL_COLLECTION)
+//       .findOne({ email: hotelloginData.email });
+//     if (user) {
+//       if (user.block === false) {
+//         bcrypt.compare(hotelloginData.password, user.password).then((status) => {
+//           if (status) {
+//             console.log("login success");
+//             response.user = user;
+//             response.status = true;
+//             resolve(response);
+//           } else {
+//             console.log("login failed");
+//             resolve({ status: false });
+//           }
+//         });
+//       } else {
+//         console.log("blocke userrrrrrrrrrr");
+//         resolve({ block: true });
+//       }
+//     } else {
+//       console.log("user not available");
+//       resolve({ status: false });
+//     }
+//   });
+// },
 
 
 
