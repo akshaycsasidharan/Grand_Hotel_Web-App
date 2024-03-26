@@ -56,7 +56,7 @@ module.exports = {
         const status = await bcrypt.compare(hotelloginData.password, user.password);
         if (status) {
           const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1d' });
-          return { user, status: true, token };
+          return { user, status: true, token }; // Return token along with other data
         } else {
           return { status: 406, message: "Invalid email/password" };
         }
@@ -67,7 +67,7 @@ module.exports = {
       throw error;
     }
   },
-
+  
 
 // hotelLogin: (hotelloginData) => {
 //   return new Promise(async (resolve, reject) => {

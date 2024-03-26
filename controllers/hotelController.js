@@ -26,21 +26,24 @@ module.exports = {
   },
 
   hotellogin: async (req, res) => {
-    try {
-      const response = await hotelHelper.hotelLogin(req.body);
-      console.log("Response:", response);
-  
-      if (response.status == 200 && !response.user.blocked) {
-        // Render the dashboard view and pass user data to it
-        res.status(200).render("hotel/hotelDashboard", { user: response.user });
-      } else {
-        res.redirect("/hotel");
-      }
-    } catch (error) {
-      console.log(error);
-      res.redirect("/error-page");
+  try {
+    const response = await hotelHelper.hotelLogin(req.body);
+    console.log("Response:", response);
+
+    if (response.status == 200 && !response.user.blocked ) {
+      // Send the token as a cookie or in response headers
+      res.cookie('token', response.token, { httpOnly: true });
+      res.status(200).redirect("/hotel/hotelDashboard"); // Corrected redirection to the dashboard page
+    } else {
+      res.redirect("/"); // Redirect to login page if login fails
     }
-  },
+  } catch (error) {
+    console.log(error);
+    res.redirect("/error-page");
+  }
+},
+
+  
   
 
 
