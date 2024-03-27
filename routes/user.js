@@ -13,7 +13,8 @@ const {
   room,
   login,
   booking,
-  bookingrooms
+  bookingrooms,
+  payments
 
 } = require("../controllers/userController");
 
@@ -35,6 +36,9 @@ router.get("/room/:id",room);
 router.get("/booking",booking);
 
 router.post("/bookingroom",bookingrooms);
+
+router.get("/payment",payments);
+
 
 
 module.exports = router;

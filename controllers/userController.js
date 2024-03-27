@@ -64,6 +64,11 @@ try {
 
 },
 
+payments:(req,res) => {
+  res.render("user/payment");
+
+},
+
   homepage:(req,res) => {
     userHelper.showhotels().then((hotelssdata) => {
       res.render("user/homePage",{

@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const  jwtMiddleware  = require("../middleware/hotelMiddleware");
+const  verifyhotelToken  = require("../middleware/hotelMiddleware");
 const jwt = require("jsonwebtoken");
 
 
@@ -45,13 +45,13 @@ router.get("/", hotelloginPage);
 
 router.post("/hotellogin", hotellogin);
 
-router.get("/hoteldashboard",jwtMiddleware,hoteldashboard);
+router.get("/hoteldashboard",verifyhotelToken,hoteldashboard);
 
 router.get("/customers",customers);
 
 router.get("/rooms",roomspage);
 
-router.post("/delete/:id",jwtMiddleware,deleteroom);
+router.post("/delete/:id",verifyhotelToken,deleteroom);
 
 router.post("/deleted/:id",deletefacilities);
 

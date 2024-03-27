@@ -33,7 +33,7 @@ module.exports = {
     if (response.status == 200 && !response.user.blocked ) {
       // Send the token as a cookie or in response headers
       res.cookie('token', response.token, { httpOnly: true });
-      res.status(200).redirect("/hotel/hotelDashboard"); // Corrected redirection to the dashboard page
+      res.status(200).redirect("hotel/hotelDashboard"); // Corrected redirection to the dashboard page
     } else {
       res.redirect("/"); // Redirect to login page if login fails
     }
