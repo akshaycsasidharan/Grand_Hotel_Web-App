@@ -27,7 +27,6 @@ module.exports = {
 
 
   loginPage: (req, res, next) => {
-    // console.log("@@@@@@@@@2helloooooo");
     res.render("user/login");
   },
 
@@ -52,7 +51,6 @@ booking:(req,res) =>{
 },
 
 bookingrooms:(req,res) => {
-
 try {
   userHelper.dobooking(req.body).then((result) => {
     console.log(result);
@@ -64,10 +62,6 @@ try {
 
 },
 
-payments:(req,res) => {
-  res.render("user/payment");
-
-},
 
   homepage:(req,res) => {
     userHelper.showhotels().then((hotelssdata) => {
@@ -98,7 +92,23 @@ payments:(req,res) => {
         console.error(error);
         res.status(500).send("Error fetching room details");
     }
-  }
+  },
+
+
+  payment:(req,res) => {
+    let id = req.params.id;
+    try {
+         userHelper.paymentDetails(id).then((paymentDetails)=>{
+          res.render("user/payment", { paymentDetails });
+         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching room details");
+    }  
+  },
+
+
+  
 
 
 }
