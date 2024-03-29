@@ -96,16 +96,16 @@ login: (req, res, next) => {
   },
 
 
-  payment:(req,res) => {
+  payment:(req,res)=>{
     let id = req.params.id;
     try {
-         userHelper.paymentDetails(id).then((paymentDetails)=>{
-          res.render("user/payment", { paymentDetails });
+         userHelper.roomsDetails(id).then((roomDetails)=>{
+          res.render("user/payment", { roomDetails });
          });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error fetching room details");
-    }  
+    }
   },
 
 

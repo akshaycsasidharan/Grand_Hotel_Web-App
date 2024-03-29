@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-// const  verifyToken  = require("../middleware/userMiddleware");
 
 
 const {
@@ -14,7 +13,7 @@ const {
   login,
   booking,
   bookingrooms,
-  payment
+  payment,
 
 } = require("../controllers/userController");
 
@@ -37,7 +36,7 @@ router.get("/booking",booking);
 
 router.post("/bookingroom",bookingrooms);
 
-router.get("/payment/:id",payment);
+router.get("/payment/:id", payment);
 
 
 module.exports = router;

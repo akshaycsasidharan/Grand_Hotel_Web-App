@@ -26,14 +26,16 @@
                             <div class="rd-title">
                                 <h3>{{roomDetails.RoomType}}</h3>
                                  <div class="rdt-right">
-                                    <div class="rating">
+                                    {{!-- <div class="rating">
                                         <i class="icon_star"></i>
                                         <i class="icon_star"></i>
                                         <i class="icon_star"></i>
                                         <i class="icon_star"></i>
                                         <i class="icon_star-half_alt"></i>
-                                    </div>
+                                    </div> --}}
                                     <a href="/booking">Booking Now</a>
+                        <a href="/payment/{{roomDetails._id}}">Payment Now</a>
+
                                 </div>
                             </div>
                             <h2>{{roomDetails.Price}}$<span>/Pernight</span></h2>
