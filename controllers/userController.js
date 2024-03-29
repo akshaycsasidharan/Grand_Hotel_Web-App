@@ -46,23 +46,6 @@ login: (req, res, next) => {
   }
 },
 
-booking:(req,res) =>{
-  res.render("user/booking");
-},
-
-bookingrooms:(req,res) => {
-try {
-  userHelper.dobooking(req.body).then((result) => {
-    console.log(result);
-    res.redirect("/booking");
-  });
-} catch (error) {
-  console.log(error);
-}
-
-},
-
-
   homepage:(req,res) => {
     userHelper.showhotels().then((hotelssdata) => {
       res.render("user/homePage",{
@@ -95,6 +78,24 @@ try {
   },
 
 
+  booking:(req,res) =>{
+    res.render("user/booking");
+  },
+  
+
+  bookingrooms:(req,res) => {
+  try {
+    userHelper.dobooking(req.body).then((result) => {
+      console.log(result);
+      res.redirect("/booking");
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  
+  },
+
+
   payment:(req,res) => {
     let id = req.params.id;
     try {
@@ -108,7 +109,11 @@ try {
   },
 
 
-  
+
+
+
+
+
 
 
 }
