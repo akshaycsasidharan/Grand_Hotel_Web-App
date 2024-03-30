@@ -2,65 +2,57 @@
 <body>
     {{> user-header}}
 
-    <div class="breadcrumb-section">
-        <div class="container">
+    {{!-- <div class="breadcrumb-section"> --}}
+        {{!-- <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb-text">
-                        <h2>Our Rooms</h2>
+                        <h2>Payment</h2>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </div>  --}}
+    {{!-- </div> --}}
     <!-- Room Details Section Begin -->
     
-    <section class="room-details-section spad">
+ 
+<form action="/dopayment" method="post" name="form">
+    <section class="blog-details-hero set-bg" style="position: relative;
+    width: 100%; 
+    height: 621px; 
+    background-size: cover; 
+    background-position: center center;
+}" data-setbg="/images/sign-images/{{roomDetails.Image}}">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8">
-                    <div class="room-details-item">
-                        
-                        <img src="/images/sign-images/{{roomDetails.Image}}" alt="">
-                        <div class="rd-text">
-                            <div class="rd-title">
-                                <h3>{{roomDetails.RoomType}}</h3>
-                                 <div class="rdt-right">
-    
-                                     <a href="/payment">payment Now</a>
-                                </div>
-                            </div>
-                            <h2>{{roomDetails.Price}}$<span>/Pernight</span></h2>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td class="r-o">Floor:</td>
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="bd-hero-text" >
+<button type="submit" style="height: 55px;background:#dfa974; color:#ffffff; width: 320px; padding: 17px 16px; font-size: 15px; font-weight: 700;">PAYMENT NOW</button>
+                            <h2><tr>
+                                        <td class="r-o">Floor :</td>
                                         <td>{{roomDetails.Floor}}</td>
                                     </tr>
+                                    <br>
                                     <tr>
-                                        <td class="r-o">Capacity:</td>
+                                        <td class="r-o">Capacity :</td>
                                         <td>{{roomDetails.Capacity}}</td>
                                     </tr>
+                                    <br>
                                     <tr>
-                                        <td class="r-o">Room Number:</td>
+                                        <td class="r-o">Room Number :</td>
                                         <td>{{roomDetails.Roomnumber}}</td>
                                     </tr>
+                                    <br>
                                     <tr>
-                                        <td class="r-o">Room Type:</td>
+                                        <td class="r-o">Room Type :</td>
                                         <td>{{roomDetails.RoomType}}</td>
-                                    </tr>
-                                </tbody>
-                                
-                            </table>
-                        </div>
+                                    </tr></span></h2> 
                     </div>
                 </div>
             </div>
-            
         </div>
-
-        
     </section>
+    </form>
 
     
     <!-- Room Details Section End -->

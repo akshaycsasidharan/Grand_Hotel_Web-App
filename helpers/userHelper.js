@@ -106,6 +106,7 @@ module.exports = {
     }
   },
 
+
   dobooking: (bookingdata) => {
     return new Promise(async (resolve, reject) => {
       let datasbooking = {
@@ -126,10 +127,6 @@ module.exports = {
         });
     });
   },
-
-  // dopayment:()=>{
-
-  // },
 
 
   paymentDetails:async (paymentid) => {

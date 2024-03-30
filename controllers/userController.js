@@ -96,7 +96,7 @@ login: (req, res, next) => {
   },
 
 
-  payment:(req,res)=>{
+  paymentpage:(req,res)=>{
     let id = req.params.id;
     try {
          userHelper.roomsDetails(id).then((roomDetails)=>{
@@ -108,6 +108,7 @@ login: (req, res, next) => {
     }
   },
 
+  
 
 
 
