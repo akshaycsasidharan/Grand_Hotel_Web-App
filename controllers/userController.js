@@ -2,6 +2,14 @@ const { CURSOR_FLAGS } = require("mongodb");
 const userHelper = require("../helpers/userHelper");
 const { render } = require("../app");
 const multer = require("multer");
+const Razorpay = require("razorpay");
+
+const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+
+const razorpayInstance = new Razorpay({
+  key_id: RAZORPAY_ID_KEY,
+  key_secret: RAZORPAY_SECRET_KEY
+});
 
 
 module.exports = {
@@ -25,11 +33,9 @@ module.exports = {
 
   },
 
-
   loginPage: (req, res, next) => {
     res.render("user/login");
   },
-
 
 login: (req, res, next) => {
   try {
@@ -54,7 +60,6 @@ login: (req, res, next) => {
     })
   },
 
-
   allrooms:(req,res) => {
     userHelper.showrooms().then((roomsdata) => {
       res.render("user/allRooms",{
@@ -63,7 +68,6 @@ login: (req, res, next) => {
     })
 
   },
-
 
   room: (req, res) => {
     let id = req.params.id;
@@ -77,12 +81,10 @@ login: (req, res, next) => {
     }
   },
 
-
   booking:(req,res) =>{
     res.render("user/booking");
   },
   
-
   bookingrooms:(req,res) => {
   try {
     userHelper.dobooking(req.body).then((result) => {
@@ -107,6 +109,36 @@ login: (req, res, next) => {
         res.status(500).send("Error fetching room details");
     }
   },
+
+
+  
+   payment : async (req, res) => {
+    try {
+      const amount = req.body.price * 100; // Correct variable name
+      const options = {
+        amount: amount, // Correct variable name
+        currency: 'INR',
+        receipt: 'razorUser@gmail.com'
+      };
+  
+      razorpayInstance.orders.create(options, (err, order) => {
+        if (!err) {
+          res.status(200).send({
+            success: true,
+            msg: 'Order Created',
+            order_id: order.id,
+            amount: amount, // Correct variable name
+            key_id: RAZORPAY_ID_KEY,
+            product_name: req.body.name,
+          });
+        } else {
+          res.status(400).send({ success: false, msg: 'Something went wrong!' });
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   
 

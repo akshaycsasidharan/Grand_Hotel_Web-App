@@ -129,17 +129,17 @@ module.exports = {
   },
 
 
-  paymentDetails:async (paymentid) => {
-    try {
-      const db = await connectToMongoDB();
-      const paymentDetails = await db
-        .collection(collection.HOTEL_COLLECTION)
-        .findOne({ _id: new ObjectId(paymentid) });
-      return paymentDetails;
-    } catch (error) {
-      throw error;
-    }
-  },
+  // paymentDetails:async (paymentid) => {
+  //   try {
+  //     const db = await connectToMongoDB();
+  //     const paymentDetails = await db
+  //       .collection(collection.HOTEL_COLLECTION)
+  //       .findOne({ _id: new ObjectId(paymentid) });
+  //     return paymentDetails;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
 
 
 

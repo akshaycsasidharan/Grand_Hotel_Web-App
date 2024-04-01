@@ -1,22 +1,52 @@
 
 <body>
-    {{> user-header}}
-
-    {{!-- <div class="breadcrumb-section"> --}}
-        {{!-- <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb-text">
-                        <h2>Payment</h2>
+<!-- Header Section Begin -->
+     <header class="header-section">
+        <div class="menu-item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="logo">
+                            <a href="./index.html">
+                                <img src="/assets/userAssets/img/logo.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="nav-menu">
+                            <nav class="mainmenu">
+                                <ul>
+                                    <li class="active"><a href="/">Home</a></li>
+                                    <li><a href="/allrooms">Rooms</a></li>
+                                    <li><a href="./about-us.html">About Us</a></li>
+                                    <li><a href="./pages.html">Pages</a>
+                                        <ul class="dropdown">
+                                            <li><a href="./room-details.html">Room Details</a></li>
+                                            <li><a href="./blog-details.html">Blog Details</a></li>
+                                            <li><a href="#">Family Room</a></li>
+                                            <li><a href="#">Premium Room</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="./blog.html">News</a></li>
+                                    <li><a href="./contact.html">Contact</a></li>
+                                </ul>
+                            </nav>
+                            <div class="nav-right search-switch">
+                                <i class="icon_search"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>  --}}
-    {{!-- </div> --}}
-    <!-- Room Details Section Begin -->
+        </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    </header> 
+  
     
- 
-<form action="/dopayment" method="post" name="form">
+<form action="/dopayment" method="post" name="form" class="pay-form">
     <section class="blog-details-hero set-bg" style="position: relative;
     width: 100%; 
     height: 621px; 
@@ -27,32 +57,19 @@
             <div class="row">
                 <div class="col-lg-10 offset-lg-1">
                     <div class="bd-hero-text" >
-<button type="submit" style="height: 55px;background:#dfa974; color:#ffffff; width: 320px; padding: 17px 16px; font-size: 15px; font-weight: 700;">PAYMENT NOW</button>
-                            <h2><tr>
-                                        <td class="r-o">Floor :</td>
-                                        <td>{{roomDetails.Floor}}</td>
-                                    </tr>
-                                    <br>
-                                    <tr>
-                                        <td class="r-o">Capacity :</td>
-                                        <td>{{roomDetails.Capacity}}</td>
-                                    </tr>
-                                    <br>
-                                    <tr>
-                                        <td class="r-o">Room Number :</td>
-                                        <td>{{roomDetails.Roomnumber}}</td>
-                                    </tr>
-                                    <br>
-                                    <tr>
-                                        <td class="r-o">Room Type :</td>
-                                        <td>{{roomDetails.RoomType}}</td>
-                                    </tr></span></h2> 
+                        <button type="submit" value="Pay Now" style="height: 55px;background:#dfa974; color:#ffffff; width: 320px; padding: 17px 16px; font-size: 15px; font-weight: 700;">PAYMENT NOW</button>
+                    
+				<input type="hidden" name="name" value="shirt">
+				<input type="hidden" name="price" value="500">
+                 
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    </form>
+    </form> 
+
+   
 
     
     <!-- Room Details Section End -->
@@ -149,3 +166,55 @@
     <script src="js/main.js"></script>
 </body>
 </html>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+$(document).ready(function(){
+    $('.payment-form').submit(function(e){
+        e.preventDefault();
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url: "/dopayment",
+            type: "POST",
+            data: formData,
+            success: function(res){
+                if(res.success){
+                    var options = {
+                        "key": res.key_id,
+                        "amount": res.amount * 100, // Convert amount to smallest currency unit (paisa for INR)
+                        "currency": "INR", // Currency should be in uppercase
+                        "name": res.product_name,
+                        "description": res.description,
+                        "order_id": res.order_id,
+                        "handler": function (response){
+                            alert("Payment Succeeded");
+                        },
+                        "prefill": {
+                            "name": res.name,
+                        },
+                        "notes" : {
+                            "description": res.description
+                        },
+                        "theme": {
+                            "color": "#2300a3"
+                        }
+                    };
+                    var razorpayObject = new Razorpay(options);
+                    razorpayObject.on('payment.failed', function (response){
+                        alert("Payment Failed");
+                    });
+                    razorpayObject.open();
+                }
+                else{
+                    alert(res.msg);
+                }
+            }
+        });
+    });
+});
+</script>
+
+
