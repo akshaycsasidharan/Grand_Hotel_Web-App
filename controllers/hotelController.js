@@ -30,9 +30,9 @@ module.exports = {
     const response = await hotelHelper.hotelLogin(req.body);
     console.log("Response:", response);
 
-    if (response.status == 200 && !response.user.blocked ) {
+    if (response.status == 200 && !response.hotel.blocked ) {
       // Send the token as a cookie or in response headers
-      res.cookie('token', response.token, { httpOnly: true });
+      // res.cookie('token', response.token, { httpOnly: true });
       res.status(200).redirect("hotel/hotelDashboard"); // Corrected redirection to the dashboard page
     } else {
       res.redirect("/"); // Redirect to login page if login fails

@@ -61,7 +61,10 @@ login: (req, res, next) => {
   },
 
   allrooms:(req,res) => {
-    userHelper.showrooms().then((roomsdata) => {
+    let id = req.params.id;
+    console.log("#####333hoteid",id);
+    userHelper.showrooms(id).then((roomsdata) => {
+      console.log("$$$$$$$$$$$$$$",roomsdata);
       res.render("user/allRooms",{
         roomsdata
       });

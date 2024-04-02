@@ -82,23 +82,26 @@ module.exports = {
     });
   },
 
-  showrooms: async () => {
-    return new Promise(async (resolve, reject) => {
-      const db = await connectToMongoDB();
+  showrooms: async (id) => {
+    try {
+        const db = await connectToMongoDB();
+        const hotelrooms = await db
+            .collection(collection.ROOMS_COLLECTION)
+            .find({  hotelId: id })
+            .toArray();
+        return hotelrooms;
+    } catch (error) {
+        console.error("Error fetching hotel rooms:", error);
+        throw error; // Propagate the error to the caller
+    }
+},
 
-      let hotelroom = await db
-        .collection(collection.HOTEL_COLLECTION)
-        .find({ deleted: false })
-        .toArray();
-      resolve(hotelroom);
-    });
-  },
 
   roomsDetails: async (roomid) => {
     try {
       const db = await connectToMongoDB();
       const roomDetails = await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .findOne({ _id: new ObjectId(roomid) });
       return roomDetails;
     } catch (error) {

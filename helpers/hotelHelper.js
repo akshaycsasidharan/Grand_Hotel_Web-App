@@ -22,6 +22,7 @@ module.exports = {
       }
 
       let hotelsignupData = {
+        hotelId:Date.now().toString(16),
         name: hotelsData.name,
         email: hotelsData.email,
         password: encryptedpassword,
@@ -48,15 +49,17 @@ module.exports = {
   hotelLogin: async (hotelloginData) => {
     try {
       const db = await connectToMongoDB();
-      const user = await db
+      const hotel = await db
         .collection(collection.HOTEL_COLLECTION)
         .findOne({ email: hotelloginData.email });
   
-      if (user) {
-        const status = await bcrypt.compare(hotelloginData.password, user.password);
+      if (hotel) {
+        console.log("%%%%%%%5",hotel);
+        const status = await bcrypt.compare(hotelloginData.password, hotel.password);
         if (status) {
+          console.log("##########",status);
           const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1d' });
-          return { user, status: true, token }; // Return token along with other data
+          return { hotel, status: true, token }; // Return token along with other data
         } else {
           return { status: 406, message: "Invalid email/password" };
         }
