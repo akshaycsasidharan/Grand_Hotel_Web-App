@@ -112,8 +112,6 @@ login: (req, res, next) => {
         res.status(500).send("Error fetching room details");
     }
   },
-
-
   
    payment : async (req, res) => {
     try {
@@ -141,6 +139,23 @@ login: (req, res, next) => {
     } catch (error) {
       console.log(error.message);
     }
+  },
+
+
+  checkavailabilty:(req,res) => {
+    console.log(("@@@@@@@@@@@@@@@@",req.body));
+
+    try {
+      userHelper.dochecking(req.body).then((result) =>{
+
+        console.log("^^^^^^^^^^^^^^^",result);
+
+        res.redirect("/booking");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   

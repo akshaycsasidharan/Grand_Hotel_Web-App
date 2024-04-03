@@ -14,7 +14,9 @@ const {
   booking,
   bookingrooms,
   paymentpage,
-  payment
+  payment,
+  checkavailabilty
+
 
 } = require("../controllers/userController");
 
@@ -33,7 +35,7 @@ router.get("/allrooms/:id",allrooms);
 
 router.get("/room/:id",room);
 
-router.get("/booking/:id",booking);
+router.get("/booking",booking);
 
 router.post("/bookingroom",bookingrooms);
 
@@ -41,6 +43,7 @@ router.get("/payment/:id", paymentpage);
 
 router.post("/dopayment",payment);
 
+router.post("/checkavailability",checkavailabilty);
 
 
 module.exports = router;
