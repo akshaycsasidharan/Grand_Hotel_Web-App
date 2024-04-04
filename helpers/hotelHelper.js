@@ -46,63 +46,67 @@ module.exports = {
   },
 
 
-  hotelLogin: async (hotelloginData) => {
-    try {
-      const db = await connectToMongoDB();
-      const hotel = await db
-        .collection(collection.HOTEL_COLLECTION)
-        .findOne({ email: hotelloginData.email });
+  // hotelLogin: async (hotelloginData) => {
+  //   try {
+  //     const db = await connectToMongoDB();
+  //     const hotel = await db
+  //       .collection(collection.HOTEL_COLLECTION)
+  //       .findOne({ email: hotelloginData.email });
   
-      if (hotel) {
-        console.log("%%%%%%%5",hotel);
-        const status = await bcrypt.compare(hotelloginData.password, hotel.password);
-        if (status) {
-          console.log("##########",status);
-          const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1d' });
-          return { hotel, status: true, token }; // Return token along with other data
-        } else {
-          return { status: 406, message: "Invalid email/password" };
-        }
-      } else {
-        return { status: 404, message: "User not found" };
-      }
-    } catch (error) {
-      throw error;
-    }
-  },
+  //     if (user) {
+  //       console.log("%%%%%%%5",hotel);
+  //       const status = await bcrypt.compare(hotelloginData.password, user.password);
+  //       if (status) {
+  //         console.log("##########",status);
+  //         const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1d' });
+  //         console.log(('DSAFDfsd%%%%%%%%%%%%5',token));
+  //         return { user, status: true, token }; // Return token along with other data
+  //       } else {
+  //         return { status: 406, message: "Invalid email/password" };
+  //       }
+  //     } else {
+  //       return { status: 404, message: "User not found" };
+  //     }
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // },
   
 
-// hotelLogin: (hotelloginData) => {
-//   return new Promise(async (resolve, reject) => {
-//     let loginStatus = false;
-//     let response = {};
-//     let user = await db
-//       .get()
-//       .collection(collection.HOTEL_COLLECTION)
-//       .findOne({ email: hotelloginData.email });
-//     if (user) {
-//       if (user.block === false) {
-//         bcrypt.compare(hotelloginData.password, user.password).then((status) => {
-//           if (status) {
-//             console.log("login success");
-//             response.user = user;
-//             response.status = true;
-//             resolve(response);
-//           } else {
-//             console.log("login failed");
-//             resolve({ status: false });
-//           }
-//         });
-//       } else {
-//         console.log("blocke userrrrrrrrrrr");
-//         resolve({ block: true });
-//       }
-//     } else {
-//       console.log("user not available");
-//       resolve({ status: false });
-//     }
-//   });
-// },
+  hotelLogin: (loginData) => {
+    return new Promise(async (resolve, reject) => {
+      let loginstatus = false;
+      let response = {};
+      const db = await connectToMongoDB();
+      let user = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .findOne({ email: loginData.email });
+
+      if (user) {
+        bcrypt.compare(loginData.password, user.password).then((status) => {
+          if (status) {
+            console.log("login success");
+            const usertoken = jwt.sign(
+              { userId: user._id, useremail: user.email },
+              "secret",
+              { expiresIn: "24h" }
+            );
+            response.token = usertoken;
+            response.user = user;
+            response.status = true;
+            response.message = "Login Success";
+            resolve(response);
+          } else {
+            response.message = "the user cant login";
+            resolve({ status: false });
+          }
+        });
+      } else {
+        resolve({ status: false });
+      }
+    });
+  },
+
 
 
 

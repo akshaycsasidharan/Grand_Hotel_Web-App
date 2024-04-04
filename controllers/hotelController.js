@@ -25,48 +25,44 @@ module.exports = {
     res.render("hotel/hotelLogin");
   },
 
-  hotellogin: async (req, res) => {
-  try {
-    const response = await hotelHelper.hotelLogin(req.body);
-    console.log("Response:", response);
 
-    if (response.status == 200 && !response.hotel.blocked ) {
-      // Send the token as a cookie or in response headers
-      // res.cookie('token', response.token, { httpOnly: true });
-      res.status(200).redirect("hotel/hotelDashboard"); // Corrected redirection to the dashboard page
-    } else {
-      res.redirect("/"); // Redirect to login page if login fails
-    }
+//   hotellogin: async (req, res) => {
+//     try {
+//         const response = await hotelHelper.hotelLogin(req.body);
+//         console.log("Response:", response);
+
+//         if (response.status == 200 && !response.hotel.blocked ) {
+//             // Send the token as a cookie or in response headers
+//             res.cookie('token', response.token, { httpOnly: true });
+//             res.status(200).redirect("/hoteldashboard"); // Corrected redirection to the dashboard page
+//         } else {
+//             res.redirect("/"); // Redirect to login page if login fails
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.redirect("/error-page");
+//     }
+// },
+
+
+
+hotellogin: (req, res, next) => {
+  try {
+    hotelHelper.hotelLogin(req.body).then((response) => {
+      console.log("#############33",response);
+      if (response.status) {
+        res.render("hotel/hotelDashboard");
+      } else {
+        res.render("/", { error: response.message });
+      }
+    });
   } catch (error) {
     console.log(error);
-    res.redirect("/error-page");
   }
 },
 
+
   
-  
-
-
-  // hotellogin: (req, res) => {
-  //   hotelHelper.hotelLogin(req.body).then((response) => {
-  //     if (response.status) {
-  //       req.session.loggedIn = true;
-  //       req.session.user = response.user;
-  //       return  res.render("hotel/hotelDashboard");
-
-  //     } else if (response.block) {
-  //       req.session.block = true;
-  //       res.redirect("/hotel");
-  //     } else {
-  //       req.session.loginErr = true;
-  //       res.redirect("/hotel");
-  //     }
-
-  //   });
-
-  // },
-
-
   
   
   hoteldashboard: (req, res, next) => {
