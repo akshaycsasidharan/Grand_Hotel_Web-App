@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 
 
 module.exports = {
+
   hoteldoSignup: (hotelsData,file) => {
     return new Promise(async (resolve, reject) => {
       console.log("!!!!!!!!!!!!!!!11hotelsssdataaaa", hotelsData);
@@ -22,7 +23,9 @@ module.exports = {
       }
 
       let hotelsignupData = {
+
         hotelId:Date.now().toString(16),
+
         name: hotelsData.name,
         email: hotelsData.email,
         password: encryptedpassword,
@@ -72,7 +75,6 @@ module.exports = {
   //   }
   // },
   
-
   hotelLogin: (loginData) => {
     return new Promise(async (resolve, reject) => {
       let loginstatus = false;
@@ -86,12 +88,12 @@ module.exports = {
         bcrypt.compare(loginData.password, user.password).then((status) => {
           if (status) {
             console.log("login success");
-            const usertoken = jwt.sign(
-              { userId: user._id, useremail: user.email },
-              "secret",
-              { expiresIn: "24h" }
-            );
-            response.token = usertoken;
+            // const usertoken = jwt.sign(
+            //   { userId: user._id, useremail: user.email },
+            //   "secret",
+            //   { expiresIn: "24h" }
+            // );
+            // response.token = usertoken;
             response.user = user;
             response.status = true;
             response.message = "Login Success";
@@ -107,9 +109,6 @@ module.exports = {
     });
   },
 
-
-
-
   showcustomers: async () => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -121,11 +120,14 @@ module.exports = {
     });
   },
 
-
   addrooms: (roomdata, file) => {
     // console.log("3#########@@@@@@@@@@2",roomdata);
     return new Promise(async (resolve, reject) => {
       let dataroom = {
+
+
+        // roomId:Date.now().toString(16),
+
         Roomnumber: roomdata.Roomnumber,
         RoomType: roomdata.RoomType,
         Floor: roomdata.Floor,
@@ -138,7 +140,7 @@ module.exports = {
       const db = await connectToMongoDB();
 
       const result = await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .insertOne(dataroom)
         .then((data) => {
           resolve(data.insertedId);
@@ -158,7 +160,7 @@ module.exports = {
       const db = await connectToMongoDB();
 
       const result = await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.FACILITY_COLLECTION)
         .insertOne(datafacilities)
         .then((data) => {
           resolve(data.insertedId);
@@ -171,7 +173,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       let roomsview = db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .find({ deleted: false })
         .toArray();
       resolve(roomsview);
@@ -182,7 +184,7 @@ module.exports = {
   viewfacility: () => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
-    let facilitiesview = db.collection(collection.HOTEL_COLLECTION)
+    let facilitiesview = db.collection(collection.FACILITY_COLLECTION)
         .find({ facility: false })
         .toArray();
         resolve(facilitiesview)
@@ -194,7 +196,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .updateOne({ _id: new ObjectId(deleteid) }, { $set: { deleted: true } })
         .then((result) => {
           if (result.matchedCount > 0) {
@@ -214,7 +216,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .findOne({ _id: new ObjectId(roomid) })
         .then((result) => {
           if (result) {
@@ -234,7 +236,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .updateOne(
           { _id: new ObjectId(userid) },
           {
@@ -259,7 +261,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.FACILITY_COLLECTION)
         .findOne({ _id: new ObjectId(facilityid) })
         .then((result) => {
           if (result) {
@@ -279,7 +281,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.FACILITY_COLLECTION)
         .updateOne(
           { _id: new ObjectId(facilityid) },
           {
@@ -301,7 +303,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.FACILITY_COLLECTION)
         .updateOne(
           { _id: new ObjectId(facilityid) },
           { $set: { facility: true } }

@@ -3,5 +3,6 @@ module.exports = {
     HOTEL_COLLECTION : 'hotels',
     ROOMS_COLLECTION : "rooms",
     CHECKING_COLLECTION : "checking",
-    BOOKING_COLLECTION : "booking"
+    BOOKING_COLLECTION : "booking",
+    FACILITY_COLLECTION : "facility"
 }

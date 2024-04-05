@@ -53,6 +53,7 @@ login: (req, res, next) => {
   }
 },
 
+
   homepage:(req,res) => {
     userHelper.showhotels().then((hotelssdata) => {
       res.render("user/homePage",{
@@ -60,6 +61,7 @@ login: (req, res, next) => {
       });
     })
   },
+
 
   allrooms:(req,res) => {
     let id = req.params.id;
@@ -72,6 +74,7 @@ login: (req, res, next) => {
     })
 
   },
+
 
   room: (req, res) => {
     let id = req.params.id;
@@ -98,6 +101,7 @@ login: (req, res, next) => {
     }
   },
   
+
   bookingrooms: (req, res) => {
     try {
         userHelper.dobooking(req.body).then((result) => {
@@ -108,6 +112,7 @@ login: (req, res, next) => {
         console.log(error);
     }
 },
+
 
 paymentpage:(req,res)=>{
   let id = req.params.id;
@@ -120,8 +125,6 @@ paymentpage:(req,res)=>{
       res.status(500).send("Error fetching room details");
   }
 },
-
-
  
   checkavailabilty: async (req, res) => {
     console.log("Checking availability for dates:", req.body);

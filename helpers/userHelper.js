@@ -97,6 +97,7 @@ module.exports = {
     }
   },
 
+  
   roomsDetails: async (roomid) => {
     try {
       const db = await connectToMongoDB();

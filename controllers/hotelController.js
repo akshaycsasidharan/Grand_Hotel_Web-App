@@ -60,10 +60,6 @@ hotellogin: (req, res, next) => {
     console.log(error);
   }
 },
-
-
-  
-  
   
   hoteldashboard: (req, res, next) => {
     res.render("hotel/hotelDashboard");
@@ -161,6 +157,7 @@ hotellogin: (req, res, next) => {
       res.redirect("/hotel/facilities");
     });
   },
+  
 
   customers: (req, res) => {
     hotelHelper.showcustomers().then(async (customerdata) => {
