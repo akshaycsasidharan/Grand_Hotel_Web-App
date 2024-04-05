@@ -170,8 +170,9 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+
 $(document).ready(function(){
-    $('.payment-form').submit(function(e){
+    $('.pay-form').submit(function(e){
         e.preventDefault();
 
         var formData = $(this).serialize();

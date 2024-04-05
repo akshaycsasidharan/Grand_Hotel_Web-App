@@ -5,6 +5,8 @@ const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
+  
+
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
       //   console.log(userData);
@@ -108,25 +110,49 @@ module.exports = {
   },
 
   dobooking: (bookingdata) => {
+    // Function to generate array of dates between checkin and checkout
+    function generateDateArray(checkin, checkout) {
+        let datesArray = [];
+        let currentDate = new Date(checkin);
+        const endDate = new Date(checkout);
+        
+        // Loop through each day between checkin and checkout
+        while (currentDate <= endDate) {
+            datesArray.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        return datesArray;
+    }
+
     return new Promise(async (resolve, reject) => {
-      let datasbooking = {
-        name: bookingdata.name,
-        email: bookingdata.email,
-        checkin: bookingdata.checkin,
-        checkout: bookingdata.checkout,
-        booked: true,
-      };
+        let datasbooking = {
+            name: bookingdata.name,
+            email: bookingdata.email,
+            checkin: bookingdata.checkin,
+            checkout: bookingdata.checkout,
+            booked: true,
+        };
 
-      const db = await connectToMongoDB();
+        const db = await connectToMongoDB();
 
-      await db
-        .collection(collection.BOOKING_COLLECTION)
-        .insertOne(datasbooking)
-        .then((data) => {
-          resolve(data.insertedId);
-        });
+        // Generate array of dates between checkin and checkout
+        let datesArray = generateDateArray(bookingdata.checkin, bookingdata.checkout);
+
+        // Add the array of dates to datasbooking object
+        datasbooking.datesArray = datesArray;
+
+        await db
+            .collection(collection.BOOKING_COLLECTION)
+            .insertOne(datasbooking)
+            .then((data) => {
+                resolve(data.insertedId);
+            })
+            .catch((error) => {
+                reject(error);
+            });
     });
-  },
+},
+
 
   dochecking: (checkingdata) => {
     return new Promise(async (resolve, reject) => {
@@ -158,8 +184,7 @@ module.exports = {
             reject(error);
         }
     });
-}
-
+},
 
 
   // paymentDetails:async (paymentid) => {
@@ -173,4 +198,7 @@ module.exports = {
   //     throw error;
   //   }
   // },
+
+
+
 };
