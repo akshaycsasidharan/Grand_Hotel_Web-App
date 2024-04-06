@@ -75,12 +75,16 @@ hotellogin: (req, res, next) => {
 
   addrooms: (req, res) => {
     try {
-      hotelHelper.addrooms(req.body, req.file).then((response) => {
-        console.log("%%%%%%%%%%%%%%%%%", response);
+      hotelHelper.addrooms(req.body, req.file).then((insertedId) => {
+        console.log("Room inserted with ID:", insertedId);
         res.redirect("/hotel/rooms");
+      }).catch((error) => {
+        console.error("Error adding room:", error);
+        res.status(500).send("Error adding room");
       });
     } catch (error) {
       console.log(error);
+      res.status(500).send("Error adding room");
     }
   },
 

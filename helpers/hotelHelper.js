@@ -140,7 +140,7 @@ module.exports = {
       const db = await connectToMongoDB();
 
       const result = await db
-        .collection(collection.ROOMS_COLLECTION)
+        .collection(collection.HOTEL_COLLECTION)
         .insertOne(dataroom)
         .then((data) => {
           resolve(data.insertedId);

@@ -3,9 +3,17 @@ var collection = require("../config/collection");
 const bcrypt = require("bcrypt");
 const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
+const Razorpay = require("razorpay");
+
+
+const razorpayInstance = new Razorpay({
+  key_id: "rzp_test_8cTRaG2qyqmSGG",
+  key_secret: "lPhtD4Guxq3dUurYJLs9OwXi"
+});
+
 
 module.exports = {
-  
+
 
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
@@ -36,6 +44,7 @@ module.exports = {
         });
     });
   },
+
 
   doLogin: (loginData) => {
     return new Promise(async (resolve, reject) => {
@@ -71,6 +80,7 @@ module.exports = {
     });
   },
 
+
   showhotels: async () => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -83,11 +93,14 @@ module.exports = {
     });
   },
 
+
+
   showrooms: async (id) => {
+
     try {
       const db = await connectToMongoDB();
       const hotelrooms = await db
-        .collection(collection.ROOMS_COLLECTION)
+        .collection(collection.HOTEL_COLLECTION)
         .find({ hotelId: id })
         .toArray();
       return hotelrooms;
@@ -98,17 +111,19 @@ module.exports = {
   },
 
   
+
   roomsDetails: async (roomid) => {
     try {
       const db = await connectToMongoDB();
       const roomDetails = await db
-        .collection(collection.ROOMS_COLLECTION)
+        .collection(collection.HOTEL_COLLECTION)
         .findOne({ _id: new ObjectId(roomid) });
       return roomDetails;
     } catch (error) {
       throw error;
     }
   },
+
 
   dobooking: (bookingdata) => {
     // Function to generate array of dates between checkin and checkout
@@ -188,17 +203,56 @@ module.exports = {
 },
 
 
-  // paymentDetails:async (paymentid) => {
-  //   try {
-  //     const db = await connectToMongoDB();
-  //     const paymentDetails = await db
-  //       .collection(collection.HOTEL_COLLECTION)
-  //       .findOne({ _id: new ObjectId(paymentid) });
-  //     return paymentDetails;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
+payment: async (name, price) => {
+  
+  try {
+      // Create options object for Razorpay order
+      const options = {
+          amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
+          currency: 'INR',
+          receipt: 'razorUser@gmail.com',
+          payment_capture: '1' // Automatically capture payments
+      };
+
+      // Create Razorpay order
+      const order = await new Promise((resolve, reject) => {
+          razorpayInstance.orders.create(options, (err, order) => {
+              if (err) {
+                  reject(err);
+              } else {
+                  resolve(order);
+              }
+          });
+      });
+
+      // If order creation is successful, save payment details to MongoDB
+      const paymentDetails = {
+          name: name,
+          amount: price,
+          order_id: order.id,
+          status: 'Pending' // Initial status
+      };
+
+      // Connect to MongoDB
+      const db = await connectToMongoDB();
+
+      // Insert payment details into MongoDB payment collection
+      await db.collection(collection.PAYMENT_COLLECTION).insertOne(paymentDetails);
+
+      // Return order details
+      return {
+          success: true,
+          msg: 'Order Created',
+          order_id: order.id,
+          amount: options.amount,
+          key_id: "rzp_test_8cTRaG2qyqmSGG",
+          product_name: name
+      };
+  } catch (error) {
+      console.log(error.message);
+      throw error;
+  }
+}
 
 
 

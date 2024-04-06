@@ -161,36 +161,22 @@ paymentpage:(req,res)=>{
 },
 
 
-   payment : async (req, res) => {
-    try {
-      const amount = req.body.price * 100; // Correct variable name
-      const options = {
-        amount: amount, // Correct variable name
-        currency: 'INR',
-        receipt: 'razorUser@gmail.com'
-      };
-  
-      razorpayInstance.orders.create(options, (err, order) => {
-        if (!err) {
-          res.status(200).send({
-            success: true,
-            msg: 'Order Created',
-            order_id: order.id,
-            amount: amount, // Correct variable name
-            key_id: "rzp_test_8cTRaG2qyqmSGG",
-            product_name: req.body.name,
-          });
-        } else {
-          res.status(400).send({ success: false, msg: 'Something went wrong!' });
-        }
-      });
-    } catch (error) {
+payment: async (req, res) => {
+  try {
+    
+      const { name, price } = req.body;
+
+      const paymentResult = await userHelper.payment(name, price);
+
+      // Send response back to client
+      res.status(200).send(paymentResult);
+  } catch (error) {
       console.log(error.message);
-    }
+      // Handle error
+      res.status(500).send({ success: false, msg: 'Something went wrong!' });
+  }
+}
 
-  },
-
-  
 
 
 
