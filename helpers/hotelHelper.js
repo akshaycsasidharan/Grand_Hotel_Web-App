@@ -120,6 +120,7 @@ module.exports = {
     });
   },
 
+  
   addrooms: (roomdata, file) => {
     // console.log("3#########@@@@@@@@@@2",roomdata);
     return new Promise(async (resolve, reject) => {
@@ -140,7 +141,7 @@ module.exports = {
       const db = await connectToMongoDB();
 
       const result = await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .insertOne(dataroom)
         .then((data) => {
           resolve(data.insertedId);
@@ -320,4 +321,6 @@ module.exports = {
         });
     });
   },
+
+
 };

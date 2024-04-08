@@ -108,6 +108,7 @@ hotellogin: (req, res, next) => {
     });
   },
 
+
   facilitypage: (req, res) => {
     console.log("###########33", req.body);
 
@@ -118,6 +119,7 @@ hotellogin: (req, res, next) => {
     });
   },
 
+  
   editrooms: (req, res) => {
     let id = req.params.id;
 

@@ -100,7 +100,7 @@ module.exports = {
     try {
       const db = await connectToMongoDB();
       const hotelrooms = await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .find({ hotelId: id })
         .toArray();
       return hotelrooms;
@@ -116,7 +116,7 @@ module.exports = {
     try {
       const db = await connectToMongoDB();
       const roomDetails = await db
-        .collection(collection.HOTEL_COLLECTION)
+        .collection(collection.ROOMS_COLLECTION)
         .findOne({ _id: new ObjectId(roomid) });
       return roomDetails;
     } catch (error) {

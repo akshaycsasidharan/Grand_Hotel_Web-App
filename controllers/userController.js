@@ -72,7 +72,6 @@ login: (req, res, next) => {
         roomsdata
       });
     })
-
   },
 
 
