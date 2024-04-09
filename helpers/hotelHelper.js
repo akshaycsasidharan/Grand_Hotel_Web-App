@@ -122,40 +122,40 @@ module.exports = {
 
   
   addrooms: (roomdata, file) => {
-    // console.log("3#########@@@@@@@@@@2",roomdata);
     return new Promise(async (resolve, reject) => {
-      let dataroom = {
+        let dataroom = {
+            Roomnumber: roomdata.Roomnumber,
+            RoomType: roomdata.RoomType,
+            Floor: roomdata.Floor,
+            Price: roomdata.Price,
+            Capacity: roomdata.Capacity,
+            Image: file.filename,
+            deleted: false,
+        };
 
+        const db = await connectToMongoDB();
 
-        // roomId:Date.now().toString(16),
-
-        Roomnumber: roomdata.Roomnumber,
-        RoomType: roomdata.RoomType,
-        Floor: roomdata.Floor,
-        Price:roomdata.Price,
-        Capacity: roomdata.Capacity,
-        Image: file.filename,
-        deleted: false,
-      };
-
-      const db = await connectToMongoDB();
-
-      const result = await db
-        .collection(collection.ROOMS_COLLECTION)
-        .insertOne(dataroom)
-        .then((data) => {
-          resolve(data.insertedId);
-        });
+        db.collection(collection.ROOMS_COLLECTION)
+            .insertOne(dataroom)
+            .then((data) => {
+                resolve(data.insertedId);
+            })
+            .catch((error) => {
+                reject(error);
+            });
     });
-  },
+},
+
 
 
   addfacility: (facilitiesdata, file) => {
+
     return new Promise(async (resolve, reject) => {
       let datafacilities = {
         Facilities: facilitiesdata.Facilities,
         Image: file.filename,
         facility:false
+
       };
 
       const db = await connectToMongoDB();

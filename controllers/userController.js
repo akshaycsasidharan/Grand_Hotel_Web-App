@@ -63,16 +63,22 @@ login: (req, res, next) => {
   },
 
 
-  allrooms:(req,res) => {
-    let id = req.params.id;
-    console.log("#####333hoteid",id);
-    userHelper.showrooms(id).then((roomsdata) => {
-      console.log("$$$$$$$$$$$$$$",roomsdata);
-      res.render("user/allRooms",{
-        roomsdata
-      });
-    })
-  },
+  allrooms: (req, res) => {
+    let hotelId = req.params.id; // Fetch the hotelId from route parameters
+    try {
+        userHelper.showrooms(hotelId).then((roomsdata) => {
+            console.log("$$$$$$$$$$$$$$", roomsdata);
+            res.render("user/allRooms", {
+                roomsdata
+            });
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching rooms data");
+    }
+},
+
+
 
 
   room: (req, res) => {

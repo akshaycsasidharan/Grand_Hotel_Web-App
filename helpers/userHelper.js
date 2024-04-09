@@ -95,20 +95,20 @@ module.exports = {
 
 
 
-  showrooms: async (id) => {
-
+  showrooms: async (hotelId) => {
     try {
-      const db = await connectToMongoDB();
-      const hotelrooms = await db
-        .collection(collection.ROOMS_COLLECTION)
-        .find({ hotelId: id })
-        .toArray();
-      return hotelrooms;
+        const db = await connectToMongoDB();
+        const hotelrooms = await db
+            .collection(collection.ROOMS_COLLECTION)
+            .find({ hotelId: hotelId })
+            .toArray();
+        return hotelrooms;
     } catch (error) {
-      console.error("Error fetching hotel rooms:", error);
-      throw error; // Propagate the error to the caller
+        console.error("Error fetching hotel rooms:", error);
+        throw error; // Propagate the error to the caller
     }
-  },
+},
+
 
   
 
