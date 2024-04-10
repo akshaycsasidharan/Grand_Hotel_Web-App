@@ -1,8 +1,11 @@
+   {{hoteldetail}}
+   
    <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="assets/imgs/theme/logo.svg" class="logo" alt="HOTEL PANEL">
+                <p>{{hoteldetail.name}}</p>
+                {{!-- <img src="/images/sign-images/{{hoteldetail.Image}}"class="logo" alt="{{hoteldetail.name}}"> --}}
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
@@ -26,7 +29,7 @@
                 </li>
                 
                <li>
-                    <a class="menu-link" href="rooms"> <i class="icon material-icons md-shopping_cart"></i>
+                    <a class="menu-link" href="rooms/{{hoteldetail.hotelId}}"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Rooms</span>
                     </a>
                 </li>

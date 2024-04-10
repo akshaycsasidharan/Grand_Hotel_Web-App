@@ -49,9 +49,11 @@ module.exports = {
 hotellogin: (req, res, next) => {
   try {
     hotelHelper.hotelLogin(req.body).then((response) => {
-      console.log("#############33",response);
+      console.log("#############responseee",response);
       if (response.status) {
-        res.render("hotel/hotelDashboard");
+        let hoteldetail = response.user;
+        // console.log("##########response.user",response.user);
+        res.render("hotel/hotelDashboard",{hoteldetail});
       } else {
         res.render("/", { error: response.message });
       }
@@ -66,6 +68,8 @@ hotellogin: (req, res, next) => {
   },
 
   addroomspage : (req, res) => {
+    let addid = req.params.id;
+    console.log("addid",addid);
     res.render("hotel/addRooms");
   },
 
@@ -101,9 +105,14 @@ hotellogin: (req, res, next) => {
   },
 
   roomspage: (req, res) => {
-    hotelHelper.viewrooms().then(async (viewdata) => {
+
+    let hoteldetails = req.params.id;
+    console.log("hoteldetailssss",hoteldetails);
+    hotelHelper.viewrooms(hoteldetails).then(async (viewdata) => {
+      console.log("hoteldetails",hoteldetails);
+      // console.log("iddddddd",id);
       res.render("hotel/rooms", {
-        viewdata,
+        viewdata
       });
     });
   },

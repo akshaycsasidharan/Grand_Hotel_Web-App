@@ -124,6 +124,8 @@ module.exports = {
   addrooms: (roomdata, file) => {
     return new Promise(async (resolve, reject) => {
         let dataroom = {
+
+            hotelId:req.params.id,
             Roomnumber: roomdata.Roomnumber,
             RoomType: roomdata.RoomType,
             Floor: roomdata.Floor,
@@ -170,12 +172,12 @@ module.exports = {
   },
 
 
-  viewrooms: () => {
+  viewrooms: (id) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       let roomsview = db
         .collection(collection.ROOMS_COLLECTION)
-        .find({ deleted: false })
+        .find({ deleted: false ,hotelId:id})
         .toArray();
       resolve(roomsview);
     });

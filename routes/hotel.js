@@ -49,7 +49,7 @@ router.get("/hoteldashboard",hoteldashboard);
 
 router.get("/customers",customers);
 
-router.get("/rooms",roomspage);
+router.get("/rooms/:id",roomspage);
 
 router.post("/delete/:id",deleteroom);
 
@@ -57,9 +57,9 @@ router.post("/deleted/:id",deletefacilities);
 
 router.get("/facilities",facilitypage);
 
-router.get("/addrooms",addroomspage);
+router.get("/addrooms/:id",addroomspage);
 
-router.post("/addrooms",upload.single('image'),addrooms);
+router.post("/addrooms/:id",upload.single('image'),addrooms);
 
 router.get("/addfacilities",addfacilitiespage);
 
