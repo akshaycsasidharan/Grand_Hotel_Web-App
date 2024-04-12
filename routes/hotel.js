@@ -1,8 +1,7 @@
 var express = require("express");
 var router = express.Router();
-// const  verifyhotelToken  = require("../middleware/hotelMiddleware");
-// const jwt = require("jsonwebtoken");
 
+const {verifyHotel ,notVerifyHotel} = require("../middleware/hotelMiddleware");
 
 
 const {

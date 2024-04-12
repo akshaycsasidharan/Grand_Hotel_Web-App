@@ -34,10 +34,9 @@
                     <h2 class="content-title card-title">All Room</h2>
                 </div>
                  <div>
-                    {{#each hoteldetails}}
-                    <p>hotelId {{hoteldetails.hotelId}}</p>
-                    {{/each}}
-                    <a href="/hotel/addrooms/{{hoteldetails.hotelId}}" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Add Room</a>
+                    <p>hotelId {{hotel.hotelId}}</p>
+
+                    <a href="/hotel/addrooms/{{hotel.hotelId}}" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Add Room</a>
                 </div>
             </div>
             <div class="card mb-4">

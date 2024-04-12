@@ -1,5 +1,5 @@
 const { CURSOR_FLAGS } = require("mongodb");
-const { render } = require("../app");
+const { render, response } = require("../app");
 const hotelHelper = require("../helpers/hotelHelper");
 const multer = require("multer");
 
@@ -22,7 +22,19 @@ module.exports = {
   },
 
   hotelloginPage: (req, res, next) => {
-    res.render("hotel/hotelLogin");
+    if (req.session.loggedIn) {
+      // res.render("hotel/hotelLogin");
+      return res.redirect("hotel/hotelDashboard");
+      } else {
+      res.render("hotel/hotelLogin", {
+        Hotel: true,
+        loginErr: req.session.loginErr,
+        block: req.session.block,
+      });
+      req.session.loginErr = false;
+      req.session.block = false;
+    }
+    // res.render("hotel/hotelLogin");
   },
 
 
@@ -47,30 +59,51 @@ module.exports = {
 
 
 hotellogin: (req, res, next) => {
-  try {
-    hotelHelper.hotelLogin(req.body).then((response) => {
-      console.log("#############responseee",response);
-      if (response.status) {
-        let hoteldetail = response.user;
-        // console.log("##########response.user",response.user);
-        res.render("hotel/hotelDashboard",{hoteldetail});
-      } else {
-        res.render("/", { error: response.message });
-      }
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  hotelHelper.hotelLogin(req.body).then((response) => {
+    if(response.status){
+      req.session.loggedIn = true;
+      req.session.hotel = response.hotel;
+      res.render("hotel/hotelDashboard");
+    }else {
+      req.session.loginErr = true;
+      res.render("/", { error: response.message });
+    }
+  })
+
+  // try {
+  //   hotelHelper.hotelLogin(req.body).then((response) => {
+
+  //     console.log("#############responseee",response);
+  //     if (response.status) {
+  //       let hoteldetail = response.user;
+  //       // console.log("##########response.user",response.user);
+  //       res.render("hotel/hotelDashboard",{hoteldetail});
+  //     } else {
+  //       res.render("/", { error: response.message });
+  //     }
+  //   });
+  // } catch (error) {
+  //   console.log(error);
+  // }
 },
   
   hoteldashboard: (req, res, next) => {
-    res.render("hotel/hotelDashboard");
+    let hotel = req.session.hotel;
+    console.log("hotelllllllllllll $$$$$",hotel);
+    console.log("====================== session =================",req.session);
+
+    res.render("hotel/hotelDashboard",{
+      hotel,
+      Hotel : true
+    });
   },
 
   addroomspage : (req, res) => {
-    let addid = req.params.id;
-    console.log("addid",addid);
-    res.render("hotel/addRooms");
+    let hotelId = req.params.id;
+    console.log("hotelId",hotelId);
+    res.render("hotel/addRooms",{
+      hotelId
+    });
   },
 
   addfacilitiespage: (req, res) => {
@@ -78,8 +111,14 @@ hotellogin: (req, res, next) => {
   },
 
   addrooms: (req, res) => {
+
+    console.log("addroomssssssssss ======");
+
+    let hotelId = req.params.id;
+
+    console.log("reqqqq.params.idd",req.params.id);
     try {
-      hotelHelper.addrooms(req.body, req.file).then((insertedId) => {
+      hotelHelper.addrooms(req.body, req.file,hotelId).then((insertedId) => {
         console.log("Room inserted with ID:", insertedId);
         res.redirect("/hotel/rooms");
       }).catch((error) => {
@@ -105,14 +144,17 @@ hotellogin: (req, res, next) => {
   },
 
   roomspage: (req, res) => {
-
+    console.log("##########$$#^GGFN B BN BB G");
+      let hotel = req.session.hotel;
+      console.log(("========= hotel ======",hotel));
     let hoteldetails = req.params.id;
     console.log("hoteldetailssss",hoteldetails);
     hotelHelper.viewrooms(hoteldetails).then(async (viewdata) => {
       console.log("hoteldetails",hoteldetails);
       // console.log("iddddddd",id);
       res.render("hotel/rooms", {
-        viewdata
+        viewdata,
+        hotel
       });
     });
   },

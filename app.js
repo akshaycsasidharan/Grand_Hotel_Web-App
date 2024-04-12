@@ -6,10 +6,9 @@ var logger = require("morgan");
 var hbs = require("express-handlebars");
 let Hbs = require("handlebars");
 // var fileupload = require("express-fileupload");
-var jwt = require("jsonwebtoken");
+// var jwt = require("jsonwebtoken");
 const Razorpay = require("razorpay");
 
-// var session = require("express-session");
 
 
 
@@ -19,6 +18,7 @@ var userRouter = require("./routes/user");
 var adminRouter = require("./routes/admin");
 var hotelRouter = require("./routes/hotel");
 var app = express();
+
 
 var session = require("express-session");
 
@@ -42,7 +42,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-// app.use(session({ secret: 'Key', cookie: { maxAge: 6000000 } }))
+app.use(session({ secret: 'Key', cookie: { maxAge: 6000000 } }))
 const razorpayInstance = new Razorpay({
   key_id: "rzp_test_8cTRaG2qyqmSGG",
   key_secret: "lPhtD4Guxq3dUurYJLs9OwXi"

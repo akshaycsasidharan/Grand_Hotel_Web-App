@@ -75,30 +75,28 @@ module.exports = {
   //   }
   // },
   
+
   hotelLogin: (loginData) => {
+
     return new Promise(async (resolve, reject) => {
       let loginstatus = false;
       let response = {};
       const db = await connectToMongoDB();
-      let user = await db
+      let hotel = await db
         .collection(collection.HOTEL_COLLECTION)
         .findOne({ email: loginData.email });
 
-      if (user) {
-        bcrypt.compare(loginData.password, user.password).then((status) => {
+      if (hotel) {
+        bcrypt.compare(loginData.password, hotel.password).then((status) => {
           if (status) {
             console.log("login success");
-            // const usertoken = jwt.sign(
-            //   { userId: user._id, useremail: user.email },
-            //   "secret",
-            //   { expiresIn: "24h" }
-            // );
-            // response.token = usertoken;
-            response.user = user;
+            
+            response.hotel = hotel;
             response.status = true;
             response.message = "Login Success";
             resolve(response);
           } else {
+            console.log("user not availableeee %%%%%%%%%%5%%%55");
             response.message = "the user cant login";
             resolve({ status: false });
           }
@@ -121,11 +119,11 @@ module.exports = {
   },
 
   
-  addrooms: (roomdata, file) => {
+  addrooms: (roomdata, file,hotelId) => {
     return new Promise(async (resolve, reject) => {
         let dataroom = {
 
-            hotelId:req.params.id,
+            hotelId:hotelId,
             Roomnumber: roomdata.Roomnumber,
             RoomType: roomdata.RoomType,
             Floor: roomdata.Floor,
