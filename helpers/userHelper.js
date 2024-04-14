@@ -94,7 +94,6 @@ module.exports = {
   },
 
 
-
   showrooms: async (hotelId) => {
     try {
         const db = await connectToMongoDB();
@@ -109,8 +108,6 @@ module.exports = {
     }
 },
 
-
-  
 
   roomsDetails: async (roomid) => {
     try {
@@ -171,6 +168,7 @@ module.exports = {
 
 
   dochecking: (checkingdata) => {
+
     return new Promise(async (resolve, reject) => {
         try {
             const db = await connectToMongoDB();
@@ -189,6 +187,7 @@ module.exports = {
                 datesInRange.push(new Date(date));
             }
 
+            
             // Insert the array of dates into a single document in the database
             const result = await db.collection(collection.CHECKING_COLLECTION).insertOne({
                 dates: datesInRange

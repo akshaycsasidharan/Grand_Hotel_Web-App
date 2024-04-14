@@ -35,9 +35,12 @@ router.get("/allrooms/:id",allrooms);
 
 router.get("/room/:id",room);
 
+
 router.get("/booking/:id",booking);
 
+
 router.post("/bookingroom",bookingrooms);
+
 
 router.get("/payment/:id", paymentpage);
 

@@ -3,6 +3,9 @@ const userHelper = require("../helpers/userHelper");
 const { render } = require("../app");
 const multer = require("multer");
 const Razorpay = require("razorpay");
+var { connectToMongoDB } = require("../config/connection");
+const { ObjectId } = require("mongodb");
+var collection = require("../config/collection");
 
 
 // const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
@@ -79,8 +82,6 @@ login: (req, res, next) => {
 },
 
 
-
-
   room: (req, res) => {
     let id = req.params.id;
     try {
@@ -94,7 +95,6 @@ login: (req, res, next) => {
   },
 
   booking:(req,res) =>{
-    
     let id = req.params.id;
     try {
          userHelper.roomsDetails(id).then((roomDetails)=>{
@@ -111,8 +111,8 @@ login: (req, res, next) => {
     try {
         userHelper.dobooking(req.body).then((result) => {
             console.log(result);
-            res.redirect("/payment",{roomDetails});
-        });
+            res.render("/paymentpage");
+          });
     } catch (error) {
         console.log(error);
     }
@@ -120,6 +120,7 @@ login: (req, res, next) => {
 
 
 paymentpage:(req,res)=>{
+
   let id = req.params.id;
   try {
        userHelper.roomsDetails(id).then((roomDetails)=>{
@@ -131,9 +132,10 @@ paymentpage:(req,res)=>{
   }
 },
  
+
+
   checkavailabilty: async (req, res) => {
     console.log("Checking availability for dates:", req.body);
-
     try {
         const result = await userHelper.dochecking(req.body);
 
@@ -152,18 +154,19 @@ paymentpage:(req,res)=>{
                 });
             } catch (error) {
                 console.log("Error in booking:", error);
-                res.redirect("/booking"); // Redirect to booking page with an error message
+                res.redirect("/"); // Redirect to booking page with an error message
             }
         } else {
             // Dates are not available or already booked, inform the user
             console.log("Selected dates are not available or already booked");
-            res.redirect("/"); // Redirect to home page or any other appropriate route
+            res.redirect("/room"); // Redirect to home page or any other appropriate route
         }
     } catch (error) {
         console.log("Error checking availability:", error);
-        res.redirect("/booking"); // Redirect to booking page with an error message
+        res.redirect("/"); // Redirect to booking page with an error message
     }
 },
+
 
 
 payment: async (req, res) => {
@@ -186,3 +189,6 @@ payment: async (req, res) => {
 
 
 }
+
+
+
