@@ -131,6 +131,7 @@ hotellogin: (req, res, next) => {
     }
   },
 
+
   addfacilities: (req, res) => {
     console.log("@@@@@@@@@@@@@@@@@@", req.body);
     try {
@@ -143,6 +144,7 @@ hotellogin: (req, res, next) => {
     }
   },
 
+  
   roomspage: (req, res) => {
     console.log("##########$$#^GGFN B BN BB G");
       let hotel = req.session.hotel;

@@ -96,6 +96,7 @@ login: (req, res, next) => {
 
   booking:(req,res) =>{
     let id = req.params.id;
+    
     try {
          userHelper.roomsDetails(id).then((roomDetails)=>{
           res.render("user/booking", { roomDetails });
@@ -133,8 +134,12 @@ paymentpage:(req,res)=>{
 },
  
 
-
   checkavailabilty: async (req, res) => {
+
+    const roomId = req.params.id;
+    console.log("Checking availability for room with ID:", roomId);
+
+    console.log("########################### reqqq.bodyyyyy",req.body);
     console.log("Checking availability for dates:", req.body);
     try {
         const result = await userHelper.dochecking(req.body);
@@ -150,7 +155,7 @@ paymentpage:(req,res)=>{
                 // Perform the booking
                 userHelper.dobooking(req.body).then((bookingResult) => {
                     console.log("Booking successful:", bookingResult);
-                    res.redirect("/booking"); // Redirect to booking page after successful booking
+                    res.redirect("/booking/"+roomId); // Redirect to booking page after successful booking
                 });
             } catch (error) {
                 console.log("Error in booking:", error);
@@ -159,7 +164,7 @@ paymentpage:(req,res)=>{
         } else {
             // Dates are not available or already booked, inform the user
             console.log("Selected dates are not available or already booked");
-            res.redirect("/room"); // Redirect to home page or any other appropriate route
+            res.redirect("/room/"+roomId); // Redirect to home page or any other appropriate route
         }
     } catch (error) {
         console.log("Error checking availability:", error);

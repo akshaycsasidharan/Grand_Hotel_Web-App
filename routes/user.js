@@ -46,7 +46,7 @@ router.get("/payment/:id", paymentpage);
 
 router.post("/dopayment",payment);
 
-router.post("/checkavailability",checkavailabilty);
+router.post("/checkavailability/:id",checkavailabilty);
 
 
 module.exports = router;
