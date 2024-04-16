@@ -94,45 +94,6 @@ login: (req, res, next) => {
     }
   },
 
-  booking:(req,res) =>{
-    let id = req.params.id;
-    
-    try {
-         userHelper.roomsDetails(id).then((roomDetails)=>{
-          res.render("user/booking", { roomDetails });
-         });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error fetching room details");
-    }
-  },
-  
-
-  bookingrooms: (req, res) => {
-    try {
-        userHelper.dobooking(req.body).then((result) => {
-            console.log(result);
-            res.render("/paymentpage");
-          });
-    } catch (error) {
-        console.log(error);
-    }
-},
-
-
-paymentpage:(req,res)=>{
-
-  let id = req.params.id;
-  try {
-       userHelper.roomsDetails(id).then((roomDetails)=>{
-        res.render("user/payment", { roomDetails });
-       });
-  } catch (error) {
-      console.error(error);
-      res.status(500).send("Error fetching room details");
-  }
-},
- 
 
   checkavailabilty: async (req, res) => {
 
@@ -172,6 +133,51 @@ paymentpage:(req,res)=>{
     }
 },
 
+
+  booking:(req,res) =>{
+    let id = req.params.id;
+    
+    try {
+         userHelper.roomsDetails(id).then((roomDetails)=>{
+          res.render("user/booking", { roomDetails });
+         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching room details");
+    }
+  },
+  
+
+  bookingrooms: (req, res) => {
+    let roomId = req.params.id; // Correctly retrieve room ID from request parameters
+
+    try {
+        userHelper.dobooking(req.body).then((result) => {
+            console.log(result);
+            // Render the payment page with the correct room ID
+            res.redirect("/payment/" + roomId);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+},
+
+
+
+
+paymentpage:(req,res)=>{
+
+  let id = req.params.id;
+  try {
+       userHelper.roomsDetails(id).then((roomDetails)=>{
+        res.render("user/payment", { roomDetails });
+       });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Error fetching room details");
+  }
+},
+ 
 
 
 payment: async (req, res) => {
