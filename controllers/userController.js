@@ -163,26 +163,23 @@ login: (req, res, next) => {
 },
 
 
-
-
 paymentpage:(req,res)=>{
-
   let id = req.params.id;
   try {
        userHelper.roomsDetails(id).then((roomDetails)=>{
+        console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
         res.render("user/payment", { roomDetails });
        });
   } catch (error) {
       console.error(error);
       res.status(500).send("Error fetching room details");
   }
+
 },
  
 
-
 payment: async (req, res) => {
   try {
-    
       const { name, price } = req.body;
 
       const paymentResult = await userHelper.payment(name, price);

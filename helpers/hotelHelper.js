@@ -49,33 +49,6 @@ module.exports = {
   },
 
 
-  // hotelLogin: async (hotelloginData) => {
-  //   try {
-  //     const db = await connectToMongoDB();
-  //     const hotel = await db
-  //       .collection(collection.HOTEL_COLLECTION)
-  //       .findOne({ email: hotelloginData.email });
-  
-  //     if (user) {
-  //       console.log("%%%%%%%5",hotel);
-  //       const status = await bcrypt.compare(hotelloginData.password, user.password);
-  //       if (status) {
-  //         console.log("##########",status);
-  //         const token = jwt.sign({ userId: user._id }, 'secret', { expiresIn: '1d' });
-  //         console.log(('DSAFDfsd%%%%%%%%%%%%5',token));
-  //         return { user, status: true, token }; // Return token along with other data
-  //       } else {
-  //         return { status: 406, message: "Invalid email/password" };
-  //       }
-  //     } else {
-  //       return { status: 404, message: "User not found" };
-  //     }
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
-  
-
   hotelLogin: (loginData) => {
 
     return new Promise(async (resolve, reject) => {
@@ -145,7 +118,6 @@ module.exports = {
             });
     });
 },
-
 
 
   addfacility: (facilitiesdata, file) => {
@@ -323,6 +295,14 @@ module.exports = {
     });
   },
 
-
+  transactiondetails:() => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+    let transactionview = db.collection(collection.PAYMENT_COLLECTION)
+        .find({})
+        .toArray();
+        resolve(transactionview)
+    });
+  }
 
 };

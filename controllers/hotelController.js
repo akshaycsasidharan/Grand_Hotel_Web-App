@@ -227,8 +227,18 @@ hotellogin: (req, res, next) => {
   },
 
   transactions: (req, res) => {
-    res.render("hotel/transactions");
+
+    hotelHelper.transactiondetails().then((transactiondata) => {
+
+      res.render("hotel/transactions", {
+        transactiondata
+      });
+
+    })
   },
+
+
+
 
 
   reviews: (req, res) => {

@@ -229,7 +229,7 @@ payment: async (name, price) => {
           name: name,
           amount: price,
           order_id: order.id,
-          status: 'Pending' // Initial status
+          status: 'success' // Initial status
       };
 
       // Connect to MongoDB
