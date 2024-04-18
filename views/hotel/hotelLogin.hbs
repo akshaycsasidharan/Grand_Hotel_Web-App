@@ -38,6 +38,19 @@
               method="post"
               name="form"
             >
+            {{#if loginErr}}
+
+					<p class="error font-weight-bold text-danger">invalid username or password!</p>
+
+					{{/if}}
+
+          {{#if block}}
+          
+					<h2 class="error font-weight-bold text-danger">user account Banned.....</h2>
+
+					{{/if}}
+
+
               <div class="mb-3">
                 <input
                   class="form-control"
@@ -55,12 +68,7 @@
                   type="password"
                 />
               </div>
-              <!-- form-group// -->
-              <div class="mb-3">
-                <a href="#" class="float-end font-sm text-muted">Forgot
-                  password?</a>
-              </div>
-              <!-- form-group form-check .// -->
+  
               <div class="mb-4">
                 <button type="submit" class="btn btn-primary w-100">
                   Login

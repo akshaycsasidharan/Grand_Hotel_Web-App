@@ -10,7 +10,6 @@ module.exports = {
   },
 
   hotelsignup: (req, res) => {
-    // console.log("@@@@@@@@@2222",req.body);
     try {
       hotelHelper.hoteldoSignup(req.body,req.file).then((response) => {
         console.log("$$$$$$$$$$",response);
@@ -22,8 +21,8 @@ module.exports = {
   },
 
   hotelloginPage: (req, res, next) => {
+
     if (req.session.loggedIn) {
-      // res.render("hotel/hotelLogin");
       return res.redirect("hotel/hotelDashboard");
       } else {
       res.render("hotel/hotelLogin", {
@@ -34,31 +33,12 @@ module.exports = {
       req.session.loginErr = false;
       req.session.block = false;
     }
-    // res.render("hotel/hotelLogin");
+
   },
 
 
-//   hotellogin: async (req, res) => {
-//     try {
-//         const response = await hotelHelper.hotelLogin(req.body);
-//         console.log("Response:", response);
-
-//         if (response.status == 200 && !response.hotel.blocked ) {
-//             // Send the token as a cookie or in response headers
-//             res.cookie('token', response.token, { httpOnly: true });
-//             res.status(200).redirect("/hoteldashboard"); // Corrected redirection to the dashboard page
-//         } else {
-//             res.redirect("/"); // Redirect to login page if login fails
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.redirect("/error-page");
-//     }
-// },
-
-
-
 hotellogin: (req, res, next) => {
+  
   hotelHelper.hotelLogin(req.body).then((response) => {
     if(response.status){
       req.session.loggedIn = true;
@@ -69,22 +49,7 @@ hotellogin: (req, res, next) => {
       res.render("/", { error: response.message });
     }
   })
-
-  // try {
-  //   hotelHelper.hotelLogin(req.body).then((response) => {
-
-  //     console.log("#############responseee",response);
-  //     if (response.status) {
-  //       let hoteldetail = response.user;
-  //       // console.log("##########response.user",response.user);
-  //       res.render("hotel/hotelDashboard",{hoteldetail});
-  //     } else {
-  //       res.render("/", { error: response.message });
-  //     }
-  //   });
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  
 },
   
   hoteldashboard: (req, res, next) => {
@@ -131,7 +96,6 @@ hotellogin: (req, res, next) => {
     }
   },
 
-
   addfacilities: (req, res) => {
     console.log("@@@@@@@@@@@@@@@@@@", req.body);
     try {
@@ -143,24 +107,30 @@ hotellogin: (req, res, next) => {
       console.log(error);
     }
   },
-
   
   roomspage: (req, res) => {
+
     console.log("##########$$#^GGFN B BN BB G");
+
       let hotel = req.session.hotel;
+
       console.log(("========= hotel ======",hotel));
+
     let hoteldetails = req.params.id;
+
     console.log("hoteldetailssss",hoteldetails);
+
     hotelHelper.viewrooms(hoteldetails).then(async (viewdata) => {
+
       console.log("hoteldetails",hoteldetails);
-      // console.log("iddddddd",id);
+
       res.render("hotel/rooms", {
+
         viewdata,
         hotel
       });
     });
   },
-
 
   facilitypage: (req, res) => {
     console.log("###########33", req.body);
@@ -171,7 +141,6 @@ hotellogin: (req, res, next) => {
       });
     });
   },
-
   
   editrooms: (req, res) => {
     let id = req.params.id;
@@ -216,7 +185,6 @@ hotellogin: (req, res, next) => {
       res.redirect("/hotel/facilities");
     });
   },
-  
 
   customers: (req, res) => {
     hotelHelper.showcustomers().then(async (customerdata) => {
