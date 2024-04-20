@@ -108,35 +108,38 @@ login: (req, res, next) => {
   //   }
   // },
 
+
   booking:(req,res) => {
-
     res.render("user/booking");
-
   },
   
 
 
   bookingrooms: (req, res) => {
-    
-    let roomId = req.params.id; // Correctly retrieve room ID from request parameters
-
+    let roomId = req.query.roomId; // Get roomId from query parameters
+    let bookingdata = req.body;
+  
+    console.log("roomId", roomId);
+  
     try {
-        userHelper.dobooking(req.body).then((result) => {
-            console.log(result);
-            // Render the payment page with the correct room ID
-            res.redirect("/payment/" + roomId);
-        });
+      userHelper.dobooking(bookingdata, roomId).then((result) => {
+        console.log(result);
+        // Redirect to the payment page with the correct roomId
+        res.redirect("/payment/" + roomId);
+      });
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-},
-
+  },
+  
+  
 
   checkavailabilty: async (req, res) => {
 
     const roomId = req.params.id;
 
     console.log("rooooooooooooomidddddddddddd",roomId);
+    
     const { checkin, checkout } = req.body;
 
     try {

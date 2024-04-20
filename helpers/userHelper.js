@@ -127,8 +127,10 @@ module.exports = {
   },
 
 
-  dobooking: (bookingdata) => {
+  dobooking: (bookingdata,roomId) => {
+
     // Function to generate array of dates between checkin and checkout
+
     function generateDateArray(checkin, checkout) {
         let datesArray = [];
         let currentDate = new Date(checkin);
@@ -144,6 +146,7 @@ module.exports = {
 
     return new Promise(async (resolve, reject) => {
         let datasbooking = {
+            roomId:roomId,
             name: bookingdata.name,
             email: bookingdata.email,
             checkin: bookingdata.checkin,
