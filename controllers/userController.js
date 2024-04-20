@@ -96,42 +96,33 @@ login: (req, res, next) => {
 
 
   checkavailabilty: async (req, res) => {
-
     const roomId = req.params.id;
-    console.log("Checking availability for room with ID:", roomId);
+    const { checkin, checkout } = req.body;
 
-    console.log("########################### reqqq.bodyyyyy",req.body);
-    console.log("Checking availability for dates:", req.body);
     try {
-        const result = await userHelper.dochecking(req.body);
+        const bookingData = await userHelper.dochecking(checkin, checkout);
 
-        // Check if availability data is stored in the BOOKING_COLLECTION
-        const db = await connectToMongoDB();
-        const bookingData = await db.collection(collection.BOOKING_COLLECTION).findOne(req.body);
-
-        if (result && !bookingData) {
+        if (!bookingData) {
             // Dates are available and not booked, proceed with booking
             console.log("Dates are available for booking");
             try {
-                // Perform the booking
-                userHelper.dobooking(req.body).then((bookingResult) => {
-                    console.log("Booking successful:", bookingResult);
-                    res.redirect("/booking/"+roomId); // Redirect to booking page after successful booking
-                });
+                // Redirect to booking page after successful booking
+                res.redirect("/booking/" + roomId);
             } catch (error) {
-                console.log("Error in booking:", error);
-                res.redirect("/"); // Redirect to booking page with an error message
+                console.log("Error in redirecting to booking page:", error);
+                res.redirect("/"); // Redirect to home page with an error message
             }
         } else {
             // Dates are not available or already booked, inform the user
             console.log("Selected dates are not available or already booked");
-            res.redirect("/room/"+roomId); // Redirect to home page or any other appropriate route
+            res.redirect("/room/" + roomId); // Redirect to room page or any other appropriate route
         }
     } catch (error) {
         console.log("Error checking availability:", error);
-        res.redirect("/"); // Redirect to booking page with an error message
+        res.redirect("/"); // Redirect to home page with an error message
     }
 },
+
 
 
   booking:(req,res) =>{

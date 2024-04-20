@@ -31,7 +31,6 @@ module.exports = {
         password: encryptedpassword,
         Image:file.filename,
         blocked: true,
-        vote: false,
         usercount: 0,
         mobilenumber:hotelsData.mobilenumber,
         Place:hotelsData.Place,
@@ -96,6 +95,10 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
         let dataroom = {
 
+
+          roomId:Date.now().toString(16),
+
+          
             hotelId:hotelId,
             Roomnumber: roomdata.Roomnumber,
             RoomType: roomdata.RoomType,

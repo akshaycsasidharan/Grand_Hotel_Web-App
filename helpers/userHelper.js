@@ -28,6 +28,11 @@ module.exports = {
       }
 
       let signupData = {
+
+
+        userId:Date.now().toString(16),
+
+
         name: userData.name,
         email: userData.email,
         password: encryptedpassword,
@@ -143,7 +148,7 @@ module.exports = {
             email: bookingdata.email,
             checkin: bookingdata.checkin,
             checkout: bookingdata.checkout,
-            booked: true,
+            booked: false,
         };
 
         const db = await connectToMongoDB();
@@ -167,38 +172,65 @@ module.exports = {
 },
 
 
-  dochecking: (checkingdata) => {
+//   dochecking: (checkingdata) => {
 
-    return new Promise(async (resolve, reject) => {
-        try {
-            const db = await connectToMongoDB();
-            const checkin = new Date(checkingdata.checkin);
-            const checkout = new Date(checkingdata.checkout);
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             const db = await connectToMongoDB();
+//             const checkin = new Date(checkingdata.checkin);
+//             const checkout = new Date(checkingdata.checkout);
 
-            // Ensure check-in date is before or equal to check-out date
-            if (checkin > checkout) {
-                reject(new Error("Check-in date cannot be later than check-out date"));
-                return;
-            }
+//             // Ensure check-in date is before or equal to check-out date
+//             if (checkin > checkout) {
+//                 reject(new Error("Check-in date cannot be later than check-out date"));
+//                 return;
+//             }
 
-            // Generate an array of dates between check-in and check-out dates
-            const datesInRange = [];
-            for (let date = checkin; date <= checkout; date.setDate(date.getDate() + 1)) {
-                datesInRange.push(new Date(date));
-            }
+//             // Generate an array of dates between check-in and check-out dates
+//             const datesInRange = [];
+//             for (let date = checkin; date <= checkout; date.setDate(date.getDate() + 1)) {
+//                 datesInRange.push(new Date(date));
+//             }
 
             
-            // Insert the array of dates into a single document in the database
-            const result = await db.collection(collection.CHECKING_COLLECTION).insertOne({
-                dates: datesInRange
-            });
+//             // Insert the array of dates into a single document in the database
+//             const result = await db.collection(collection.CHECKING_COLLECTION).insertOne({
+//                 dates: datesInRange
+//             });
 
-            resolve(result.insertedId);
-        } catch (error) {
-            console.error("Error inserting checking data:", error);
-            reject(error);
-        }
-    });
+//             resolve(result.insertedId);
+//         } catch (error) {
+//             console.error("Error inserting checking data:", error);
+//             reject(error);
+//         }
+//     });
+// },
+
+
+
+
+dochecking: async (checkin, checkout) => {
+
+  console.log("3#######%%%%%%%%%",checkin,checkout);
+  
+  try {
+      const db = await connectToMongoDB();
+      
+      // Query the booking collection to check if any booking exists for the given date range
+      const existingBooking = await db.collection(collection.BOOKING_COLLECTION).findOne({
+          // $or: [
+          //     { $and: [{ checkin: { $lte: new Date(checkin) } }, { checkout: { $gte: new Date(checkin) } }] }, // Check-in date falls within existing booking
+          //     { $and: [{ checkin: { $lte: new Date(checkout) } }, { checkout: { $gte: new Date(checkout) } }] }, // Check-out date falls within existing booking
+          //     { $and: [{ checkin: { $gte: new Date(checkin) } }, { checkout: { $lte: new Date(checkout) } }] } // Existing booking falls within the given date range
+          // ]
+          checkin,checkout
+      });
+
+      // Return the booking data if exists, otherwise return null
+      return existingBooking;
+  } catch (error) {
+      throw error;
+  }
 },
 
 
