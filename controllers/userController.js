@@ -95,8 +95,48 @@ login: (req, res, next) => {
   },
 
 
+  // booking:(req,res) =>{
+  //   let id = req.params.id;
+    
+  //   try {
+  //        userHelper.roomsDetails(id).then((roomDetails)=>{
+  //         res.render("user/booking", { roomDetails });
+  //        });
+  //   } catch (error) {
+  //       console.error(error);
+  //       res.status(500).send("Error fetching room details");
+  //   }
+  // },
+
+  booking:(req,res) => {
+
+    res.render("user/booking");
+
+  },
+  
+
+
+  bookingrooms: (req, res) => {
+    
+    let roomId = req.params.id; // Correctly retrieve room ID from request parameters
+
+    try {
+        userHelper.dobooking(req.body).then((result) => {
+            console.log(result);
+            // Render the payment page with the correct room ID
+            res.redirect("/payment/" + roomId);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+},
+
+
   checkavailabilty: async (req, res) => {
+
     const roomId = req.params.id;
+
+    console.log("rooooooooooooomidddddddddddd",roomId);
     const { checkin, checkout } = req.body;
 
     try {
@@ -107,7 +147,7 @@ login: (req, res, next) => {
             console.log("Dates are available for booking");
             try {
                 // Redirect to booking page after successful booking
-                res.redirect("/booking/" + roomId);
+                res.redirect("/booking/" +roomId);
             } catch (error) {
                 console.log("Error in redirecting to booking page:", error);
                 res.redirect("/"); // Redirect to home page with an error message
@@ -123,35 +163,6 @@ login: (req, res, next) => {
     }
 },
 
-
-
-  booking:(req,res) =>{
-    let id = req.params.id;
-    
-    try {
-         userHelper.roomsDetails(id).then((roomDetails)=>{
-          res.render("user/booking", { roomDetails });
-         });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error fetching room details");
-    }
-  },
-  
-
-  bookingrooms: (req, res) => {
-    let roomId = req.params.id; // Correctly retrieve room ID from request parameters
-
-    try {
-        userHelper.dobooking(req.body).then((result) => {
-            console.log(result);
-            // Render the payment page with the correct room ID
-            res.redirect("/payment/" + roomId);
-        });
-    } catch (error) {
-        console.log(error);
-    }
-},
 
 
 paymentpage:(req,res)=>{

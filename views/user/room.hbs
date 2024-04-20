@@ -34,14 +34,7 @@
                              <h2><td>{{roomDetails.Price}}</td>$<span>/Pernight</span></h2>
                             <table>
                                 <tbody>
-                                    {{!-- <tr>
-                                        <td class="r-o">Floor:</td>
-                                        <td>{{roomDetails.Floor}}</td>
-                                    </tr> --}}
-                                    {{!-- <tr>
-                                        <td class="r-o">Capacity:</td>
-                                        <td>{{roomDetails.Capacity}}</td>
-                                    </tr> --}}
+
                                     <tr>
                                         <td class="r-o">Room Number:</td>
                                         <td>{{roomDetails.Roomnumber}}</td>
@@ -50,7 +43,7 @@
                                         <td class="r-o">Room Type:</td>
                                         <td>{{roomDetails.RoomType}}</td>
                                     </tr>
-                                    <!-- Additional room details here -->
+
                                 </tbody>
                                 
                             </table>
@@ -61,7 +54,7 @@
                 <div class="col-lg-4">
                     <div class="room-booking">
                         <h3>Check Availability</h3>
-                            <form action="/checkavailability/{{roomDetails._id}}" method="post" name="form">
+                            <form action="/checkavailability/{{roomDetails.roomId}}" method="post" name="form">
                             <div class="check-date">
                                 <label for="date-in">Check In:</label>
                                 <input type="text" name="checkin" class="date-input" id="date-in">
