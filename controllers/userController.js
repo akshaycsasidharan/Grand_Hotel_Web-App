@@ -95,55 +95,67 @@ login: (req, res, next) => {
   },
 
 
-  // booking:(req,res) =>{
-  //   let id = req.params.id;
+  booking:(req,res) =>{
+    let id = req.params.id;
     
-  //   try {
-  //        userHelper.roomsDetails(id).then((roomDetails)=>{
-  //         res.render("user/booking", { roomDetails });
-  //        });
-  //   } catch (error) {
-  //       console.error(error);
-  //       res.status(500).send("Error fetching room details");
-  //   }
-  // },
-
-
-  booking:(req,res) => {
-    res.render("user/booking");
-  },
-  
-
-
-  bookingrooms: (req, res) => {
-    let roomId = req.query.roomId; // Get roomId from query parameters
-    let bookingdata = req.body;
-  
-    console.log("roomId", roomId);
-  
     try {
-      userHelper.dobooking(bookingdata, roomId).then((result) => {
-        console.log(result);
-        // Redirect to the payment page with the correct roomId
-        res.redirect("/payment/" + roomId);
-      });
+         userHelper.roomsDetails(id).then((roomDetails)=>{
+          res.render("user/booking", { roomDetails });
+         });
     } catch (error) {
-      console.log(error);
+        console.error(error);
+        res.status(500).send("Error fetching room details");
     }
   },
+
+
+  // booking:(req,res) => {
+  //   res.render("user/booking");
+  // },
   
-  
+
+
+ bookingrooms: (req, res) => {
+    try {
+        const bookingData = req.body;
+
+        // Retrieve roomId from the route parameters
+        const roomId = req.params.id;
+
+        // Retrieve room details to get hotelId
+        userHelper.roomsDetails(roomId).then((roomDetails) => {
+            const hotelId = roomDetails.hotelId; // Assuming hotelId is a property of roomDetails
+            const roomId = roomDetails.roomId; // Assuming roomId is a property of roomDetails
+
+            console.log("roommiddroroooommmiddd", roomId);
+            console.log("hotelidddddddddd", hotelId);
+
+            // Call dobooking function with both roomId and hotelId
+            userHelper.dobooking(bookingData, roomId, hotelId).then((bookingId) => {
+                console.log("Booking ID:", bookingId);
+                // Redirect to the payment page with the correct bookingId
+                res.redirect("/payment/" + bookingId);
+            });
+        });
+    } catch (error) {
+        console.log(error);
+        // Handle error
+        res.status(500).send("Error in booking");
+    }
+},
+
+
 
   checkavailabilty: async (req, res) => {
 
     const roomId = req.params.id;
 
     console.log("rooooooooooooomidddddddddddd",roomId);
-    
+
     const { checkin, checkout } = req.body;
 
     try {
-        const bookingData = await userHelper.dochecking(checkin, checkout);
+        const bookingData = await userHelper.dochecking(checkin, checkout,roomId);
 
         if (!bookingData) {
             // Dates are available and not booked, proceed with booking

@@ -127,50 +127,30 @@ module.exports = {
   },
 
 
-  dobooking: (bookingdata,roomId) => {
-
-    // Function to generate array of dates between checkin and checkout
-
-    function generateDateArray(checkin, checkout) {
-        let datesArray = [];
-        let currentDate = new Date(checkin);
-        const endDate = new Date(checkout);
-        
-        // Loop through each day between checkin and checkout
-        while (currentDate <= endDate) {
-            datesArray.push(new Date(currentDate));
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-        return datesArray;
-    }
-
+  dobooking: (bookingdata, roomId, hotelId) => {
+    
     return new Promise(async (resolve, reject) => {
-        let datasbooking = {
-            roomId:roomId,
+        // Construct the booking object
+        let bookingObject = {
+            roomId: roomId,
+            hotelId: hotelId,
             name: bookingdata.name,
             email: bookingdata.email,
             checkin: bookingdata.checkin,
             checkout: bookingdata.checkout,
-            booked: false,
+            booked: false
         };
 
-        const db = await connectToMongoDB();
-
-        // Generate array of dates between checkin and checkout
-        let datesArray = generateDateArray(bookingdata.checkin, bookingdata.checkout);
-
-        // Add the array of dates to datasbooking object
-        datasbooking.datesArray = datesArray;
-
-        await db
-            .collection(collection.BOOKING_COLLECTION)
-            .insertOne(datasbooking)
-            .then((data) => {
-                resolve(data.insertedId);
-            })
-            .catch((error) => {
-                reject(error);
-            });
+        try {
+            const db = await connectToMongoDB();
+            // Insert the booking object into the database
+            const result = await db.collection(collection.BOOKING_COLLECTION).insertOne(bookingObject);
+            // Resolve with the inserted ID
+            resolve(result.insertedId);
+        } catch (error) {
+            console.error("Error in booking:", error);
+            reject(error);
+        }
     });
 },
 
@@ -212,7 +192,7 @@ module.exports = {
 
 
 
-dochecking: async (checkin, checkout) => {
+dochecking: async (checkin, checkout,roomId) => {
 
   console.log("3#######%%%%%%%%%",checkin,checkout);
   
@@ -226,7 +206,7 @@ dochecking: async (checkin, checkout) => {
           //     { $and: [{ checkin: { $lte: new Date(checkout) } }, { checkout: { $gte: new Date(checkout) } }] }, // Check-out date falls within existing booking
           //     { $and: [{ checkin: { $gte: new Date(checkin) } }, { checkout: { $lte: new Date(checkout) } }] } // Existing booking falls within the given date range
           // ]
-          checkin,checkout
+          checkin,checkout,roomId:roomId
       });
 
       // Return the booking data if exists, otherwise return null
