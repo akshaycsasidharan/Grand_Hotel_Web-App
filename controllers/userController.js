@@ -116,23 +116,22 @@ login: (req, res, next) => {
 
 
  bookingrooms: (req, res) => {
-  
+
   const roomId = req.params.id;
   
     try {
         const bookingData = req.body;
 
         userHelper.roomsDetails(roomId).then((roomDetails) => {
-            const hotelId = roomDetails.hotelId; // Assuming hotelId is a property of roomDetails
-            const roomId = roomDetails.roomId; // Assuming roomId is a property of roomDetails
+            const hotelId = roomDetails.hotelId; 
+            const roomId = roomDetails.roomId; 
             const roomDetailsid = roomDetails._id;
-            console.log("roomDetailsid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1",roomDetailsid);
+
+            // console.log("roomDetailsid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1",roomDetailsid);
+            // console.log("roommiddroroooommmiddd", roomId);
+            // console.log("hotelidddddddddd", hotelId);
 
 
-            console.log("roommiddroroooommmiddd", roomId);
-            console.log("hotelidddddddddd", hotelId);
-
-            // Call dobooking function with both roomId and hotelId
             userHelper.dobooking(bookingData, roomId, hotelId).then((bookingId) => {
                 console.log("Booking ID:", bookingId);
                 // Redirect to the payment page with the correct bookingId
@@ -148,37 +147,30 @@ login: (req, res, next) => {
 
 
 
-  checkavailabilty: async (req, res) => {
+checkavailabilty: async (req, res) => {
+  const roomId = req.params.id;
+  const { checkin, checkout } = req.body;
 
-    const roomId = req.params.id;
+  try {
+      // Check if any existing booking overlaps with the provided date range
+      const existingBooking = await userHelper.dochecking(checkin, checkout);
 
-    console.log("rooooooooooooomidddddddddddd",roomId);
-
-    const { checkin, checkout } = req.body;
-
-    try {
-        const bookingData = await userHelper.dochecking(checkin, checkout,roomId);
-
-        if (!bookingData) {
-            // Dates are available and not booked, proceed with booking
-            console.log("Dates are available for booking");
-            try {
-                // Redirect to booking page after successful booking
-                res.redirect("/booking/" +roomId);
-            } catch (error) {
-                console.log("Error in redirecting to booking page:", error);
-                res.redirect("/"); // Redirect to home page with an error message
-            }
-        } else {
-            // Dates are not available or already booked, inform the user
-            console.log("Selected dates are not available or already booked");
-            res.redirect("/room/" + roomId); // Redirect to room page or any other appropriate route
-        }
-    } catch (error) {
-        console.log("Error checking availability:", error);
-        res.redirect("/"); // Redirect to home page with an error message
-    }
+      if (!existingBooking) {
+          // Dates are available and not booked, proceed with booking
+          console.log("Dates are available for booking");
+          res.redirect("/booking/" + roomId);
+      } else {
+          // Dates are not available or already booked, inform the user
+          console.log("Selected dates are not available or already booked");
+          res.redirect("/room/" + roomId);
+      }
+  } catch (error) {
+      console.log("Error checking availability:", error);
+      res.redirect("/"); // Redirect to home page with an error message
+  }
 },
+
+
 
 
 
@@ -198,10 +190,12 @@ paymentpage:(req,res)=>{
  
 
 payment: async (req, res) => {
-  try {
-      const { name, price } = req.body;
 
-      const paymentResult = await userHelper.payment(name, price);
+  console.log("reqqqqqqqqqqqq.bodyyyyyyyyyyy",req.body);
+  try {
+      const { name, price,hotelId,roomId} = req.body;
+
+      const paymentResult = await userHelper.payment(name, price,hotelId,roomId);
 
       // Send response back to client
       res.status(200).send(paymentResult);
