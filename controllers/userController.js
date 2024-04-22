@@ -147,30 +147,70 @@ login: (req, res, next) => {
 
 
 
+// checkavailabilty: async (req, res) => {
+
+//   const roomId = req.params.id;
+//   const { checkin, checkout } = req.body;
+
+//   try {
+//       // Check if any existing booking overlaps with the provided date range
+//       const existingBooking = await userHelper.dochecking(checkin, checkout);
+
+//       if (!existingBooking) {
+//           // Dates are available and not booked, proceed with booking
+//           console.log("Dates are available for booking");
+//           res.redirect("/booking/" + roomId);
+//       } else {
+//           // Dates are not available or already booked, inform the user
+//           console.log("Selected dates are not available or already booked");
+//           res.redirect("/room/" + roomId);
+//       }
+//   } catch (error) {
+//       console.log("Error checking availability:", error);
+//       res.redirect("/"); // Redirect to home page with an error message
+//   }
+// },
+
+
 checkavailabilty: async (req, res) => {
+
   const roomId = req.params.id;
-  const { checkin, checkout } = req.body;
+  console.log("________________________________________",roomId);
+    
+  console.log("Checking availability for dates:", req.body);
 
   try {
-      // Check if any existing booking overlaps with the provided date range
-      const existingBooking = await userHelper.dochecking(checkin, checkout);
+      const result = await userHelper.dochecking(req.body);
 
-      if (!existingBooking) {
+      // Check if availability data is stored in the BOOKING_COLLECTION
+      const db = await connectToMongoDB();
+      const bookingData = await db.collection(collection.BOOKING_COLLECTION).findOne(req.body);
+
+      if (result && !bookingData) {
           // Dates are available and not booked, proceed with booking
           console.log("Dates are available for booking");
-          res.redirect("/booking/" + roomId);
+          try {
+              // Perform the booking
+              userHelper.dobooking(req.body).then((bookingResult) => {
+                  console.log("Booking successful:", bookingResult);
+                  // Redirect to booking route with the roomid
+                  res.redirect("/booking/" + roomId);
+              });
+          } catch (error) {
+              console.log("Error in booking:", error);
+              res.redirect("/"); // Redirect to home page with an error message
+          }
       } else {
           // Dates are not available or already booked, inform the user
           console.log("Selected dates are not available or already booked");
-          res.redirect("/room/" + roomId);
+          res.redirect("/room/" + roomId); // Redirect to room page or any other appropriate route
       }
   } catch (error) {
       console.log("Error checking availability:", error);
       res.redirect("/"); // Redirect to home page with an error message
   }
+
 },
-
-
 
 
 
@@ -204,8 +244,7 @@ payment: async (req, res) => {
       // Handle error
       res.status(500).send({ success: false, msg: 'Something went wrong!' });
   }
-}
-
+},
 
 
 
