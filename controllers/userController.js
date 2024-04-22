@@ -116,16 +116,18 @@ login: (req, res, next) => {
 
 
  bookingrooms: (req, res) => {
+  
+  const roomId = req.params.id;
+  
     try {
         const bookingData = req.body;
 
-        // Retrieve roomId from the route parameters
-        const roomId = req.params.id;
-
-        // Retrieve room details to get hotelId
         userHelper.roomsDetails(roomId).then((roomDetails) => {
             const hotelId = roomDetails.hotelId; // Assuming hotelId is a property of roomDetails
             const roomId = roomDetails.roomId; // Assuming roomId is a property of roomDetails
+            const roomDetailsid = roomDetails._id;
+            console.log("roomDetailsid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1",roomDetailsid);
+
 
             console.log("roommiddroroooommmiddd", roomId);
             console.log("hotelidddddddddd", hotelId);
@@ -134,7 +136,7 @@ login: (req, res, next) => {
             userHelper.dobooking(bookingData, roomId, hotelId).then((bookingId) => {
                 console.log("Booking ID:", bookingId);
                 // Redirect to the payment page with the correct bookingId
-                res.redirect("/payment/" + bookingId);
+                res.redirect("/payment/" +roomDetailsid );
             });
         });
     } catch (error) {
@@ -184,7 +186,7 @@ paymentpage:(req,res)=>{
   let id = req.params.id;
   try {
        userHelper.roomsDetails(id).then((roomDetails)=>{
-        console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
+        // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
         res.render("user/payment", { roomDetails });
        });
   } catch (error) {

@@ -128,17 +128,26 @@ module.exports = {
 
 
   dobooking: (bookingdata, roomId, hotelId) => {
-    
     return new Promise(async (resolve, reject) => {
-        // Construct the booking object
+        // Extract check-in and checkout dates from the booking data
+        const { checkin, checkout } = bookingdata;
+
+        // Construct the array of dates between check-in and checkout dates
+        const datesInRange = [];
+        let currentDate = new Date(checkin);
+        const checkoutDate = new Date(checkout);
+        while (currentDate <= checkoutDate) {
+            datesInRange.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+        }
+
+        // Construct the booking object with the array of dates
         let bookingObject = {
             roomId: roomId,
             hotelId: hotelId,
             name: bookingdata.name,
             email: bookingdata.email,
-            checkin: bookingdata.checkin,
-            checkout: bookingdata.checkout,
-            booked: false
+            dates: datesInRange, // Store the array of dates
         };
 
         try {
@@ -153,6 +162,7 @@ module.exports = {
         }
     });
 },
+
 
 
 //   dochecking: (checkingdata) => {
