@@ -453,6 +453,7 @@ dochecking: async (checkin, checkout,roomId) => {
           //     { $and: [{ checkin: { $gte: new Date(checkin) } }, { checkout: { $lte: new Date(checkout) } }] } // Existing booking falls within the given date range
           // ]
           checkin,checkout,roomId
+
       });
 
       // Return the booking data if exists, otherwise return null
@@ -931,6 +932,7 @@ module.exports = {
 //             for (let date = checkin; date <= checkout; date.setDate(date.getDate() + 1)) {
 //                 datesInRange.push(new Date(date));
 //             }
+
 
             
 //             // Insert the array of dates into a single document in the database

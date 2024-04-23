@@ -165,9 +165,7 @@ module.exports = {
 
 
 
-dochecking: async (checkin, checkout,roomId) => {
-
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",roomId);
+dochecking: async (checkin, checkout, roomId) => {
   try {
       const db = await connectToMongoDB();
 
@@ -180,12 +178,20 @@ dochecking: async (checkin, checkout,roomId) => {
           throw new Error("Check-in date cannot be later than check-out date");
       }
 
+      // Construct the array of dates between check-in and checkout dates
+      const datesInRange = [];
+      let currentDate = new Date(checkinDate);
+      while (currentDate <= checkoutDate) {
+          datesInRange.push(new Date(currentDate));
+          currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+      }
+
       // Query the booking collection to check if any booking overlaps with the provided date range and roomId
       const existingBooking = await db.collection(collection.BOOKING_COLLECTION).findOne({
           roomId: roomId, // Match the roomId
           $or: [
-              { $and: [{ checkin: { $lte: checkinDate } }, { checkout: { $gte: checkinDate } }] }, // Check-in date falls within existing booking
-              { $and: [{ checkin: { $lte: checkoutDate } }, { checkout: { $gte: checkoutDate } }] }, // Check-out date falls within existing booking
+              { dates: { $in: datesInRange } }, // Check if any date falls within the provided date range
+              { $and: [{ checkin: { $lte: checkinDate } }, { checkout: { $gte: checkoutDate } }] }, // Existing booking spans the provided date range
               { $and: [{ checkin: { $gte: checkinDate } }, { checkout: { $lte: checkoutDate } }] } // Existing booking falls within the given date range
           ]
       });
@@ -196,6 +202,46 @@ dochecking: async (checkin, checkout,roomId) => {
       throw error;
   }
 },
+
+
+
+//   dochecking: (checkingdata) => {
+
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             const db = await connectToMongoDB();
+//             const checkin = new Date(checkingdata.checkin);
+//             const checkout = new Date(checkingdata.checkout);
+
+//             // Ensure check-in date is before or equal to check-out date
+//             if (checkin > checkout) {
+//                 reject(new Error("Check-in date cannot be later than check-out date"));
+//                 return;
+//             }
+
+//             // Generate an array of dates between check-in and check-out dates
+//             const datesInRange = [];
+//             for (let date = checkin; date <= checkout; date.setDate(date.getDate() + 1)) {
+//                 datesInRange.push(new Date(date));
+//             }
+
+
+            
+//             // Insert the array of dates into a single document in the database
+//             const result = await db.collection(collection.CHECKING_COLLECTION).insertOne({
+//                 dates: datesInRange
+//             });
+
+//             resolve(result.insertedId);
+//         } catch (error) {
+//             console.error("Error inserting checking data:", error);
+//             reject(error);
+//         }
+//     });
+// },
+
+
+
 
 
 // dochecking: (checkingdata) => {

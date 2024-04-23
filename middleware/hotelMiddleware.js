@@ -19,6 +19,7 @@ const notVerifyHotel = (req, res, next) => {
   
   
   module.exports={
+    
     verifyHotel,
     notVerifyHotel,
     
