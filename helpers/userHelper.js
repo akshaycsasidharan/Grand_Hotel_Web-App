@@ -165,7 +165,9 @@ module.exports = {
 
 
 
-dochecking: async (checkin, checkout, roomId) => {
+dochecking: async (checkin, checkout,roomId) => {
+
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",roomId);
   try {
       const db = await connectToMongoDB();
 

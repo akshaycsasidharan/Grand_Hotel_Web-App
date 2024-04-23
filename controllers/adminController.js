@@ -79,9 +79,24 @@ customers: (req,res) => {
 },
 
 
-transactionspage:(req,res) => {
-  res.render("admin/transactions");
+// transactionspage:(req,res) => {
+//   res.render("admin/transactions");
+// },
+
+
+
+transactionspage: (req, res) => {
+
+  adminHelper.transactiondetails().then((transactiondata) => {
+
+    res.render("admin/transactions", {
+      transactiondata
+    });
+
+  })
 },
+
+
 
 reviewspage:(req,res) => {
   res.render("admin/reviews");

@@ -5,6 +5,7 @@ const multer = require("multer");
 
 
 module.exports = {
+  
   signuppage: (req, res, next) => {
     res.render("hotel/hotelSignup");
   },

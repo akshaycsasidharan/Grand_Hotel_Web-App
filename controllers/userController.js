@@ -147,33 +147,33 @@ login: (req, res, next) => {
 
 
 checkavailabilty: async (req, res) => {
-  
   const roomdetailsid = req.params.id;
   const { checkin, checkout } = req.body;
 
   try {
+      // Retrieve room details to get roomId
+      const roomDetails = await userHelper.roomsDetails(roomdetailsid);
+      const roomId = roomDetails.roomId;
 
-    // Retrieve room details to get roomId
-    const roomDetails = await userHelper.roomsDetails(roomdetailsid); // Corrected variable name
-    const roomId = roomDetails.roomId; // Get roomId from roomDetails
+      // Check if any existing booking overlaps with the provided date range
+      const existingBooking = await userHelper.dochecking(checkin, checkout, roomId);
 
-    // Check if any existing booking overlaps with the provided date range
-    const existingBooking = await userHelper.dochecking(checkin, checkout, roomId);
-
-    if (!existingBooking) {
-      // Dates are available and not booked, proceed with booking
-      console.log("Dates are available for booking");
-      res.redirect("/booking/" + roomdetailsid);
-    } else {
-      // Dates are not available or already booked, inform the user
-      console.log("Selected dates are not available or already booked");
-      res.redirect("/room/" + roomdetailsid);
-    }
+      if (existingBooking) {
+          // Dates are not available or already booked, inform the user
+          console.log("Selected dates are not available or already booked");
+          res.redirect("/room/" + roomdetailsid);
+      } else {
+          // Dates are available and not booked, proceed with booking
+          console.log("Dates are available for booking");
+          res.redirect("/booking/" + roomdetailsid);
+      }
   } catch (error) {
-    console.log("Error checking availability:", error);
-    res.redirect("/"); // Redirect to home page with an error message
+      console.log("Error checking availability:", error);
+      res.redirect("/"); // Redirect to home page with an error message
   }
 },
+
+
 
 
 
