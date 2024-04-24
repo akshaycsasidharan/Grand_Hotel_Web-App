@@ -1,41 +1,47 @@
-// function verifyToken(req,res,next){
-//     let authHeader = req.headers.authorization;
-//     if(authHeader==undefined){
-//         res.status(401).send({error: "no token provided"})
-//     }
-//     let token = authHeader.split(" ")[1]
-//     Jwt.verify(token, "secret",function(err,decoded){
-//         if(err){
-//             res.status(500).send({error:"autherization failed"})
-//         }
-//         else{
-//             next();
-//         }
-//     })
+
+
+// const verifyUser = (req,res,next) =>{
+//     if (req.session.UserLoggedIn === true) {
+//         return res.redirect ("/")
+//     } 
+//     next();
 // }
 
 
-const jwt = require("jsonwebtoken");
+// const notVerifyUser = (req, res, next) => {
+//     if (req.session.UserLoggedIn === false) {
+//       return res.redirect("/login");
+//     }
+//     next();
+//   };
+  
+  
+  
+  
+//   module.exports={
+    
+//     verifyUser,
+//     notVerifyUser,
+    
+//   }
 
-function verifyToken(req, res, next) {
-    let authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).send({ error: "No token provided" });
+
+const verifyUser = (req, res, next) => {
+    if (req.session.loggedIn) {
+      return res.redirect("/"); // Redirect to homepage if user is already logged in
     }
-    let token = authHeader.split(" ")[1];
-    jwt.verify(token, "secret", function (err, decoded) {
-        if (err) {
-            return res.status(403).send({ error: "Authentication failed" });
-        }
-        // If token is valid, you can access decoded information
-        req.user = decoded; // Attach user information to request object for future use
-        next();
-    });
-}
-
-module.exports = verifyToken;
-
-
-
-
+    next();
+  };
+  
+  const notVerifyUser = (req, res, next) => {
+    if (!req.session.loggedIn) {
+      return res.redirect("/login"); // Redirect to login page if user is not logged in
+    }
+    next();
+  };
+  
+  module.exports = {
+    verifyUser,
+    notVerifyUser
+  };
   

@@ -41,7 +41,18 @@
 
 
             <form class="form-signin" action="/login" method="post" name="form">
+
+
+          {{#if loginErr}}
+
+					    <p class="error font-weight-bold text-danger">invalid username or password!</p>
+
+					{{/if}}
+
+
               <div class="mb-3">
+
+                
                   
                 <input
                   class="form-control"

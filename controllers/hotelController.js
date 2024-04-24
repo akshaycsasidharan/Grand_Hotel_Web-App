@@ -11,6 +11,7 @@ module.exports = {
   },
 
   hotelsignup: (req, res) => {
+
     try {
       hotelHelper.hoteldoSignup(req.body,req.file).then((response) => {
         console.log("$$$$$$$$$$",response);
@@ -37,6 +38,7 @@ module.exports = {
 
   },
 
+  
 
 hotellogin: (req, res, next) => {
   

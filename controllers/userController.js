@@ -38,16 +38,24 @@ module.exports = {
   },
 
   loginPage: (req, res, next) => {
-    res.render("user/login");
+    if (req.session.loggedIn) {
+      return res.redirect("user/homePage");
+    } else {
+      res.render("user/login");
+    } 
   },
+
 
 login: (req, res, next) => {
   try {
     userHelper.doLogin(req.body).then((response) => {
-      console.log("#############33",response);
+      // console.log("#############33",response);
       if (response.status) {
-        res.redirect("/allRooms"); 
+        req.session.loggedIn = true;
+        req.session.user = response.user;
+        res.redirect("/"); // Redirect to homepage or dashboard
       } else {
+        req.session.loginErr = true;
         res.render("user/login", { error: response.message });
       }
     });
@@ -146,67 +154,44 @@ login: (req, res, next) => {
 
 
 
-checkavailabilty: async (req, res) => {
-  const roomdetailsid = req.params.id;
-  const { checkin, checkout } = req.body;
-
-  try {
+ checkavailabilty: async (req, res,next) => {
+    const roomdetailsid = req.params.id;
+    const { checkin, checkout } = req.body;
+  
+    try {
       // Retrieve room details to get roomId
       const roomDetails = await userHelper.roomsDetails(roomdetailsid);
       const roomId = roomDetails.roomId;
-
+  
       // Check if any existing booking overlaps with the provided date range
-      const existingBooking = await userHelper.dochecking(checkin, checkout, roomId);
-
+      const existingBooking = await userHelper.dochecking(
+        checkin,
+        checkout,
+        roomId
+      );
+  
       if (existingBooking) {
-          // Dates are not available or already booked, inform the user
-          console.log("Selected dates are not available or already booked");
-          res.redirect("/room/" + roomdetailsid);
+        // Dates are not available or already booked, inform the user
+        console.log("Selected dates are not available or already booked");
+        res.redirect("/room/" + roomdetailsid);
       } else {
-          // Dates are available and not booked, proceed with booking
+        // Dates are available and not booked
+        if (req.session.loggedIn) {
+          // If user is logged in, redirect to booking route
           console.log("Dates are available for booking");
           res.redirect("/booking/" + roomdetailsid);
+        } else {
+          // If user is not logged in, redirect to room route
+          console.log("User is not logged in. Redirecting to room route.");
+          res.redirect("/login");
+        }
       }
-  } catch (error) {
+    } catch (error) {
       console.log("Error checking availability:", error);
       res.redirect("/"); // Redirect to home page with an error message
-  }
-},
-
-
-
-
-
-
-// checkavailabilty: async (req, res) => {
-//     const roomId = req.params.id;
-    
-//     console.log("Checking availability for dates:", req.body);
-//     try {
-//         const result = await userHelper.dochecking(req.body, roomId);
-//         if (result) {
-//             // Dates are available and not booked, proceed with booking
-//             console.log("Dates are available for booking");
-//             try {
-//                 // Perform the booking
-//                 const bookingResult = await userHelper.dobooking(req.body, roomId);
-//                 console.log("Booking successful:", bookingResult);
-//                 // Redirect to booking route with the roomid
-//                 res.redirect("/booking/" + roomId);
-//             } catch (error) {
-//                 console.log("Error in booking:", error);
-//                 res.redirect("/"); // Redirect to home page with an error message
-//             }
-//         } else {
-//             // Dates are not available or already booked, inform the user
-//             console.log("Selected dates are not available or already booked");
-//             res.redirect("/room/" + roomId); // Redirect to room page or any other appropriate route
-//         }
-//     } catch (error) {
-//         console.log("Error checking availability:", error);
-//         res.redirect("/"); // Redirect to home page with an error message
-//     }
-// },
+    }
+  },
+  
 
 
 
@@ -224,6 +209,7 @@ paymentpage:(req,res)=>{
 
 },
  
+
 
 payment: async (req, res) => {
 

@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+const {verifyUser ,notVerifyUser} = require("../middleware/userMiddleware");
 
 
 const {
