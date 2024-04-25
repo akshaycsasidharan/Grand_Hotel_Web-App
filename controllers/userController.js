@@ -37,23 +37,35 @@ module.exports = {
 
   },
 
+
   loginPage: (req, res, next) => {
+    
     if (req.session.loggedIn) {
       return res.redirect("user/homePage");
     } else {
       res.render("user/login");
     } 
+    
   },
 
 
 login: (req, res, next) => {
+
+  let roomobjectid=req.params.id;
+  console.log("roomobbbjecctttt",roomobjectid);
+
   try {
     userHelper.doLogin(req.body).then((response) => {
+
       // console.log("#############33",response);
       if (response.status) {
         req.session.loggedIn = true;
         req.session.user = response.user;
-        res.redirect("/"); // Redirect to homepage or dashboard
+        const userId = response.user.userId;
+
+        console.log("@@@@@@@@@@@@@@@userrrrrriddddd",userId);
+
+        res.redirect("/booking/" +userId  +roomobjectid); // Redirect to homepage or dashboard
       } else {
         req.session.loginErr = true;
         res.render("user/login", { error: response.message });
@@ -62,6 +74,54 @@ login: (req, res, next) => {
   } catch (error) {
     console.log(error);
   }
+},
+
+
+checkavailabilty: async (req, res,next) => {
+  
+  const roomdetailsid = req.params.id;
+  const { checkin, checkout } = req.body;
+
+  try {
+    // Retrieve room details to get roomId
+    const roomDetails = await userHelper.roomsDetails(roomdetailsid);
+    const roomId = roomDetails.roomId;
+
+    // Check if any existing booking overlaps with the provided date range
+    const existingBooking = await userHelper.dochecking(
+      checkin,
+      checkout,
+      roomId
+    );
+
+    if (existingBooking) {
+      // Dates are not available or already booked, inform the user
+      console.log("Selected dates are not available or already booked");
+      res.redirect("/room/" + roomdetailsid);
+    } else {
+      // Dates are available and not booked
+      if (req.session.loggedIn) {
+        let userId = req.session.user.userId;
+        // If user is logged in, redirect to booking route
+        console.log("Dates are available for booking");
+        res.redirect("/booking/" + roomdetailsid + userId);
+      } else {
+        // If user is not logged in, redirect to room route
+        console.log("User is not logged in. Redirecting to room route.");
+        res.redirect("/login/"+roomdetailsid);
+      }
+    }
+  } catch (error) {
+    console.log("Error checking availability:", error);
+    res.redirect("/"); // Redirect to home page with an error message
+  }
+},
+
+
+
+logout:(req,res) => {
+  req.session.destroy();
+  res.redirect("/");
 },
 
 
@@ -151,48 +211,6 @@ login: (req, res, next) => {
         res.status(500).send("Error in booking");
     }
 },
-
-
-
- checkavailabilty: async (req, res,next) => {
-    const roomdetailsid = req.params.id;
-    const { checkin, checkout } = req.body;
-  
-    try {
-      // Retrieve room details to get roomId
-      const roomDetails = await userHelper.roomsDetails(roomdetailsid);
-      const roomId = roomDetails.roomId;
-  
-      // Check if any existing booking overlaps with the provided date range
-      const existingBooking = await userHelper.dochecking(
-        checkin,
-        checkout,
-        roomId
-      );
-  
-      if (existingBooking) {
-        // Dates are not available or already booked, inform the user
-        console.log("Selected dates are not available or already booked");
-        res.redirect("/room/" + roomdetailsid);
-      } else {
-        // Dates are available and not booked
-        if (req.session.loggedIn) {
-          // If user is logged in, redirect to booking route
-          console.log("Dates are available for booking");
-          res.redirect("/booking/" + roomdetailsid);
-        } else {
-          // If user is not logged in, redirect to room route
-          console.log("User is not logged in. Redirecting to room route.");
-          res.redirect("/login");
-        }
-      }
-    } catch (error) {
-      console.log("Error checking availability:", error);
-      res.redirect("/"); // Redirect to home page with an error message
-    }
-  },
-  
-
 
 
 paymentpage:(req,res)=>{
