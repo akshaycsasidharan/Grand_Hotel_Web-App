@@ -145,6 +145,7 @@ hotellogin: (req, res, next) => {
     });
   },
   
+
   editrooms: (req, res) => {
     let id = req.params.id;
 
