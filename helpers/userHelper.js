@@ -208,58 +208,58 @@ dochecking: async (checkin, checkout, roomId) => {
 
 
 
-payment: async (name, price, hotelId, roomId, userId) => {
-  try {
-      // Create options object for Razorpay order
-      const options = {
-          amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
-          currency: 'INR',
-          receipt: `razorUser_${userId}`, // Use userId in receipt for better tracking
-          payment_capture: '1' // Automatically capture payments
-      };
+      payment: async (name, price, hotelId, roomId, userId) => {
+        try {
+            // Create options object for Razorpay order
+            const options = {
+                amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
+                currency: 'INR',
+                receipt: `razorUser_${userId}`, // Use userId in receipt for better tracking
+                payment_capture: '1' // Automatically capture payments
+            };
 
-      // Create Razorpay order
-      const order = await new Promise((resolve, reject) => {
-          razorpayInstance.orders.create(options, (err, order) => {
-              if (err) {
-                  reject(err);
-              } else {
-                  resolve(order);
-              }
-          });
-      });
+            // Create Razorpay order
+            const order = await new Promise((resolve, reject) => {
+                razorpayInstance.orders.create(options, (err, order) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(order);
+                    }
+                });
+            });
 
-      // If order creation is successful, save payment details to MongoDB
-      const paymentDetails = {
-          name: name,
-          amount: price,
-          order_id: order.id,
-          roomId: roomId,
-          hotelId: hotelId,
-          userId: userId,
-          status: 'pending' // Initially set status to 'pending'
-      };
+            // If order creation is successful, save payment details to MongoDB
+            const paymentDetails = {
+                name: name,
+                amount: price,
+                order_id: order.id,
+                roomId: roomId,
+                hotelId: hotelId,
+                userId: userId,
+                status: 'success' // Initially set status to 'pending'
+            };
 
-      // Connect to MongoDB
-      const db = await connectToMongoDB();
+            // Connect to MongoDB
+            const db = await connectToMongoDB();
 
-      // Insert payment details into MongoDB payment collection
-      await db.collection(collection.PAYMENT_COLLECTION).insertOne(paymentDetails);
+            // Insert payment details into MongoDB payment collection
+            await db.collection(collection.PAYMENT_COLLECTION).insertOne(paymentDetails);
 
-      // Return order details
-      return {
-          success: true,
-          msg: 'Order Created',
-          order_id: order.id,
-          amount: options.amount,
-          key_id: "rzp_test_8cTRaG2qyqmSGG",
-          product_name: name
-      };
-  } catch (error) {
-      console.log(error.message);
-      throw error;
-  }
-}
+            // Return order details
+            return {
+                success: true,
+                msg: 'Order Created',
+                order_id: order.id,
+                amount: options.amount,
+                key_id: "rzp_test_8cTRaG2qyqmSGG",
+                product_name: name
+            };
+        } catch (error) {
+            console.log(error.message);
+            throw error;
+        }
+      }
 
 
 };

@@ -242,7 +242,7 @@ payment: async (req, res) => {
 
       const userId = req.session.user.userId;
 
-      console.log("^^^^^^^^^^^^^^^^^^6",userId);
+      // console.log("^^^^^^^^^^^^^^^^^^6",userId);
 
       const { name, price,hotelId,roomId} = req.body;
 
