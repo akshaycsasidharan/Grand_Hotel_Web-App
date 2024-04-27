@@ -208,14 +208,13 @@ dochecking: async (checkin, checkout, roomId) => {
 
 
 
-payment: async (name, price,hotelId,roomId) => {
-  
+payment: async (name, price, hotelId, roomId, userId) => {
   try {
       // Create options object for Razorpay order
       const options = {
           amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
           currency: 'INR',
-          receipt: 'razorUser@gmail.com',
+          receipt: `razorUser_${userId}`, // Use userId in receipt for better tracking
           payment_capture: '1' // Automatically capture payments
       };
 
@@ -235,9 +234,10 @@ payment: async (name, price,hotelId,roomId) => {
           name: name,
           amount: price,
           order_id: order.id,
-          roomId: roomId, 
+          roomId: roomId,
           hotelId: hotelId,
-          status: 'success' 
+          userId: userId,
+          status: 'pending' // Initially set status to 'pending'
       };
 
       // Connect to MongoDB
@@ -260,7 +260,6 @@ payment: async (name, price,hotelId,roomId) => {
       throw error;
   }
 }
-
 
 
 };

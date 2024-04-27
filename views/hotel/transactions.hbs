@@ -44,8 +44,9 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>roomId</th>
                                             <th>hotelId</th>
+                                            <th>roomId</th>
+                                            <th>userId</th>
                                             <th>Razorpay order ID</th>
                                             <th>Paid</th>
                                             <th>Room Type</th>
@@ -59,8 +60,9 @@
                                         {{#each transactiondata}}
 
                                         <tr>
+                                            <td>{{this.hotelId}}</td> 
                                             <td>{{this.roomId}}</td>
-                                            <td>{{this.hotelId}}</td>
+                                            <td>{{this.userId}}</td>
                                             <td><b>{{this.order_id}}</b></td>
                                             <td>{{this.amount}}</td>
                                             <td>

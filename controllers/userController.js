@@ -41,11 +41,10 @@ module.exports = {
   loginPage: (req, res, next) => {
 
     const roomObjectId = req.params.id;
-
-    console.log("loggggginnniddddd", roomObjectId);
+    // console.log("loggggginnniddddd", roomObjectId);
     
     if (req.session.loggedIn) {
-        return res.redirect("/user/booking/" + roomObjectId); // Redirect to booking route with roomObjectId
+        return res.redirect("/user/booking/" + roomObjectId);
     } else {
         res.render("user/login", { roomObjectId });
     } 
@@ -55,17 +54,17 @@ module.exports = {
 login: (req, res, next) => {
 
   const roomObjectId = req.params.id;
-  console.log("**********************",roomObjectId);
+  // console.log("**********************",roomObjectId);
 
     try {
         userHelper.doLogin(req.body).then((response) => {
             if (response.status) {
                 req.session.loggedIn = true;
                 req.session.user = response.user;
-                const userId = response.user.userId;
+                // const userId = response.user.userId;
 
                 // Redirect to the booking route with userId and roomObjectId
-                res.redirect("/booking/" + userId + "/" + roomObjectId);
+                res.redirect("/booking/" + roomObjectId);
             } else {
                 req.session.loginErr = true;
                 res.render("user/login", { error: response.message });
@@ -77,13 +76,9 @@ login: (req, res, next) => {
 },
 
 
-
-
 booking:(req,res) =>{
-  
   let id = req.params.id;
-
-  console.log("innnnnnnnnn",id);
+  // console.log("innnnnnnnnn",id);
   
   try {
        userHelper.roomsDetails(id).then((roomDetails)=>{
@@ -105,14 +100,12 @@ booking:(req,res) =>{
 
 bookingrooms: (req, res) => {
 
-
 const roomId = req.params.id;
 
   try {
       const bookingData = req.body;
-
       userHelper.roomsDetails(roomId).then((roomDetails) => {
-        
+
           const hotelId = roomDetails.hotelId; 
           const roomId = roomDetails.roomId; 
           const roomDetailsid = roomDetails._id;
@@ -164,7 +157,7 @@ checkavailabilty: async (req, res,next) => {
         let userId = req.session.user.userId;
         // If user is logged in, redirect to booking route
         console.log("Dates are available for booking");
-        res.redirect("/booking/" + userId + "/" + roomdetailsid );
+        res.redirect("/booking/"  + roomdetailsid );
       } else {
         // If user is not logged in, redirect to room route
         console.log("User is not logged in. Redirecting to room route.");
@@ -224,6 +217,7 @@ logout:(req,res) => {
 
 
 paymentpage:(req,res)=>{
+
   let id = req.params.id;
   try {
        userHelper.roomsDetails(id).then((roomDetails)=>{
@@ -241,14 +235,23 @@ paymentpage:(req,res)=>{
 
 payment: async (req, res) => {
 
-  console.log("reqqqqqqqqqqqq.bodyyyyyyyyyyy",req.body);
+  // console.log("reqqqqqqqqqqqq.bodyyyyyyyyyyy",req.body);
   try {
+
+    if(req.session.loggedIn){
+
+      const userId = req.session.user.userId;
+
+      console.log("^^^^^^^^^^^^^^^^^^6",userId);
+
       const { name, price,hotelId,roomId} = req.body;
 
-      const paymentResult = await userHelper.payment(name, price,hotelId,roomId);
+      const paymentResult = await userHelper.payment(name, price,hotelId,roomId,userId);
 
       // Send response back to client
       res.status(200).send(paymentResult);
+    }
+
   } catch (error) {
       console.log(error.message);
       // Handle error
