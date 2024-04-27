@@ -53,13 +53,16 @@ module.exports = {
 
 
 login: (req, res, next) => {
+
+  const roomObjectId = req.params.id;
+  console.log("**********************",roomObjectId);
+
     try {
         userHelper.doLogin(req.body).then((response) => {
             if (response.status) {
                 req.session.loggedIn = true;
                 req.session.user = response.user;
                 const userId = response.user.userId;
-                const roomObjectId = req.params.id;
 
                 // Redirect to the booking route with userId and roomObjectId
                 res.redirect("/booking/" + userId + "/" + roomObjectId);
@@ -161,7 +164,7 @@ checkavailabilty: async (req, res,next) => {
         let userId = req.session.user.userId;
         // If user is logged in, redirect to booking route
         console.log("Dates are available for booking");
-        res.redirect("/booking/" + roomdetailsid );
+        res.redirect("/booking/" + userId + "/" + roomdetailsid );
       } else {
         // If user is not logged in, redirect to room route
         console.log("User is not logged in. Redirecting to room route.");

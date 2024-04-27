@@ -31,7 +31,7 @@ router.post("/signup",signup);
 
 router.get("/login/:id", loginPage);
 
-router.post("/login", login);
+router.post("/login/:id", login);
 
 router.get("/allrooms/:id",allrooms);
 
