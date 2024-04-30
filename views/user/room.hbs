@@ -51,24 +51,28 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="room-booking">
-                        <h3>Check Availability</h3>
-                            <form action="/checkavailability/{{roomDetails._id}}" method="post" name="form">
-                            <div class="check-date">
-                                <label for="date-in">Check In:</label>
-                                <input type="text" name="checkin" class="date-input" id="date-in">
-                                <i class="icon_calendar"></i>
-                            </div>
-                            <div class="check-date">
-                                <label for="date-out">Check Out:</label>
-                                <input type="text" name="checkout" class="date-input" id="date-out">
-                                <i class="icon_calendar"></i>
-                            </div>
-                            <button type="submit">Check Availability</button>
-                        </form>
-                    </div>
-                </div>
+               <div class="col-lg-4">
+    <div class="room-booking">
+        <h3>Check Availability</h3>
+
+        <form action="/checkavailability/{{roomDetails._id}}" method="post" name="form">
+            <div class="check-date">
+                <label for="date-in">Check In:</label>
+                <input type="text" name="checkin" class="date-input" id="date-in">
+                <i class="icon_calendar"></i>
+            </div>
+            <div class="check-date">
+                <label for="date-out">Check Out:</label>
+                <input type="text" name="checkout" class="date-input" id="date-out">
+                <i class="icon_calendar"></i>
+            </div>
+            <button type="submit">Check Availability</button>
+        </form>
+
+
+    </div>
+</div>
+
             </div>
         </div>
     </section>

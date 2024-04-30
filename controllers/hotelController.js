@@ -52,8 +52,9 @@ hotellogin: (req, res, next) => {
       res.render("/", { error: response.message });
     }
   })
-  
 },
+
+
   
   hoteldashboard: (req, res, next) => {
     let hotel = req.session.hotel;

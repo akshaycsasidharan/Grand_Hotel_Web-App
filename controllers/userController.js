@@ -98,34 +98,28 @@ booking:(req,res) =>{
 
 
 
-bookingrooms: (req, res) => {
+    bookingrooms: (req, res) => {
+      const roomId = req.params.id;
 
-const roomId = req.params.id;
-
-  try {
-      const bookingData = req.body;
-      userHelper.roomsDetails(roomId).then((roomDetails) => {
-
-          const hotelId = roomDetails.hotelId; 
-          const roomId = roomDetails.roomId; 
+      try {
+        const bookingData = req.body;
+        userHelper.roomsDetails(roomId).then((roomDetails) => {
+          const hotelId = roomDetails.hotelId;
+          const roomId = roomDetails.roomId;
           const roomDetailsid = roomDetails._id;
-
-          // console.log("roomDetailsid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1",roomDetailsid);
-          // console.log("roommiddroroooommmiddd", roomId);
-          // console.log("hotelidddddddddd", hotelId);
-
+          
           userHelper.dobooking(bookingData, roomId, hotelId).then((bookingId) => {
-              console.log("Booking ID:", bookingId);
-              // Redirect to the payment page with the correct bookingId
-              res.redirect("/payment/" +roomDetailsid );
+            userHelper.price(bookingId).then((totalprice) => {
+              res.redirect(`/payment/${roomDetailsid}?totalprice=${totalprice}`);
+            });
           });
-      });
-  } catch (error) {
-      console.log(error);
-      // Handle error
-      res.status(500).send("Error in booking");
-  }
-},
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Error in booking");
+      }
+    },
+
 
 
 
@@ -154,7 +148,7 @@ checkavailabilty: async (req, res,next) => {
     } else {
       // Dates are available and not booked
       if (req.session.loggedIn) {
-        let userId = req.session.user.userId;
+        // let userId = req.session.user.userId;
         // If user is logged in, redirect to booking route
         console.log("Dates are available for booking");
         res.redirect("/booking/"  + roomdetailsid );
@@ -191,7 +185,7 @@ logout:(req,res) => {
     let hotelId = req.params.id; // Fetch the hotelId from route parameters
     try {
         userHelper.showrooms(hotelId).then((roomsdata) => {
-            console.log("$$$$$$$$$$$$$$", roomsdata);
+            // console.log("$$$$$$$$$$$$$$", roomsdata);
             res.render("user/allRooms", {
                 roomsdata
             });

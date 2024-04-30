@@ -164,6 +164,21 @@ module.exports = {
     });
 },
 
+price:async(bookingId) => {
+  const db = await connectToMongoDB ();
+   const bookingprice = await db.collection(collection.BOOKING_COLLECTION).find(bookingId).toArray();
+   console.log("boooooooookinggpriceee@22222222",bookingprice);
+   console.log("bookingprice....",bookingprice[0].roomId);
+   console.log("arrayy",bookingprice[0].dates.length);
+   const id = bookingprice[0].roomId;
+   const roomprice = await db.collection(collection.ROOMS_COLLECTION).find({roomId : id}).toArray();
+   console.log("$$$$$$$$$4",roomprice);
+
+   const totalprice = roomprice[0].Price*bookingprice[0].dates.length;
+  //  console.log("totalpriceee," ,totalprice);
+   return totalprice;
+},
+
 
 
 dochecking: async (checkin, checkout, roomId) => {
