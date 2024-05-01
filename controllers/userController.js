@@ -215,23 +215,23 @@ logout:(req,res) => {
   },
 
 
-// paymentpage:(req,res)=>{
+paymentpage:(req,res)=>{
 
-//   // let value = req.query.params.value;
-//   console.log("requestconsoleee",req.query);
+  // let value = req.query.params.value;
+  console.log("requestconsoleee",req.query);
 
-//   let id = req.params.id;
-//   try {
-//        userHelper.roomsDetails(id).then((roomDetails)=>{
-//         // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
-//         res.render("user/payment", { roomDetails });
-//        });
-//   } catch (error) {
-//       console.error(error);
-//       res.status(500).send("Error fetching room details");
-//   }
+  let id = req.params.id;
+  try {
+       userHelper.roomsDetails(id).then((roomDetails)=>{
+        // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
+        res.render("user/payment", { roomDetails });
+       });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Error fetching room details");
+  }
 
-// },
+},
  
 
 
