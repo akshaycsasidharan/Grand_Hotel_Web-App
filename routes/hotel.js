@@ -26,15 +26,17 @@ const {
   editfacilities,
   customers,
   transactions,
-  reviews,
+  // reviews,
   roomspage,
   facilitypage,
   deleteroom,
   deletefacilities,
   roomedit,
-  facilityedit
+  facilityedit,
+  logout
 } = require("../controllers/hotelController");
 
+router.get("/logout",logout);
 
 router.get("/hotelssignup",signuppage);
 
@@ -74,7 +76,6 @@ router.post("/editfacilities/:id",upload.single('image'),facilityedit);
 
 router.get("/transactions",transactions);
 
-router.get("/reviews",reviews);
 
 
 module.exports = router;

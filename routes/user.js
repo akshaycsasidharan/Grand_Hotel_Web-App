@@ -14,7 +14,7 @@ const {
   login,
   booking,
   bookingrooms,
-  paymentpage,
+  // paymentpage,
   payment,
   checkavailabilty,
   logout
@@ -41,7 +41,7 @@ router.get("/booking/:id",booking);
 
 router.post("/bookingroom/:id", bookingrooms);
 
-router.get("/payment/:id", paymentpage);
+// router.get("/payment/:id", paymentpage);
 
 router.post("/dopayment",payment);
 

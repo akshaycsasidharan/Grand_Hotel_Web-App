@@ -5,16 +5,12 @@ const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const Razorpay = require("razorpay");
 
-
 const razorpayInstance = new Razorpay({
   key_id: "rzp_test_8cTRaG2qyqmSGG",
-  key_secret: "lPhtD4Guxq3dUurYJLs9OwXi"
+  key_secret: "lPhtD4Guxq3dUurYJLs9OwXi",
 });
 
-
 module.exports = {
-
-
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
       //   console.log(userData);
@@ -28,10 +24,7 @@ module.exports = {
       }
 
       let signupData = {
-
-
-        userId:Date.now().toString(16),
-
+        userId: Date.now().toString(16),
 
         name: userData.name,
         email: userData.email,
@@ -49,7 +42,6 @@ module.exports = {
         });
     });
   },
-
 
   doLogin: (loginData) => {
     return new Promise(async (resolve, reject) => {
@@ -85,7 +77,6 @@ module.exports = {
     });
   },
 
-
   showhotels: async () => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -98,21 +89,19 @@ module.exports = {
     });
   },
 
-
   showrooms: async (hotelId) => {
     try {
-        const db = await connectToMongoDB();
-        const hotelrooms = await db
-            .collection(collection.ROOMS_COLLECTION)
-            .find({ hotelId: hotelId })
-            .toArray();
-        return hotelrooms;
+      const db = await connectToMongoDB();
+      const hotelrooms = await db
+        .collection(collection.ROOMS_COLLECTION)
+        .find({ hotelId: hotelId })
+        .toArray();
+      return hotelrooms;
     } catch (error) {
-        console.error("Error fetching hotel rooms:", error);
-        throw error; // Propagate the error to the caller
+      console.error("Error fetching hotel rooms:", error);
+      throw error; // Propagate the error to the caller
     }
-},
-
+  },
 
   roomsDetails: async (roomid) => {
     try {
@@ -126,65 +115,68 @@ module.exports = {
     }
   },
 
-
   dobooking: (bookingdata, roomId, hotelId) => {
-
     return new Promise(async (resolve, reject) => {
-        // Extract check-in and checkout dates from the booking data
-        const { checkin, checkout } = bookingdata;
+      // Extract check-in and checkout dates from the booking data
+      const { checkin, checkout } = bookingdata;
 
-        // Construct the array of dates between check-in and checkout dates
-        const datesInRange = [];
-        let currentDate = new Date(checkin);
-        const checkoutDate = new Date(checkout);
-        while (currentDate <= checkoutDate) {
-            datesInRange.push(new Date(currentDate));
-            currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-        }
+      // Construct the array of dates between check-in and checkout dates
+      const datesInRange = [];
+      let currentDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+      while (currentDate <= checkoutDate) {
+        datesInRange.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+      }
 
-        // Construct the booking object with the array of dates
-        let bookingObject = {
-            roomId: roomId,
-            hotelId: hotelId,
-            name: bookingdata.name,
-            email: bookingdata.email,
-            dates: datesInRange, // Store the array of dates
-        };
+      // Construct the booking object with the array of dates
+      let bookingObject = {
+        roomId: roomId,
+        hotelId: hotelId,
+        name: bookingdata.name,
+        email: bookingdata.email,
+        dates: datesInRange, // Store the array of dates
+      };
 
-        try {
-            const db = await connectToMongoDB();
-            // Insert the booking object into the database
-            const result = await db.collection(collection.BOOKING_COLLECTION).insertOne(bookingObject);
-            // Resolve with the inserted ID
-            resolve(result.insertedId);
-        } catch (error) {
-            console.error("Error in booking:", error);
-            reject(error);
-        }
+      try {
+        const db = await connectToMongoDB();
+        // Insert the booking object into the database
+        const result = await db
+          .collection(collection.BOOKING_COLLECTION)
+          .insertOne(bookingObject);
+        // Resolve with the inserted ID
+        resolve(result.insertedId);
+      } catch (error) {
+        console.error("Error in booking:", error);
+        reject(error);
+      }
     });
-},
+  },
 
-price:async(bookingId) => {
-  const db = await connectToMongoDB ();
-   const bookingprice = await db.collection(collection.BOOKING_COLLECTION).find(bookingId).toArray();
-   console.log("boooooooookinggpriceee@22222222",bookingprice);
-   console.log("bookingprice....",bookingprice[0].roomId);
-   console.log("arrayy",bookingprice[0].dates.length);
-   const id = bookingprice[0].roomId;
-   const roomprice = await db.collection(collection.ROOMS_COLLECTION).find({roomId : id}).toArray();
-   console.log("$$$$$$$$$4",roomprice);
+  price: async (bookingId) => {
+    console.log("priceeeeeeeeeeid", bookingId);
+    const db = await connectToMongoDB();
+    const bookingprice = await db
+      .collection(collection.BOOKING_COLLECTION)
+      .find(bookingId)
+      .toArray();
+    console.log("boooooooookinggpriceee@22222222", bookingprice);
+    console.log("bookingprice....", bookingprice[0].roomId);
+    console.log("arrayy", bookingprice[0].dates.length);
+    const id = bookingprice[0].roomId;
+    const roomprice = await db
+      .collection(collection.ROOMS_COLLECTION)
+      .find({ roomId: id })
+      .toArray();
+    console.log("$$$$$$$$$4", roomprice);
 
-   const totalprice = roomprice[0].Price*bookingprice[0].dates.length;
-  //  console.log("totalpriceee," ,totalprice);
-   return totalprice;
-},
+    const totalprice = roomprice[0].Price * bookingprice[0].dates.length;
+    //  console.log("totalpriceee," ,totalprice);
+    return totalprice;
+  },
 
-
-
-dochecking: async (checkin, checkout, roomId) => {
-
-  
-  try {
+  dochecking: async (checkin, checkout, roomId) => {
+    try {
       const db = await connectToMongoDB();
 
       // Convert check-in and checkout dates to Date objects
@@ -193,88 +185,99 @@ dochecking: async (checkin, checkout, roomId) => {
 
       // Ensure check-in date is before or equal to check-out date
       if (checkinDate > checkoutDate) {
-          throw new Error("Check-in date cannot be later than check-out date");
+        throw new Error("Check-in date cannot be later than check-out date");
       }
 
       // Construct the array of dates between check-in and checkout dates
       const datesInRange = [];
       let currentDate = new Date(checkinDate);
       while (currentDate <= checkoutDate) {
-          datesInRange.push(new Date(currentDate));
-          currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+        datesInRange.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
       }
 
       // Query the booking collection to check if any booking overlaps with the provided date range and roomId
-      const existingBooking = await db.collection(collection.BOOKING_COLLECTION).findOne({
+      const existingBooking = await db
+        .collection(collection.BOOKING_COLLECTION)
+        .findOne({
           roomId: roomId, // Match the roomId
           $or: [
-              { dates: { $in: datesInRange } }, // Check if any date falls within the provided date range
-              { $and: [{ checkin: { $lte: checkinDate } }, { checkout: { $gte: checkoutDate } }] }, // Existing booking spans the provided date range
-              { $and: [{ checkin: { $gte: checkinDate } }, { checkout: { $lte: checkoutDate } }] } // Existing booking falls within the given date range
-          ]
-      });
+            { dates: { $in: datesInRange } }, // Check if any date falls within the provided date range
+            {
+              $and: [
+                { checkin: { $lte: checkinDate } },
+                { checkout: { $gte: checkoutDate } },
+              ],
+            }, // Existing booking spans the provided date range
+            {
+              $and: [
+                { checkin: { $gte: checkinDate } },
+                { checkout: { $lte: checkoutDate } },
+              ],
+            }, // Existing booking falls within the given date range
+          ],
+        });
 
       // Return the booking data if exists, otherwise return null
       return existingBooking;
-  } catch (error) {
+    } catch (error) {
       throw error;
-  }
-},
+    }
+  },
 
+  payment: async (name, price, hotelId, roomId, userId) => {
+    console.log("priceeeee", price);
+    try {
+      // Create options object for Razorpay order
+      const options = {
+        amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
+        currency: "INR",
+        receipt: `razorUser_${userId}`, // Use userId in receipt for better tracking
+        payment_capture: "1", // Automatically capture payments
+      };
 
+      // Create Razorpay order
+      const order = await new Promise((resolve, reject) => {
+        razorpayInstance.orders.create(options, (err, order) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(order);
+          }
+        });
+      });
 
-      payment: async (name, price, hotelId, roomId, userId) => {
-        try {
-            // Create options object for Razorpay order
-            const options = {
-                amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
-                currency: 'INR',
-                receipt: `razorUser_${userId}`, // Use userId in receipt for better tracking
-                payment_capture: '1' // Automatically capture payments
-            };
+      // If order creation is successful, save payment details to MongoDB
+      const paymentDetails = {
+        name: name,
+        amount: price,
+        order_id: order.id,
+        roomId: roomId,
+        hotelId: hotelId,
+        userId: userId,
+        status: "success", // Initially set status to 'pending'
+      };
 
-            // Create Razorpay order
-            const order = await new Promise((resolve, reject) => {
-                razorpayInstance.orders.create(options, (err, order) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(order);
-                    }
-                });
-            });
+      // Connect to MongoDB
+      const db = await connectToMongoDB();
 
-            // If order creation is successful, save payment details to MongoDB
-            const paymentDetails = {
-                name: name,
-                amount: price,
-                order_id: order.id,
-                roomId: roomId,
-                hotelId: hotelId,
-                userId: userId,
-                status: 'success' // Initially set status to 'pending'
-            };
+      // Insert payment details into MongoDB payment collection
+      await db
+        .collection(collection.PAYMENT_COLLECTION)
+        .insertOne(paymentDetails);
 
-            // Connect to MongoDB
-            const db = await connectToMongoDB();
-
-            // Insert payment details into MongoDB payment collection
-            await db.collection(collection.PAYMENT_COLLECTION).insertOne(paymentDetails);
-
-            // Return order details
-            return {
-                success: true,
-                msg: 'Order Created',
-                order_id: order.id,
-                amount: options.amount,
-                key_id: "rzp_test_8cTRaG2qyqmSGG",
-                product_name: name
-            };
-        } catch (error) {
-            console.log(error.message);
-            throw error;
-        }
-      }
-
-
+      // Return order details
+      return {
+        success: true,
+        msg: "Order Created",
+        order_id: order.id,
+        amount: options.amount,
+        key_id: "rzp_test_8cTRaG2qyqmSGG",
+        product_name: name,
+      };
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+    }
+  },
 };

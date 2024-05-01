@@ -57,6 +57,7 @@ hotellogin: (req, res, next) => {
 
   
   hoteldashboard: (req, res, next) => {
+    
     let hotel = req.session.hotel;
     console.log("hotelllllllllllll $$$$$",hotel);
     console.log("====================== session =================",req.session);
@@ -126,7 +127,7 @@ hotellogin: (req, res, next) => {
 
     hotelHelper.viewrooms(hoteldetails).then(async (viewdata) => {
 
-      console.log("hoteldetails",hoteldetails);
+      // console.log("hoteldetails",hoteldetails);
 
       res.render("hotel/rooms", {
 
@@ -211,11 +212,9 @@ hotellogin: (req, res, next) => {
   },
 
 
-
-
-
-  reviews: (req, res) => {
-    res.render("hotel/reviews");
+  logout:(req,res) => {
+    req.session.destroy();
+    res.redirect("/");
   },
   
 };
