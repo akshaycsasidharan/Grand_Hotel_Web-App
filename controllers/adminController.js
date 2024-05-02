@@ -49,9 +49,10 @@ hotelpage: (req,res) => {
 
 
 block: (req, res, next) => {
+  
   const id = req.params.id; 
   adminHelper.blockUser(id).then(() => {
-    res.redirect("/admin/dashBoard");
+    res.redirect("/admin/hotels");
   }).catch(error => {
     // console.error(error);
     res.status(500).send("Error blocking user");
@@ -62,7 +63,7 @@ block: (req, res, next) => {
 unblock: (req, res) => {
   const id = req.params.id; 
   adminHelper.unblockUser(id).then(() => {
-    res.redirect("/admin/dashBoard");
+    res.redirect("/admin/hotels");
   }).catch(error => {
     // console.error(error);
     res.status(500).send("Error unblocking user");

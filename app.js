@@ -5,9 +5,10 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var hbs = require("express-handlebars");
 let Hbs = require("handlebars");
-// var fileupload = require("express-fileupload");
-// var jwt = require("jsonwebtoken");
 const Razorpay = require("razorpay");
+
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 
 

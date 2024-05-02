@@ -89,7 +89,9 @@ hotellogin: (req, res, next) => {
     console.log("reqqqq.params.idd",req.params.id);
     try {
       hotelHelper.addrooms(req.body, req.file,hotelId).then((insertedId) => {
+
         console.log("Room inserted with ID:", insertedId);
+
         res.redirect("/hotel/rooms");
       }).catch((error) => {
         console.error("Error adding room:", error);
@@ -101,17 +103,6 @@ hotellogin: (req, res, next) => {
     }
   },
 
-  addfacilities: (req, res) => {
-    console.log("@@@@@@@@@@@@@@@@@@", req.body);
-    try {
-      hotelHelper.addfacility(req.body, req.file).then((response) => {
-        // console.log("%%%%%%%%%%%%%%%%%",response);
-        res.redirect("/hotel/facilities");
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  },
   
   roomspage: (req, res) => {
 
@@ -132,10 +123,23 @@ hotellogin: (req, res, next) => {
       res.render("hotel/rooms", {
 
         viewdata,
-        hotel
+        // hotel
       });
     });
   },
+
+  addfacilities: (req, res) => {
+    console.log("@@@@@@@@@@@@@@@@@@", req.body);
+    try {
+      hotelHelper.addfacility(req.body, req.file).then((response) => {
+        // console.log("%%%%%%%%%%%%%%%%%",response);
+        res.redirect("/hotel/facilities");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
 
   facilitypage: (req, res) => {
     console.log("###########33", req.body);
@@ -202,19 +206,20 @@ hotellogin: (req, res, next) => {
 
   transactions: (req, res) => {
 
-    hotelHelper.transactiondetails().then((transactiondata) => {
+    let hotel = req.session.hotel;
 
-      res.render("hotel/transactions", {
-        transactiondata
+    hotelHelper.transactiondetails(hotel).then((transactiondata) => {
+      res.render("hotel/transactions", { 
+       transactiondata
       });
-
     })
+    
   },
 
 
   logout:(req,res) => {
     req.session.destroy();
-    res.redirect("/");
+    res.redirect("/hotel");
   },
   
 };

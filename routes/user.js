@@ -49,5 +49,11 @@ router.post("/checkavailability/:id",checkavailabilty);
 
 router.get("/logout",logout);
 
+ // Add a new route to handle PDF download
+ router.get("/download/:file", (req, res) => {
+  const file = `${__dirname}/../download/${req.params.file}`;
+  res.download(file); // Set disposition and send it.
+});
+
 
 module.exports = router;

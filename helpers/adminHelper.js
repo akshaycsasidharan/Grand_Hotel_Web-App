@@ -105,6 +105,7 @@ module.exports = {
 
 
   transactiondetails:() => {
+    
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
     let transactionview = db.collection(collection.PAYMENT_COLLECTION)

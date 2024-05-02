@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const { ObjectId } = require("mongodb");
 const { facility } = require("../controllers/hotelController");
 const { response } = require("express");
-const jwt = require("jsonwebtoken");
 
 
 module.exports = {
@@ -92,9 +91,9 @@ module.exports = {
 
   
   addrooms: (roomdata, file,hotelId) => {
+
     return new Promise(async (resolve, reject) => {
         let dataroom = {
-
 
           roomId:Date.now().toString(16),
 
@@ -209,6 +208,7 @@ module.exports = {
 
 
   roomedit: (userid, idroom, file) => {
+    
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
@@ -298,14 +298,23 @@ module.exports = {
     });
   },
 
-  transactiondetails:() => {
+
+  transactiondetails: (hotel) => {
+
+    // console.log("Hotel ID:", hotel.hotelId);
+
     return new Promise(async (resolve, reject) => {
-      const db = await connectToMongoDB();
-    let transactionview = db.collection(collection.PAYMENT_COLLECTION)
-        .find({})
-        .toArray();
-        resolve(transactionview)
+      try {
+        const db = await connectToMongoDB();
+        let transactionview = await db.collection(collection.PAYMENT_COLLECTION)
+          .find({ hotelId: hotel.hotelId })
+          .toArray();
+        resolve(transactionview);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
+  
 
 };

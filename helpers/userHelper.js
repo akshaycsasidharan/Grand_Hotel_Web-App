@@ -11,6 +11,8 @@ const razorpayInstance = new Razorpay({
 });
 
 module.exports = {
+
+
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
       //   console.log(userData);
@@ -225,8 +227,11 @@ module.exports = {
     }
   },
 
+
   payment: async (name, price, hotelId, roomId, userId) => {
-    console.log("priceeeee", price);
+
+    // console.log("priceeeee", price);
+
     try {
       // Create options object for Razorpay order
       const options = {
@@ -245,6 +250,7 @@ module.exports = {
             resolve(order);
           }
         });
+
       });
 
       // If order creation is successful, save payment details to MongoDB
@@ -279,5 +285,8 @@ module.exports = {
       console.log(error.message);
       throw error;
     }
+    
   },
+
+  
 };
