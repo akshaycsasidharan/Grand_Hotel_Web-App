@@ -59,8 +59,8 @@ hotellogin: (req, res, next) => {
   hoteldashboard: (req, res, next) => {
     
     let hotel = req.session.hotel;
-    console.log("hotelllllllllllll $$$$$",hotel);
-    console.log("====================== session =================",req.session);
+    // console.log("hotelllllllllllll $$$$$",hotel);
+    // console.log("====================== session =================",req.session);
 
     res.render("hotel/hotelDashboard",{
       hotel,
@@ -70,7 +70,7 @@ hotellogin: (req, res, next) => {
 
   addroomspage : (req, res) => {
     let hotelId = req.params.id;
-    console.log("hotelId",hotelId);
+    // console.log("hotelId",hotelId);
     res.render("hotel/addRooms",{
       hotelId
     });
@@ -82,20 +82,24 @@ hotellogin: (req, res, next) => {
 
   addrooms: (req, res) => {
 
-    console.log("addroomssssssssss ======");
+    // console.log("addroomssssssssss ======");
 
     let hotelId = req.params.id;
 
-    console.log("reqqqq.params.idd",req.params.id);
+    // console.log("reqqqq.params.idd",req.params.id);
+
     try {
       hotelHelper.addrooms(req.body, req.file,hotelId).then((insertedId) => {
 
-        console.log("Room inserted with ID:", insertedId);
+        console.log("Room inserted with ID...............:", insertedId);
 
-        res.redirect("/hotel/rooms");
+        res.redirect("/hotel/rooms" );
+        
       }).catch((error) => {
+
         console.error("Error adding room:", error);
         res.status(500).send("Error adding room");
+
       });
     } catch (error) {
       console.log(error);
@@ -106,15 +110,15 @@ hotellogin: (req, res, next) => {
   
   roomspage: (req, res) => {
 
-    console.log("##########$$#^GGFN B BN BB G");
+    // console.log("##########$$#^GGFN B BN BB G");
 
       let hotel = req.session.hotel;
 
-      console.log(("========= hotel ======",hotel));
+      // console.log(("========= hotel ======",hotel));
 
     let hoteldetails = req.params.id;
 
-    console.log("hoteldetailssss",hoteldetails);
+    // console.log("hoteldetailssss",hoteldetails);
 
     hotelHelper.viewrooms(hoteldetails).then(async (viewdata) => {
 
@@ -123,7 +127,7 @@ hotellogin: (req, res, next) => {
       res.render("hotel/rooms", {
 
         viewdata,
-        // hotel
+        hotel
       });
     });
   },
@@ -205,15 +209,13 @@ hotellogin: (req, res, next) => {
   },
 
   transactions: (req, res) => {
-
     let hotel = req.session.hotel;
-
     hotelHelper.transactiondetails(hotel).then((transactiondata) => {
       res.render("hotel/transactions", { 
        transactiondata
       });
     })
-    
+
   },
 
 
@@ -222,4 +224,5 @@ hotellogin: (req, res, next) => {
     res.redirect("/hotel");
   },
   
+
 };

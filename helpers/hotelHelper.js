@@ -6,10 +6,8 @@ const { ObjectId } = require("mongodb");
 const { facility } = require("../controllers/hotelController");
 const { response } = require("express");
 
-
 module.exports = {
-
-  hoteldoSignup: (hotelsData,file) => {
+  hoteldoSignup: (hotelsData, file) => {
     return new Promise(async (resolve, reject) => {
       console.log("!!!!!!!!!!!!!!!11hotelsssdataaaa", hotelsData);
 
@@ -22,17 +20,16 @@ module.exports = {
       }
 
       let hotelsignupData = {
-
-        hotelId:Date.now().toString(16),
+        hotelId: Date.now().toString(16),
 
         name: hotelsData.name,
         email: hotelsData.email,
         password: encryptedpassword,
-        Image:file.filename,
+        Image: file.filename,
         blocked: true,
         usercount: 0,
-        mobilenumber:hotelsData.mobilenumber,
-        Place:hotelsData.Place,
+        mobilenumber: hotelsData.mobilenumber,
+        Place: hotelsData.Place,
       };
 
       const db = await connectToMongoDB();
@@ -46,9 +43,7 @@ module.exports = {
     });
   },
 
-
   hotelLogin: (loginData) => {
-
     return new Promise(async (resolve, reject) => {
       let loginstatus = false;
       let response = {};
@@ -61,7 +56,7 @@ module.exports = {
         bcrypt.compare(loginData.password, hotel.password).then((status) => {
           if (status) {
             console.log("login success");
-            
+
             response.hotel = hotel;
             response.status = true;
             response.message = "Login Success";
@@ -83,53 +78,46 @@ module.exports = {
       const db = await connectToMongoDB();
       let customerdata = await db
         .collection(collection.USER_COLLECTION)
-        .find({booked:true})
+        .find({ booked: true })
         .toArray();
       resolve(customerdata);
     });
   },
 
-  
-  addrooms: (roomdata, file,hotelId) => {
-
+  addrooms: (roomdata, file, hotelId) => {
     return new Promise(async (resolve, reject) => {
-        let dataroom = {
+      let dataroom = {
+        roomId: Date.now().toString(16),
 
-          roomId:Date.now().toString(16),
+        hotelId: hotelId,
+        Roomnumber: roomdata.Roomnumber,
+        RoomType: roomdata.RoomType,
+        Floor: roomdata.Floor,
+        Price: roomdata.Price,
+        Capacity: roomdata.Capacity,
+        Image: file.filename,
+        deleted: false,
+      };
 
-          
-            hotelId:hotelId,
-            Roomnumber: roomdata.Roomnumber,
-            RoomType: roomdata.RoomType,
-            Floor: roomdata.Floor,
-            Price: roomdata.Price,
-            Capacity: roomdata.Capacity,
-            Image: file.filename,
-            deleted: false,
-        };
+      const db = await connectToMongoDB();
 
-        const db = await connectToMongoDB();
-
-        db.collection(collection.ROOMS_COLLECTION)
-            .insertOne(dataroom)
-            .then((data) => {
-                resolve(data.insertedId);
-            })
-            .catch((error) => {
-                reject(error);
-            });
+      db.collection(collection.ROOMS_COLLECTION)
+        .insertOne(dataroom)
+        .then((data) => {
+          resolve(data.insertedId);
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
-},
-
+  },
 
   addfacility: (facilitiesdata, file) => {
-
     return new Promise(async (resolve, reject) => {
       let datafacilities = {
         Facilities: facilitiesdata.Facilities,
         Image: file.filename,
-        facility:false
-
+        facility: false,
       };
 
       const db = await connectToMongoDB();
@@ -143,29 +131,27 @@ module.exports = {
     });
   },
 
-
   viewrooms: (id) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       let roomsview = db
         .collection(collection.ROOMS_COLLECTION)
-        .find({ deleted: false ,hotelId:id})
+        .find({ deleted: false, hotelId: id })
         .toArray();
       resolve(roomsview);
     });
   },
 
-
   viewfacility: () => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
-    let facilitiesview = db.collection(collection.FACILITY_COLLECTION)
+      let facilitiesview = db
+        .collection(collection.FACILITY_COLLECTION)
         .find({ facility: false })
         .toArray();
-        resolve(facilitiesview)
+      resolve(facilitiesview);
     });
   },
-
 
   roomdelete: (deleteid) => {
     return new Promise(async (resolve, reject) => {
@@ -186,7 +172,6 @@ module.exports = {
     });
   },
 
-
   editroom: (roomid) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -206,9 +191,7 @@ module.exports = {
     });
   },
 
-
   roomedit: (userid, idroom, file) => {
-    
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       await db
@@ -232,7 +215,6 @@ module.exports = {
     });
   },
 
-
   editfacility: (facilityid) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -251,7 +233,6 @@ module.exports = {
         });
     });
   },
-
 
   facilityedit: (facilityid, idfacilities, file) => {
     return new Promise(async (resolve, reject) => {
@@ -273,8 +254,6 @@ module.exports = {
         });
     });
   },
-  
-  
 
   facilitiesdelete: (facilityid) => {
     return new Promise(async (resolve, reject) => {
@@ -298,15 +277,14 @@ module.exports = {
     });
   },
 
-
   transactiondetails: (hotel) => {
-
     // console.log("Hotel ID:", hotel.hotelId);
 
     return new Promise(async (resolve, reject) => {
       try {
         const db = await connectToMongoDB();
-        let transactionview = await db.collection(collection.PAYMENT_COLLECTION)
+        let transactionview = await db
+          .collection(collection.PAYMENT_COLLECTION)
           .find({ hotelId: hotel.hotelId })
           .toArray();
         resolve(transactionview);
@@ -314,7 +292,5 @@ module.exports = {
         reject(error);
       }
     });
-  }
-  
-
+  },
 };
