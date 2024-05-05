@@ -200,7 +200,8 @@ $(document).ready(function(){
                         "order_id": res.order_id,
 
                         "handler": function (response){
-                            alert("Payment Succeeded");
+                            // Redirect to the receipt page after successful payment
+                            window.location.href = "/receipt";
                         },
                         "prefill": {
                             "name": res.name,
