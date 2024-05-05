@@ -62,28 +62,34 @@ module.exports = {
     }
   },
 
-  login: (req, res, next) => {
+  login: async (req, res, next) => {
     const roomObjectId = req.params.id;
+
     // console.log("**********************",roomObjectId);
 
     try {
-      userHelper.doLogin(req.body).then((response) => {
-        if (response.status) {
-          req.session.loggedIn = true;
-          req.session.user = response.user;
-          // const userId = response.user.userId;
+        const roomDetails = await userHelper.roomsDetails(roomObjectId);
+        const hotelId = roomDetails.hotelId;
 
-          // Redirect to the booking route with userId and roomObjectId
-          res.redirect("/booking/" + roomObjectId);
-        } else {
-          req.session.loginErr = true;
-          res.render("user/login", { error: response.message });
-        }
-      });
+        // console.log("////////////////",hotelId);
+
+        userHelper.doLogin(req.body,hotelId).then((response) => {
+            if (response.status) {
+                req.session.loggedIn = true;
+                req.session.user = response.user;
+                res.redirect("/booking/" + roomObjectId);
+            } else {
+                req.session.loginErr = true;
+                // Redirect to login page with error message
+                res.redirect("/login/" + roomObjectId);
+            }
+        });
     } catch (error) {
-      console.log(error);
+        console.log(error);
+        // Redirect to login page with error message
+        res.redirect("/login/" + roomObjectId);
     }
-  },
+},
 
   booking: (req, res) => {
     let id = req.params.id;
@@ -115,6 +121,7 @@ module.exports = {
           const roomDetailsid = roomDetails._id;
   
           userHelper.dobooking(bookingData, roomId, hotelId,userId).then((bookingId) => {
+            
             userHelper.price(bookingId).then((totalprice) => {
               // res.redirect(`/payment/${roomDetailsid}?value=${totalprice}`);
               // console.log("rooomdetailssss",roomDetails);
@@ -255,7 +262,7 @@ module.exports = {
   },
 
   receipt: async (req, res) => {
-    
+
     try {
         if (req.session.loggedIn) {
 
