@@ -231,7 +231,6 @@ module.exports = {
   },
 
   payment: async (name, price, hotelId, roomId, userId) => {
-    
     try {
         const options = {
             amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
@@ -260,6 +259,7 @@ module.exports = {
             hotelId: hotelId,
             userId: userId,
             status: "pending", // Initially set status to 'pending'
+            payment_date: new Date(), // Store the current date as payment date
         };
 
         // Connect to MongoDB
