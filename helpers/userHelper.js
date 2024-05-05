@@ -12,8 +12,7 @@ const razorpayInstance = new Razorpay({
 
 module.exports = {
 
-
-  doSignup: (userData) => {
+  doSignup: (userData,hotelId,roomId) => {
     return new Promise(async (resolve, reject) => {
       //   console.log(userData);
 
@@ -27,7 +26,8 @@ module.exports = {
 
       let signupData = {
         userId: Date.now().toString(16),
-
+        hotelId:hotelId,
+        roomId:roomId,
         name: userData.name,
         email: userData.email,
         password: encryptedpassword,
@@ -117,7 +117,7 @@ module.exports = {
     }
   },
 
-  dobooking: (bookingdata, roomId, hotelId) => {
+  dobooking: (bookingdata, roomId, hotelId,userId) => {
     return new Promise(async (resolve, reject) => {
       // Extract check-in and checkout dates from the booking data
       const { checkin, checkout } = bookingdata;
@@ -133,6 +133,7 @@ module.exports = {
 
       // Construct the booking object with the array of dates
       let bookingObject = {
+        userId:userId,
         roomId: roomId,
         hotelId: hotelId,
         name: bookingdata.name,
@@ -156,21 +157,21 @@ module.exports = {
   },
 
   price: async (bookingId) => {
-    console.log("priceeeeeeeeeeid", bookingId);
+    // console.log("priceeeeeeeeeeid", bookingId);
     const db = await connectToMongoDB();
     const bookingprice = await db
       .collection(collection.BOOKING_COLLECTION)
       .find(bookingId)
       .toArray();
-    console.log("boooooooookinggpriceee@22222222", bookingprice);
-    console.log("bookingprice....", bookingprice[0].roomId);
-    console.log("arrayy", bookingprice[0].dates.length);
+    // console.log("boooooooookinggpriceee@22222222", bookingprice);
+    // console.log("bookingprice....", bookingprice[0].roomId);
+    // console.log("arrayy", bookingprice[0].dates.length);
     const id = bookingprice[0].roomId;
     const roomprice = await db
       .collection(collection.ROOMS_COLLECTION)
       .find({ roomId: id })
       .toArray();
-    console.log("$$$$$$$$$4", roomprice);
+    // console.log("$$$$$$$$$4", roomprice);
 
     const totalprice = roomprice[0].Price * bookingprice[0].dates.length;
     //  console.log("totalpriceee," ,totalprice);
@@ -227,9 +228,7 @@ module.exports = {
     }
   },
 
-
   payment: async (name, price, hotelId, roomId, userId) => {
-
     // console.log("priceeeee", price);
 
     try {
@@ -250,7 +249,6 @@ module.exports = {
             resolve(order);
           }
         });
-
       });
 
       // If order creation is successful, save payment details to MongoDB
@@ -285,8 +283,37 @@ module.exports = {
       console.log(error.message);
       throw error;
     }
-    
   },
 
-  
-};
+  showreceipt: async (userId) => {
+    // console.log("$$$$$$$$$$$$$$$4",userId);
+
+    try {
+        const db = await connectToMongoDB();
+
+        // Fetch user details based on the user's ID
+        const userDetails = await db
+            .collection(collection.PAYMENT_COLLECTION)
+            .findOne({ userId: userId });
+
+        // Fetch hotel details based on the hotel ID obtained from user details
+        const hotelDetails = await db
+            .collection(collection.HOTEL_COLLECTION)
+            .findOne({ hotelId: userDetails.hotelId });
+
+        const customerDetails = await db
+            .collection(collection.BOOKING_COLLECTION)
+            .findOne({ userId: userId });    
+
+            // console.log("2222222222222222222userdetails",userDetails);
+            // console.log("1111111111111111111hoteldetails",hotelDetails);
+            // console.log(("333333333333333333customerdetailss",customerDetails));
+        // Return both user and hotel details
+        return [userDetails, hotelDetails,customerDetails];
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+},
+
+}

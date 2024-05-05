@@ -32,26 +32,29 @@ module.exports = {
   },
 
   loginPage: (req, res, next) => {
+    const roomObjectId = req.params.id;
+    // console.log("loggggginnniddddd", roomObjectId);
+
     if (req.session.loggedIn) {
-      return res.redirect("user/homePage");
+      return res.redirect("/user/booking/" + roomObjectId);
     } else {
-      res.render("user/login");
-      // res.render("user/login", {
-      //   User: true,
-      //   loginErr: req.session.loginErr,
-      // });
-      // req.session.loginErr = false;
+      res.render("user/login", { roomObjectId });
     }
   },
 
   login: (req, res, next) => {
+    const roomObjectId = req.params.id;
+    // console.log("**********************",roomObjectId);
+
     try {
       userHelper.doLogin(req.body).then((response) => {
-        // console.log("#############33",response);
         if (response.status) {
           req.session.loggedIn = true;
           req.session.user = response.user;
-          res.redirect("/"); // Redirect to homepage or dashboard
+          // const userId = response.user.userId;
+
+          // Redirect to the booking route with userId and roomObjectId
+          res.redirect("/booking/" + roomObjectId);
         } else {
           req.session.loginErr = true;
           res.render("user/login", { error: response.message });
@@ -62,36 +65,102 @@ module.exports = {
     }
   },
 
-  homepage: (req, res, next) => {
-    // let user = req.session.user;
+  booking: (req, res) => {
+    let id = req.params.id;
+    // console.log("innnnnnnnnn",id);
 
-    // console.log("userrrrrrrrrrrrrrr",user);
-
-    // userHelper.showhotels().then((hotelssdata) => {
-    //   res.render("user/homePage",{
-    //     hotelssdata,
-    //     user,
-    //     // User :true
-    //   });
-    // })
-
-    // Homepage route
-
-    if (req.session.loggedIn) {
-      // If user is logged in, render homepage with user ID
-      res.render("user/homePage", {
-        userId: req.session.user.userId, // Assuming user ID is stored in session
+    try {
+      userHelper.roomsDetails(id).then((roomDetails) => {
+        res.render("user/booking", { roomDetails });
       });
-    } else {
-      // If user is not logged in, render homepage without user ID
-      res.render("user/homePage");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error fetching room details");
     }
+  },
+ 
+  bookingrooms: async (req, res) => {
+    const roomId = req.params.id;
+
+    try {
+      const bookingData = req.body;
+      await userHelper.roomsDetails(roomId).then((roomDetails) => {
+        const hotelId = roomDetails.hotelId;
+        const roomId = roomDetails.roomId;
+        const roomDetailsid = roomDetails._id;
+
+        userHelper.dobooking(bookingData, roomId, hotelId).then((bookingId) => {
+          userHelper.price(bookingId).then((totalprice) => {
+            // res.redirect(`/payment/${roomDetailsid}?value=${totalprice}`);
+            // console.log("rooomdetailssss",roomDetails);
+            res.render("user/payment", { roomDetails, totalprice });
+          });
+        });
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Error in booking");
+    }
+  },
+
+  checkavailabilty: async (req, res, next) => {
+    const roomdetailsid = req.params.id;
+
+    const { checkin, checkout } = req.body;
+
+    try {
+      // Retrieve room details to get roomId
+      const roomDetails = await userHelper.roomsDetails(roomdetailsid);
+      const roomId = roomDetails.roomId;
+
+      // Check if any existing booking overlaps with the provided date range
+      const existingBooking = await userHelper.dochecking(
+        checkin,
+        checkout,
+        roomId
+      );
+
+      if (existingBooking) {
+        // Dates are not available or already booked, inform the user
+        console.log("Selected dates are not available or already booked");
+        res.redirect("/room/" + roomdetailsid);
+      } else {
+        // Dates are available and not booked
+        if (req.session.loggedIn) {
+          // let userId = req.session.user.userId;
+          // If user is logged in, redirect to booking route
+          console.log("Dates are available for booking");
+          res.redirect("/booking/" + roomdetailsid);
+        } else {
+          // If user is not logged in, redirect to room route
+          console.log("User is not logged in. Redirecting to room route.");
+          res.redirect("/login/" + roomdetailsid);
+        }
+      }
+    } catch (error) {
+      console.log("Error checking availability:", error);
+      res.redirect("/"); // Redirect to home page with an error message
+    }
+  },
+
+  logout: (req, res) => {
+    req.session.destroy();
+    res.redirect("/");
+  },
+
+  homepage: (req, res) => {
+    userHelper.showhotels().then((hotelssdata) => {
+      res.render("user/homePage", {
+        hotelssdata,
+      });
+    });
   },
 
   allrooms: (req, res) => {
     let hotelId = req.params.id; // Fetch the hotelId from route parameters
     try {
       userHelper.showrooms(hotelId).then((roomsdata) => {
+        // console.log("$$$$$$$$$$$$$$", roomsdata);
         res.render("user/allRooms", {
           roomsdata,
         });
@@ -114,159 +183,397 @@ module.exports = {
     }
   },
 
-  booking: (req, res) => {
-    let id = req.params.id;
+  // paymentpage: (req, res) => {
+  //   // let value = req.query.params.value;
+  //   // console.log("requestconsoleee", req.query);
 
-    try {
-      userHelper.roomsDetails(id).then((roomDetails) => {
-        res.render("user/booking", { roomDetails });
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error fetching room details");
-    }
-  },
-
-  // booking:(req,res) => {
-  //   res.render("user/booking");
-  // },
-
-  bookingrooms: (req, res) => {
-    const roomId = req.params.id;
-
-    try {
-      const bookingData = req.body;
-
-      userHelper.roomsDetails(roomId).then((roomDetails) => {
-        const hotelId = roomDetails.hotelId;
-        const roomId = roomDetails.roomId;
-        const roomDetailsid = roomDetails._id;
-
-        // console.log("roomDetailsid!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1",roomDetailsid);
-        // console.log("roommiddroroooommmiddd", roomId);
-        // console.log("hotelidddddddddd", hotelId);
-
-        userHelper.dobooking(bookingData, roomId, hotelId).then((bookingId) => {
-          console.log("Booking ID:", bookingId);
-          // Redirect to the payment page with the correct bookingId
-          res.redirect("/payment/" + roomDetailsid);
-        });
-      });
-    } catch (error) {
-      console.log(error);
-      // Handle error
-      res.status(500).send("Error in booking");
-    }
-  },
-
-
-  // checkavailabilty: async (req, res) => {
-
-  //   const roomdetailsid = req.params.id;
-  //   const { checkin, checkout } = req.body;
-
+  //   let id = req.params.id;
   //   try {
-  //     // Retrieve room details to get roomId
-  //     const roomDetails = await userHelper.roomsDetails(roomdetailsid);
-  //     const roomId = roomDetails.roomId;
-
-  //     // Check if any existing booking overlaps with the provided date range
-  //     const existingBooking = await userHelper.dochecking(
-  //       checkin,
-  //       checkout,
-  //       roomId
-  //     );
-  
-
-  //     if (existingBooking) {
-  //       // Dates are not available or already booked, inform the user
-  //       console.log("Selected dates are not available or already booked");
-  //       res.redirect("/room/" + roomdetailsid);
-  //     } else {
-  //       // Dates are available and not booked, proceed with booking
-  //       console.log("Dates are available for booking");
-  //       res.redirect("/booking/" + roomdetailsid);
-  //     }
+  //     userHelper.roomsDetails(id).then((roomDetails) => {
+  //       // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
+  //       res.render("user/payment", { roomDetails });
+  //     });
   //   } catch (error) {
-  //     console.log("Error checking availability:", error);
-  //     res.redirect("/"); // Redirect to home page with an error message
+  //     console.error(error);
+  //     res.status(500).send("Error fetching room details");
   //   }
   // },
 
-
-  checkavailabilty: async (req, res,next) => {
-    const roomdetailsid = req.params.id;
-    const { checkin, checkout } = req.body;
-  
-    try {
-      // Retrieve room details to get roomId
-      const roomDetails = await userHelper.roomsDetails(roomdetailsid);
-      const roomId = roomDetails.roomId;
-  
-      // Check if any existing booking overlaps with the provided date range
-      const existingBooking = await userHelper.dochecking(
-        checkin,
-        checkout,
-        roomId
-      );
-  
-      if (existingBooking) {
-        // Dates are not available or already booked, inform the user
-        console.log("Selected dates are not available or already booked");
-        res.redirect("/room/" + roomdetailsid);
-      } else {
-        // Dates are available and not booked
-        if (req.session.loggedIn) {
-          // If user is logged in, redirect to booking route
-          console.log("Dates are available for booking");
-          res.redirect("/booking/" + roomdetailsid);
-        } else {
-          // If user is not logged in, redirect to room route
-          console.log("User is not logged in. Redirecting to room route.");
-          res.redirect("/room/" + roomdetailsid);
-        }
-      }
-    } catch (error) {
-      console.log("Error checking availability:", error);
-      res.redirect("/"); // Redirect to home page with an error message
-    }
-  },
-  
-
-
-
-
-  paymentpage: (req, res) => {
-    let id = req.params.id;
-    try {
-      userHelper.roomsDetails(id).then((roomDetails) => {
-        // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
-        res.render("user/payment", { roomDetails });
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error fetching room details");
-    }
-  },
-
   payment: async (req, res) => {
-    console.log("reqqqqqqqqqqqq.bodyyyyyyyyyyy", req.body);
+    // console.log("reqqqqqqqqqqqq.bodyyyyyyyyyyy", req.body);
     try {
-      const { name, price, hotelId, roomId } = req.body;
+      if (req.session.loggedIn) {
+        const userId = req.session.user.userId;
 
-      const paymentResult = await userHelper.payment(
-        name,
-        price,
-        hotelId,
-        roomId
-      );
+        // console.log("^^^^^^^^^^^^^^^^^^6",userId);
 
-      // Send response back to client
-      res.status(200).send(paymentResult);
+        const { name, price, hotelId, roomId } = req.body;
+
+        const paymentResult = await userHelper.payment(
+          name,
+          price,
+          hotelId,
+          roomId,
+          userId
+        );
+
+        // Send response back to client
+        res.status(200).send(paymentResult);
+      }
     } catch (error) {
       console.log(error.message);
       // Handle error
       res.status(500).send({ success: false, msg: "Something went wrong!" });
     }
   },
+
+  receipt:(req,res) => {
+
+    if(req.session.loggedIn){
+
+      const userId = req.session.user.userId;
+
+      console.log("[[[[[[[[[[[[[[[[[",userId);
+
+      userHelper.showreceipt(userId).then((userdetails,hoteldetails) => {
+
+        console.log("dettttttttttttttailsssssss",userdetails);
+        console.log("hoooteeellldettttttttttttttailsssssss",hoteldetails);
+
+        res.render("user/receipt" , {userdetails});
+  
+      })
+
+    }
+
+   
+
+
+  }
+
+
+
+};
+
+
+
+==============================================================================
+
+
+
+var { connectToMongoDB } = require("../config/connection");
+var collection = require("../config/collection");
+const bcrypt = require("bcrypt");
+const { ObjectId } = require("mongodb");
+const jwt = require("jsonwebtoken");
+const Razorpay = require("razorpay");
+
+const razorpayInstance = new Razorpay({
+  key_id: "rzp_test_8cTRaG2qyqmSGG",
+  key_secret: "lPhtD4Guxq3dUurYJLs9OwXi",
+});
+
+module.exports = {
+
+  doSignup: (userData) => {
+    return new Promise(async (resolve, reject) => {
+      //   console.log(userData);
+
+      if (userData.password === userData.confirmpassword) {
+        var encryptedpassword = await bcrypt.hash(userData.password, 10);
+        // console.log(encryptedpassword);
+      } else {
+        console.log("error");
+        throw new Error("given passwords are not same");
+      }
+
+      let signupData = {
+        userId: Date.now().toString(16),
+
+        name: userData.name,
+        email: userData.email,
+        password: encryptedpassword,
+        blocked: false,
+      };
+
+      const db = await connectToMongoDB();
+
+      await db
+        .collection(collection.USER_COLLECTION)
+        .insertOne(signupData)
+        .then((data) => {
+          resolve(data.insertedId);
+        });
+    });
+  },
+
+  doLogin: (loginData) => {
+    return new Promise(async (resolve, reject) => {
+      let loginstatus = false;
+      let response = {};
+      const db = await connectToMongoDB();
+      let user = await db
+        .collection(collection.USER_COLLECTION)
+        .findOne({ email: loginData.email });
+
+      if (user) {
+        bcrypt.compare(loginData.password, user.password).then((status) => {
+          if (status) {
+            console.log("login success");
+            const usertoken = jwt.sign(
+              { userId: user._id, useremail: user.email },
+              "secret",
+              { expiresIn: "24h" }
+            );
+            response.token = usertoken;
+            response.user = user;
+            response.status = true;
+            response.message = "Login Success";
+            resolve(response);
+          } else {
+            response.message = "the user cant login";
+            resolve({ status: false });
+          }
+        });
+      } else {
+        resolve({ status: false });
+      }
+    });
+  },
+
+  showhotels: async () => {
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+
+      let Datahotel = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .find({ blocked: false })
+        .toArray();
+      resolve(Datahotel);
+    });
+  },
+
+  showrooms: async (hotelId) => {
+    try {
+      const db = await connectToMongoDB();
+      const hotelrooms = await db
+        .collection(collection.ROOMS_COLLECTION)
+        .find({ hotelId: hotelId })
+        .toArray();
+      return hotelrooms;
+    } catch (error) {
+      console.error("Error fetching hotel rooms:", error);
+      throw error; // Propagate the error to the caller
+    }
+  },
+
+  roomsDetails: async (roomid) => {
+    try {
+      const db = await connectToMongoDB();
+      const roomDetails = await db
+        .collection(collection.ROOMS_COLLECTION)
+        .findOne({ _id: new ObjectId(roomid) });
+      return roomDetails;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  dobooking: (bookingdata, roomId, hotelId) => {
+    return new Promise(async (resolve, reject) => {
+      // Extract check-in and checkout dates from the booking data
+      const { checkin, checkout } = bookingdata;
+
+      // Construct the array of dates between check-in and checkout dates
+      const datesInRange = [];
+      let currentDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+      while (currentDate <= checkoutDate) {
+        datesInRange.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+      }
+
+      // Construct the booking object with the array of dates
+      let bookingObject = {
+        roomId: roomId,
+        hotelId: hotelId,
+        name: bookingdata.name,
+        email: bookingdata.email,
+        dates: datesInRange, // Store the array of dates
+      };
+
+      try {
+        const db = await connectToMongoDB();
+        // Insert the booking object into the database
+        const result = await db
+          .collection(collection.BOOKING_COLLECTION)
+          .insertOne(bookingObject);
+        // Resolve with the inserted ID
+        resolve(result.insertedId);
+      } catch (error) {
+        console.error("Error in booking:", error);
+        reject(error);
+      }
+    });
+  },
+
+  price: async (bookingId) => {
+    // console.log("priceeeeeeeeeeid", bookingId);
+    const db = await connectToMongoDB();
+    const bookingprice = await db
+      .collection(collection.BOOKING_COLLECTION)
+      .find(bookingId)
+      .toArray();
+    // console.log("boooooooookinggpriceee@22222222", bookingprice);
+    // console.log("bookingprice....", bookingprice[0].roomId);
+    // console.log("arrayy", bookingprice[0].dates.length);
+    const id = bookingprice[0].roomId;
+    const roomprice = await db
+      .collection(collection.ROOMS_COLLECTION)
+      .find({ roomId: id })
+      .toArray();
+    // console.log("$$$$$$$$$4", roomprice);
+
+    const totalprice = roomprice[0].Price * bookingprice[0].dates.length;
+    //  console.log("totalpriceee," ,totalprice);
+    return totalprice;
+  },
+
+  dochecking: async (checkin, checkout, roomId) => {
+    try {
+      const db = await connectToMongoDB();
+
+      // Convert check-in and checkout dates to Date objects
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+
+      // Ensure check-in date is before or equal to check-out date
+      if (checkinDate > checkoutDate) {
+        throw new Error("Check-in date cannot be later than check-out date");
+      }
+
+      // Construct the array of dates between check-in and checkout dates
+      const datesInRange = [];
+      let currentDate = new Date(checkinDate);
+      while (currentDate <= checkoutDate) {
+        datesInRange.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+      }
+
+      // Query the booking collection to check if any booking overlaps with the provided date range and roomId
+      const existingBooking = await db
+        .collection(collection.BOOKING_COLLECTION)
+        .findOne({
+          roomId: roomId, // Match the roomId
+          $or: [
+            { dates: { $in: datesInRange } }, // Check if any date falls within the provided date range
+            {
+              $and: [
+                { checkin: { $lte: checkinDate } },
+                { checkout: { $gte: checkoutDate } },
+              ],
+            }, // Existing booking spans the provided date range
+            {
+              $and: [
+                { checkin: { $gte: checkinDate } },
+                { checkout: { $lte: checkoutDate } },
+              ],
+            }, // Existing booking falls within the given date range
+          ],
+        });
+
+      // Return the booking data if exists, otherwise return null
+      return existingBooking;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  payment: async (name, price, hotelId, roomId, userId) => {
+    // console.log("priceeeee", price);
+
+    try {
+      // Create options object for Razorpay order
+      const options = {
+        amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
+        currency: "INR",
+        receipt: `razorUser_${userId}`, // Use userId in receipt for better tracking
+        payment_capture: "1", // Automatically capture payments
+      };
+
+      // Create Razorpay order
+      const order = await new Promise((resolve, reject) => {
+        razorpayInstance.orders.create(options, (err, order) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(order);
+          }
+        });
+      });
+
+      // If order creation is successful, save payment details to MongoDB
+      const paymentDetails = {
+        name: name,
+        amount: price,
+        order_id: order.id,
+        roomId: roomId,
+        hotelId: hotelId,
+        userId: userId,
+        status: "success", // Initially set status to 'pending'
+      };
+
+      // Connect to MongoDB
+      const db = await connectToMongoDB();
+
+      // Insert payment details into MongoDB payment collection
+      await db
+        .collection(collection.PAYMENT_COLLECTION)
+        .insertOne(paymentDetails);
+
+      // Return order details
+      return {
+        success: true,
+        msg: "Order Created",
+        order_id: order.id,
+        amount: options.amount,
+        key_id: "rzp_test_8cTRaG2qyqmSGG",
+        product_name: name,
+      };
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+    }
+  },
+
+
+
+  showreceipt: async (userId) => {
+
+    let hotelId = userId.hotelId;
+
+    console.log("hottteeellliddddd",hotelId);
+    try {
+        const db = await connectToMongoDB();
+        const userdetails = await db
+            .collection(collection.PAYMENT_COLLECTION)
+            .find({ userId: userId })
+            .toArray(); // Convert the cursor to an array
+
+        const hoteldetails = await db
+            .collection(collection.HOTEL_COLLECTION)
+            .find({ hotelId:  userId.hotelId })
+            .toArray();
+            // console.log("userdetailssssssssssss",userdetails);
+             console.log("hoteldetailsasssss",hoteldetails);
+        return userdetails , hoteldetails;
+    } catch (error) {
+        console.log(error);
+        throw error; // Propagate the error to the caller
+    }
+},
+
+
+
+
 };

@@ -14,10 +14,11 @@ const {
   login,
   booking,
   bookingrooms,
-  paymentpage,
+  // paymentpage,
   payment,
   checkavailabilty,
-  logout
+  logout,
+  receipt
 
 
 } = require("../controllers/userController");
@@ -25,9 +26,9 @@ const {
 
 router.get("/",homepage);
 
-router.get("/signup",signuppage);
+router.get("/signup/:id",signuppage);
 
-router.post("/signup",signup);
+router.post("/signup/:id",signup);
 
 router.get("/login/:id", loginPage);
 
@@ -41,7 +42,7 @@ router.get("/booking/:id",booking);
 
 router.post("/bookingroom/:id", bookingrooms);
 
-router.get("/payment/:id", paymentpage);
+// router.get("/payment/:id", paymentpage);
 
 router.post("/dopayment",payment);
 
@@ -49,11 +50,7 @@ router.post("/checkavailability/:id",checkavailabilty);
 
 router.get("/logout",logout);
 
- // Add a new route to handle PDF download
- router.get("/download/:file", (req, res) => {
-  const file = `${__dirname}/../download/${req.params.file}`;
-  res.download(file); // Set disposition and send it.
-});
+router.get("/receipt",receipt);
 
 
 module.exports = router;

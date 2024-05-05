@@ -14,26 +14,46 @@ const razorpayInstance = new Razorpay({
 });
 
 module.exports = {
+
   signuppage: (req, res) => {
-    res.render("user/signupPage");
+
+    let id = req.params.id;
+    console.log("iddddddddd",id);
+    res.render("user/signupPage",{id : id});
   },
 
-  signup: (req, res) => {
+  signup: async (req, res) => {
+
+    let id = req.params.id;
+    // console.log("iiiiiiiidddddddddd..........",id);
     // console.log("##################3",req.body);
 
     try {
-      userHelper.doSignup(req.body).then((response) => {
+      // Assuming roomId is obtained from somewhere
+      // const roomId = id.roomId;
+
+      // Retrieve room details using roomId
+      const roomDetails = await userHelper.roomsDetails(id);
+      const hotelId = roomDetails.hotelId;
+      const roomId = roomDetails.roomId;
+
+      // console.log("33333333333333333333",roomId,hotelId);
+
+      // Call doSignup with retrieved hotelId and roomId
+      await userHelper.doSignup(req.body, hotelId, roomId).then((response) => {
         // console.log(response);
-        res.redirect("/login");
+        res.redirect("/login/" + id);
       });
     } catch (error) {
       console.log(error);
     }
-  },
+},
+
 
   loginPage: (req, res, next) => {
+
     const roomObjectId = req.params.id;
-    // console.log("loggggginnniddddd", roomObjectId);
+    console.log("loggggginnniddddd", roomObjectId);
 
     if (req.session.loggedIn) {
       return res.redirect("/user/booking/" + roomObjectId);
@@ -83,20 +103,27 @@ module.exports = {
     const roomId = req.params.id;
 
     try {
-      const bookingData = req.body;
-      await userHelper.roomsDetails(roomId).then((roomDetails) => {
-        const hotelId = roomDetails.hotelId;
-        const roomId = roomDetails.roomId;
-        const roomDetailsid = roomDetails._id;
 
-        userHelper.dobooking(bookingData, roomId, hotelId).then((bookingId) => {
-          userHelper.price(bookingId).then((totalprice) => {
-            // res.redirect(`/payment/${roomDetailsid}?value=${totalprice}`);
-            // console.log("rooomdetailssss",roomDetails);
-            res.render("user/payment", { roomDetails, totalprice });
+      if(req.session.loggedIn){
+
+        let userId = req.session.user.userId;
+
+        const bookingData = req.body;
+        await userHelper.roomsDetails(roomId).then((roomDetails) => {
+          const hotelId = roomDetails.hotelId;
+          const roomId = roomDetails.roomId;
+          const roomDetailsid = roomDetails._id;
+  
+          userHelper.dobooking(bookingData, roomId, hotelId,userId).then((bookingId) => {
+            userHelper.price(bookingId).then((totalprice) => {
+              // res.redirect(`/payment/${roomDetailsid}?value=${totalprice}`);
+              // console.log("rooomdetailssss",roomDetails);
+              res.render("user/payment", { roomDetails, totalprice });
+            });
           });
         });
-      });
+      }
+      
     } catch (error) {
       console.log(error);
       res.status(500).send("Error in booking");
@@ -183,24 +210,24 @@ module.exports = {
     }
   },
 
-  paymentpage: (req, res) => {
-    // let value = req.query.params.value;
-    console.log("requestconsoleee", req.query);
+  // paymentpage: (req, res) => {
+  //   // let value = req.query.params.value;
+  //   // console.log("requestconsoleee", req.query);
 
-    let id = req.params.id;
-    try {
-      userHelper.roomsDetails(id).then((roomDetails) => {
-        // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
-        res.render("user/payment", { roomDetails });
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error fetching room details");
-    }
-  },
+  //   let id = req.params.id;
+  //   try {
+  //     userHelper.roomsDetails(id).then((roomDetails) => {
+  //       // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
+  //       res.render("user/payment", { roomDetails });
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send("Error fetching room details");
+  //   }
+  // },
 
   payment: async (req, res) => {
-    console.log("reqqqqqqqqqqqq.bodyyyyyyyyyyy", req.body);
+    // console.log("reqqqqqqqqqqqq.bodyyyyyyyyyyy", req.body);
     try {
       if (req.session.loggedIn) {
         const userId = req.session.user.userId;
@@ -226,4 +253,26 @@ module.exports = {
       res.status(500).send({ success: false, msg: "Something went wrong!" });
     }
   },
+
+  receipt: async (req, res) => {
+    
+    try {
+        if (req.session.loggedIn) {
+
+            const userId = req.session.user.userId;
+
+            // Fetch user details and hotel details based on the user's ID
+            const [userDetails, hotelDetails,customerDetails] = await userHelper.showreceipt(userId);
+
+            // Render the receipt page with user and hotel details
+            res.render("user/receipt", { userDetails, hotelDetails,customerDetails });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error fetching receipt details");
+    }
+},
+
+
+
 };
