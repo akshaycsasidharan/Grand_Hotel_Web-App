@@ -42,6 +42,12 @@ module.exports = {
       // Call doSignup with retrieved hotelId and roomId
       await userHelper.doSignup(req.body, hotelId, roomId).then((response) => {
         // console.log(response);
+
+      //   res.render("user/login", { 
+      //     signupMessage: "signup success ",
+      //     id: id // Pass room details to the view
+      // });
+
         res.redirect("/login/" + id);
       });
     } catch (error) {
@@ -53,43 +59,48 @@ module.exports = {
   loginPage: (req, res, next) => {
 
     const roomObjectId = req.params.id;
-    console.log("loggggginnniddddd", roomObjectId);
+    // console.log("loggggginnniddddd", roomObjectId);
 
     if (req.session.loggedIn) {
       return res.redirect("/user/booking/" + roomObjectId);
     } else {
-      res.render("user/login", { roomObjectId });
+      res.render("user/login", {
+        User: true,
+        loginErr: req.session.loginErr,
+         roomObjectId });
+         req.session.loginErr = false;
     }
+
   },
 
   login: async (req, res, next) => {
     const roomObjectId = req.params.id;
 
-    // console.log("**********************",roomObjectId);
-
     try {
         const roomDetails = await userHelper.roomsDetails(roomObjectId);
         const hotelId = roomDetails.hotelId;
 
-        // console.log("////////////////",hotelId);
-
-        userHelper.doLogin(req.body,hotelId).then((response) => {
+        userHelper.doLogin(req.body, hotelId).then((response) => {
             if (response.status) {
                 req.session.loggedIn = true;
                 req.session.user = response.user;
-                res.redirect("/booking/" + roomObjectId);
+                // res.redirect("/booking/" + roomObjectId);
+                res.render("user/booking", { 
+                  loginMessage: "Login Success ",
+                  roomDetails: roomDetails // Pass room details to the view
+              });
             } else {
+                // Set loginErr variable to true
                 req.session.loginErr = true;
-                // Redirect to login page with error message
                 res.redirect("/login/" + roomObjectId);
             }
         });
     } catch (error) {
         console.log(error);
-        // Redirect to login page with error message
         res.redirect("/login/" + roomObjectId);
     }
 },
+
 
   booking: (req, res) => {
     let id = req.params.id;
@@ -139,43 +150,50 @@ module.exports = {
 
   checkavailabilty: async (req, res, next) => {
     const roomdetailsid = req.params.id;
-
     const { checkin, checkout } = req.body;
 
     try {
-      // Retrieve room details to get roomId
-      const roomDetails = await userHelper.roomsDetails(roomdetailsid);
-      const roomId = roomDetails.roomId;
+        // Retrieve room details to get roomId
+        const roomDetails = await userHelper.roomsDetails(roomdetailsid);
+        const roomId = roomDetails.roomId;
 
-      // Check if any existing booking overlaps with the provided date range
-      const existingBooking = await userHelper.dochecking(
-        checkin,
-        checkout,
-        roomId
-      );
+        // Check if any existing booking overlaps with the provided date range
+        const existingBooking = await userHelper.dochecking(
+            checkin,
+            checkout,
+            roomId
+        );
 
-      if (existingBooking) {
-        // Dates are not available or already booked, inform the user
-        console.log("Selected dates are not available or already booked");
-        res.redirect("/room/" + roomdetailsid);
-      } else {
-        // Dates are available and not booked
-        if (req.session.loggedIn) {
-          // let userId = req.session.user.userId;
-          // If user is logged in, redirect to booking route
-          console.log("Dates are available for booking");
-          res.redirect("/booking/" + roomdetailsid);
+        if (existingBooking) {
+            // Dates are not available or already booked, inform the user
+            console.log("Selected dates are not available or already booked");
+            res.render("user/room", { 
+                errorMessage: "Selected dates are not available ",
+                roomDetails: roomDetails // Pass room details to the view
+            });
         } else {
-          // If user is not logged in, redirect to room route
-          console.log("User is not logged in. Redirecting to room route.");
-          res.redirect("/login/" + roomdetailsid);
+            // Dates are available and not booked
+            if (req.session.loggedIn) {
+                // If user is logged in, redirect to booking route
+                console.log("Dates are available for booking");
+
+              //   res.render("user/booking", { 
+              //     loginMessage: "login success ",
+              //     roomDetails: roomDetails // Pass room details to the view
+              // });
+                res.redirect("/booking/" + roomdetailsid);
+            } else {
+                // If user is not logged in, redirect to room route
+                console.log("User is not logged in. Redirecting to room route.");
+                res.redirect("/login/" + roomdetailsid);
+            }
         }
-      }
     } catch (error) {
-      console.log("Error checking availability:", error);
-      res.redirect("/"); // Redirect to home page with an error message
+        console.log("Error checking availability:", error);
+        res.redirect("/"); // Redirect to home page with an error message
     }
-  },
+},
+
 
   logout: (req, res) => {
     req.session.destroy();
@@ -217,21 +235,6 @@ module.exports = {
     }
   },
 
-  // paymentpage: (req, res) => {
-  //   // let value = req.query.params.value;
-  //   // console.log("requestconsoleee", req.query);
-
-  //   let id = req.params.id;
-  //   try {
-  //     userHelper.roomsDetails(id).then((roomDetails) => {
-  //       // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
-  //       res.render("user/payment", { roomDetails });
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send("Error fetching room details");
-  //   }
-  // },
 
   payment: async (req, res) => {
     // console.log("reqqqqqqqqqqqq.bodyyyyyyyyyyy", req.body);
@@ -278,6 +281,10 @@ module.exports = {
         console.log(error);
         res.status(500).send("Error fetching receipt details");
     }
+},
+
+otploginpage:(req,res) => {
+  res.render("user/otplogin")
 },
 
 

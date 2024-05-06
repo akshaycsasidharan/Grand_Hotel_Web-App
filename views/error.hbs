@@ -1,290 +1,209 @@
-const { CURSOR_FLAGS } = require("mongodb");
-const userHelper = require("../helpers/userHelper");
-const { render } = require("../app");
-const multer = require("multer");
+var createError = require("http-errors");
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+var hbs = require("express-handlebars");
+let Hbs = require("handlebars");
 const Razorpay = require("razorpay");
-var { connectToMongoDB } = require("../config/connection");
-const { ObjectId } = require("mongodb");
-var collection = require("../config/collection");
+const randomstring = require("randomstring");
 
-// const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
+
+
+
+
+
+var userRouter = require("./routes/user");
+var adminRouter = require("./routes/admin");
+var hotelRouter = require("./routes/hotel");
+var app = express();
+
+
+var session = require("express-session");
+const { error, info } = require("console");
+const { log } = require("handlebars/runtime");
+
+// view engine setup
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "hbs");
+
+app.engine(
+  "hbs",
+  hbs.engine({
+    extname: "hbs",
+    defaultLayout: "Layout",
+    layoutsDir: __dirname + "/views/layout/",
+    partialsDir: __dirname + "/views/partials",
+  })
+);
+
+
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(session({ secret: 'Key', cookie: { maxAge: 60000000 } }))
 const razorpayInstance = new Razorpay({
   key_id: "rzp_test_8cTRaG2qyqmSGG",
-  key_secret: "lPhtD4Guxq3dUurYJLs9OwXi",
+  key_secret: "lPhtD4Guxq3dUurYJLs9OwXi"
 });
 
-module.exports = {
-  signuppage: (req, res) => {
-    let id = req.params.id;
-    console.log("iddddddddd", id);
-    res.render("user/signupPage", { id: id });
-  },
+const otpCache = {};
 
-  signup: async (req, res) => {
-    let id = req.params.id;
-    // console.log("iiiiiiiidddddddddd..........",id);
-    // console.log("##################3",req.body);
+function generateOTP() {
+  return randomstring.generate({length:4,charset:'numeric'})
+}
 
-    try {
-      // Assuming roomId is obtained from somewhere
-      // const roomId = id.roomId;
+ 
+function sendOTP(email,otp) {
+  const mailOptions = {
+    from:'akshaycs0480@gmail.com',
+    to:email,
+    subject: 'OTP Verification',
+    text:`Your OTP verification is:${otp}`
+  };
 
-      // Retrieve room details using roomId
-      const roomDetails = await userHelper.roomsDetails(id);
-      const hotelId = roomDetails.hotelId;
-      const roomId = roomDetails.roomId;
 
-      // console.log("33333333333333333333",roomId,hotelId);
-
-      // Call doSignup with retrieved hotelId and roomId
-      await userHelper.doSignup(req.body, hotelId, roomId).then((response) => {
-        // console.log(response);
-        res.redirect("/login/" + id);
-      });
-    } catch (error) {
-      console.log(error);
+  let transporter = nodemailer.createTransport({
+    service:'Gmail',
+    auth: {
+      user:'akshaycs0480@gmail.com',
+      pass:'acsa ghjk vbnx asty'
+    },
+    tls: {
+      rejectUnauthorized:false
     }
-  },
+  });
 
-  loginPage: (req, res, next) => {
-    const roomObjectId = req.params.id;
-    // console.log("loggggginnniddddd", roomObjectId);
-
-    if (req.session.loggedIn) {
-      return res.redirect("/user/booking/" + roomObjectId);
-    } else {
-      res.render("user/login", { roomObjectId });
+  transporter.sendMail(mailOptions, (error,info) => {
+    if(error) {
+      console.log('error occurred:', error);
+    }else {
+      console.log('OTP Email sent successfully:', info.response);
     }
-  },
-
-  login: async (req, res, next) => {
-    const roomObjectId = req.params.id;
-
-    // console.log("**********************",roomObjectId);
-
-    try {
-        const roomDetails = await userHelper.roomsDetails(roomObjectId);
-        const hotelId = roomDetails.hotelId;
-
-        // console.log("////////////////",hotelId);
-
-        userHelper.doLogin(req.body,hotelId).then((response) => {
-            if (response.status) {
-                req.session.loggedIn = true;
-                req.session.user = response.user;
-                res.redirect("/booking/" + roomObjectId);
-            } else {
-                req.session.loginErr = true;
-                // Redirect to login page with error message
-                res.redirect("/login/" + roomObjectId);
-            }
-        });
-    } catch (error) {
-        console.log(error);
-        // Redirect to login page with error message
-        res.redirect("/login/" + roomObjectId);
-    }
-},
+  });
+}
 
 
-  booking: (req, res) => {
-    let id = req.params.id;
-    // console.log("innnnnnnnnn",id);
+app.post('/reqotp',(req,res) => {
+  const {email} = req.body;
+  const otp = generateOTP();
+  otpCache[email] = otp;
 
-    try {
-      userHelper.roomsDetails(id).then((roomDetails) => {
-        res.render("user/booking", { roomDetails });
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error fetching room details");
-    }
-  },
 
-  bookingrooms: async (req, res) => {
-    const roomId = req.params.id;
+  sendOTP(email,otp);
+  res.cookie('otpcache',otpCache, {maxAge: 30000, httpOnly: true});
+  res.status(200).json({message:'otp sent successfully'});
 
-    try {
-      if (req.session.loggedIn) {
-        let userId = req.session.user.userId;
+})
 
-        const bookingData = req.body;
-        await userHelper.roomsDetails(roomId).then((roomDetails) => {
-          const hotelId = roomDetails.hotelId;
-          const roomId = roomDetails.roomId;
-          const roomDetailsid = roomDetails._id;
 
-          userHelper
-            .dobooking(bookingData, roomId, hotelId, userId)
-            .then((bookingId) => {
-              userHelper.price(bookingId).then((totalprice) => {
-                // res.redirect(`/payment/${roomDetailsid}?value=${totalprice}`);
-                // console.log("rooomdetailssss",roomDetails);
-                res.render("user/payment", { roomDetails, totalprice });
-              });
-            });
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).send("Error in booking");
-    }
-  },
+app.post('/verifyotp',(req,res) => {
+  const { email,otp} = req.body;
 
-  checkavailabilty: async (req, res, next) => {
-    const roomdetailsid = req.params.id;
+  if (!otpCache.hasOwnProperty(email)) {
+    return res.status(400).json({message:'email not found'});
+  }
 
-    const { checkin, checkout } = req.body;
+  if (otpCache[email] === otp.trim()) {
 
-    try {
-      // Retrieve room details to get roomId
-      const roomDetails = await userHelper.roomsDetails(roomdetailsid);
-      const roomId = roomDetails.roomId;
+    delete otpCache[email];
+    return res.status(200).json({message: 'otp verified successfully'})
+  }else{
+    return res.status(400).json({message:'inavlid otp'});
+  }
 
-      // Check if any existing booking overlaps with the provided date range
-      const existingBooking = await userHelper.dochecking(
-        checkin,
-        checkout,
-        roomId
-      );
-
-      if (existingBooking) {
-        // Dates are not available or already booked, inform the user
-        console.log("Selected dates are not available or already booked");
-        res.redirect("/room/" + roomdetailsid);
-      } else {
-        // Dates are available and not booked
-        if (req.session.loggedIn) {
-          // let userId = req.session.user.userId;
-          // If user is logged in, redirect to booking route
-          console.log("Dates are available for booking");
-          res.redirect("/booking/" + roomdetailsid);
-        } else {
-          // If user is not logged in, redirect to room route
-          console.log("User is not logged in. Redirecting to room route.");
-          res.redirect("/login/" + roomdetailsid);
-        }
-      }
-    } catch (error) {
-      console.log("Error checking availability:", error);
-      res.redirect("/"); // Redirect to home page with an error message
-    }
-  },
-
-  logout: (req, res) => {
-    req.session.destroy();
-    res.redirect("/");
-  },
-
-  homepage: (req, res) => {
-    userHelper.showhotels().then((hotelssdata) => {
-      res.render("user/homePage", {
-        hotelssdata,
-      });
-    });
-  },
-
-  allrooms: (req, res) => {
-    let hotelId = req.params.id; // Fetch the hotelId from route parameters
-    try {
-      userHelper.showrooms(hotelId).then((roomsdata) => {
-        // console.log("$$$$$$$$$$$$$$", roomsdata);
-        res.render("user/allRooms", {
-          roomsdata,
-        });
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error fetching rooms data");
-    }
-  },
-
-  room: (req, res) => {
-    let id = req.params.id;
-    try {
-      userHelper.roomsDetails(id).then((roomDetails) => {
-        res.render("user/room", { roomDetails });
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error fetching room details");
-    }
-  },
-
-  // paymentpage: (req, res) => {
-  //   // let value = req.query.params.value;
-  //   // console.log("requestconsoleee", req.query);
-
-  //   let id = req.params.id;
-  //   try {
-  //     userHelper.roomsDetails(id).then((roomDetails) => {
-  //       // console.log("rooooomdetailsssss&&&&&&&&&&&&&",roomDetails);
-  //       res.render("user/payment", { roomDetails });
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send("Error fetching room details");
-  //   }
-  // },
-
-  payment: async (req, res) => {
-    try {
-        if (req.session.loggedIn) {
-            const userId = req.session.user.userId;
-            const { name, price, hotelId, roomId } = req.body;
-
-            const paymentResult = await userHelper.payment(name, price, hotelId, roomId, userId);
-
-            if (paymentResult.success) {
-                // Instead of rendering the receipt page, you can redirect the user to a different page
-                res.redirect("/success"); // Redirect to a success page
-            } else {
-                // If payment failed, handle the error by redirecting or rendering an error message
-                res.status(500).send({ success: false, msg: "Payment failed!" });
-                // Or you can redirect to an error page: res.redirect("/error");
-            }
-        } else {
-            // If user is not logged in, handle the error by redirecting to the login page
-            res.status(401).redirect("/login");
-            // Alternatively, you can render an error message: res.status(401).send({ success: false, msg: "User not logged in!" });
-        }
-    } catch (error) {
-        console.log(error.message);
-        // Handle other errors as needed, such as rendering an error page or sending an error message
-        res.status(500).send({ success: false, msg: "Something went wrong!" });
-    }
-},
+});
 
 
 
 
-  receipt: async (req, res) => {
-    try {
-      if (req.session.loggedIn) {
-        const userId = req.session.user.userId;
 
-        // Fetch user details and hotel details based on the user's ID
-        const [userDetails, hotelDetails, customerDetails] =
-          await userHelper.showreceipt(userId);
+app.use((req, res, next) => {
+  res.set('cache-control', 'no-store')
+  next()
+})
+// app.use(fileupload());
 
-        // Render the receipt page with user and hotel details
-        res.render("user/receipt", {
-          userDetails,
-          hotelDetails,
-          customerDetails,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).send("Error fetching receipt details");
-    }
-  },
+app.use("/", userRouter);
+
+app.use("/admin", adminRouter);
+
+app.use("/hotel",hotelRouter);
 
 
-};
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404));
+});
 
 
-=======================================================================================
+// error handler
+app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render("error");
+});
+
+
+module.exports = app;
+
+
+=============================================================================================
 
 
 
+<html>
+  <head>
+    <title>OTP in JS</title>
+    {{!-- <link rel="stylesheet" href="emailotp.css" /> --}}
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    
+  </head>
+  <body>
+   
+
+
+    <div class="form">
+        <div class="main1">
+
+            <form action="/reqotp" method="post">
+            <input type="email" id="otpField" name="email" class="form">
+            <button type="submit" class="btn btn-primary">request otp</button>
+            </form>
+        </div>
+
+        <div class="main2">
+
+            <form action="/verifyotp" method="post">
+            <input type="hidden" id="verifyEmail" name="email">
+            <input type="text" id="otpField" class="form-control" name="otp" placeholder="enter yoyr otp">
+            <button type="submit" class="btn btn-primary">verify otp</button>
+            </form>
+        </div>
+
+
+    </div>
+
+
+<script> 
+   
+    document.querySelector("#otpField").addEventListener("input",function (event) {
+        document.querySelector("#verifyEmail").value = event.target.value;
+    })
+</script>
+
+
+  </body>
+</html>
+
+
+=========================================================================================================

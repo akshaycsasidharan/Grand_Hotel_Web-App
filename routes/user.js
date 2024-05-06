@@ -3,6 +3,12 @@ var router = express.Router();
 const {verifyUser ,notVerifyUser} = require("../middleware/userMiddleware");
 
 
+// const {
+
+//   sendOTP
+
+// }= require ("../public/javascripts/otplogin");
+
 const {
  
   loginPage,
@@ -14,15 +20,16 @@ const {
   login,
   booking,
   bookingrooms,
-  // paymentpage,
   payment,
   checkavailabilty,
   logout,
-  receipt
-
+  receipt,
+otploginpage
 
 } = require("../controllers/userController");
 
+
+router.get("/otploginpage",otploginpage);
 
 router.get("/",homepage);
 
@@ -42,7 +49,6 @@ router.get("/booking/:id",booking);
 
 router.post("/bookingroom/:id", bookingrooms);
 
-// router.get("/payment/:id", paymentpage);
 
 router.post("/dopayment",payment);
 

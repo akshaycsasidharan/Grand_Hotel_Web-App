@@ -10,6 +10,7 @@
                         <h2>Room</h2>
                     </div>
                 </div>
+               
             </div>
         </div>
     </div>
@@ -52,6 +53,13 @@
                     </div>
                 </div>
                <div class="col-lg-4">
+
+                 {{#if errorMessage}}
+                    <div class="alert alert-danger" role="alert">
+                        {{errorMessage}}
+                    </div>
+                {{/if}}
+                
     <div class="room-booking">
         <h3>Check Availability</h3>
 
