@@ -10,6 +10,7 @@ var collection = require("../config/collection");
 const puppeteer = require("puppeteer");
 const path = require("path");
 const { error } = require("console");
+const { log } = require("handlebars/runtime");
 
 // const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 const razorpayInstance = new Razorpay({
@@ -203,19 +204,45 @@ module.exports = {
     });
   },
 
+
   allrooms: (req, res) => {
-    let hotelId = req.params.id; // Fetch the hotelId from route parameters
+    let hotelId = req.params.id;
+    // console.log("jjjjjjjjjj",hotelId);
     try {
       userHelper.showrooms(hotelId).then((roomsdata) => {
         // console.log("$$$$$$$$$$$$$$", roomsdata);
         res.render("user/allRooms", {
           roomsdata,
+          hotelId
         });
       });
     } catch (error) {
       console.error(error);
       res.status(500).send("Error fetching rooms data");
     }
+  },
+
+  allfacilities: (req,res) => {
+
+   const hotelId = req.params.id;
+
+   console.log("pppppppppppppp",hotelId);
+
+
+    try {
+      userHelper.showfacilities(hotelId).then((facilitydata) => {
+
+
+        res.render("user/facility", {
+          facilitydata,
+          hotelId
+        })
+      })
+      
+    } catch (error) {
+      
+    }
+
   },
 
   room: (req, res) => {

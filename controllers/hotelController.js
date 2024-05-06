@@ -54,8 +54,8 @@ module.exports = {
           req.session.HotelLoggedIn = true;
           req.session.hotel = response.hotel;
           const hotel = req.session.hotel;
-          res.render("hotel/hotelDashboard",{
-            hotel
+          res.render("hotel/hotelDashboard", {
+            hotel,
           });
         } else {
           req.session.loginErr = true; // Set login error flag in session
@@ -69,19 +69,21 @@ module.exports = {
   },
 
   hoteldashboard: (req, res, next) => {
-    let hotel = req.session.hotel;
-    //  console.log("hotelllllllllllll.... $$$$$",hotel);
-    // console.log("====================== session =================",req.session);
 
-    res.render("hotel/hotelDashboard", {
-      hotel,
-      // Hotel: true,
+    let hotel = req.session.hotel;
+
+    console.log("==============hotel===========",hotel);
+
+    hotelHelper.showdashboard(hotel).then((count) => {
+      console.log("``````````````````````````````````", count);
+      res.render("hotel/hotelDashboard", {
+        hotel,
+        count,
+      });
     });
   },
 
   addroomspage: (req, res) => {
-    let hotelId = req.params.id;
-    // console.log("hotelId",hotelId);
     res.render("hotel/addRooms");
   },
 
@@ -125,7 +127,7 @@ module.exports = {
 
     // console.log("@@@@@@@@@@@@@@@@@@", req.body);
     try {
-      hotelHelper.addfacility(req.body, req.file,hotel).then((response) => {
+      hotelHelper.addfacility(req.body, req.file, hotel).then((response) => {
         // console.log("%%%%%%%%%%%%%%%%%",response);
         res.redirect("/hotel/facilities");
       });
@@ -135,14 +137,14 @@ module.exports = {
   },
 
   facilitypage: (req, res) => {
-
     let hotel = req.session.hotel;
 
-    // console.log("###########33", req.body);
+    console.log("###########22222222", hotel);
 
     hotelHelper.viewfacility(hotel).then((facilitiesdata) => {
       res.render("hotel/facilities", {
-        facilitiesdata,hotel
+        facilitiesdata,
+        hotel,
       });
     });
   },
@@ -156,7 +158,6 @@ module.exports = {
   },
 
   roomedit: (req, res) => {
-
     let id = req.params.id;
 
     hotelHelper.roomedit(id, req.body, req.file).then(() => {
@@ -193,12 +194,13 @@ module.exports = {
   },
 
   customers: (req, res) => {
-
     let hotel = req.session.hotel;
+
+    console.log("111111111111",hotel);
     hotelHelper.showcustomers(hotel).then(async (customerdata) => {
       res.render("hotel/hotelCustomers", {
         customerdata,
-        hotel
+        hotel,
       });
     });
   },
@@ -208,7 +210,7 @@ module.exports = {
     hotelHelper.transactiondetails(hotel).then((transactiondata) => {
       res.render("hotel/transactions", {
         transactiondata,
-        hotel
+        hotel,
       });
     });
   },

@@ -62,16 +62,14 @@
                                         <tr>
                                             <td>{{this.hotelId}}</td> 
                                             <td>{{this.roomId}}</td>
+
                                             <td>{{this.userId}}</td>
                                             <td><b>{{this.order_id}}</b></td>
                                             <td>{{this.amount}}</td>
-                                            <td>
-                                                <div class="icontext">
-                                                    {{!-- <img class="icon border" src="assets/imgs/card-brands/1.png" alt="Payment"> --}}
-                                                    <span class="text text-muted">{{this.name}}</span>
-                                                </div>
+                                            <td>                                             
+                                            <span class="badge badge-pill badge-soft-danger">{{this.name}}</span>
                                             </td>
-                                            <td>{{this.status}}</td>
+                                            <td><span class="badge rounded-pill alert-warning">{{this.status}}</span></td>
                                             <td class="text-end">
                                             </td>
                                            

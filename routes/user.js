@@ -15,6 +15,7 @@ const {
   signup,
   homepage,
   allrooms,
+  allfacilities,
   room,
   login,
   booking,
@@ -43,6 +44,8 @@ router.get("/login/:id", loginPage);
 router.post("/login/:id", login);
 
 router.get("/allrooms/:id",allrooms);
+
+router.get("/allfacilities/:id",allfacilities);
 
 router.get("/room/:id",room);
 

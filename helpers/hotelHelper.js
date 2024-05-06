@@ -7,6 +7,7 @@ const { facility } = require("../controllers/hotelController");
 const { response } = require("express");
 
 module.exports = {
+
   hoteldoSignup: (hotelsData, file) => {
     return new Promise(async (resolve, reject) => {
       console.log("!!!!!!!!!!!!!!!11hotelsssdataaaa", hotelsData);
@@ -73,6 +74,22 @@ module.exports = {
     });
   },
 
+  showdashboard: (hotel) => {
+    console.log("hoooooooteeeeeeeeelll",hotel);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await connectToMongoDB();
+        const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        resolve(count);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  
+  
+  
+
   showcustomers: async (hotel) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
@@ -130,6 +147,7 @@ module.exports = {
 
         hotelId:hotel.hotelId,
         Facilities: facilitiesdata.Facilities,
+        Floor:facilitiesdata.Floor,
         Image: file.filename,
         facility: false,
       };
@@ -281,7 +299,7 @@ module.exports = {
   },
 
   transactiondetails: (hotel) => {
-    // console.log("Hotel ID:", hotel.hotelId);
+    console.log("Hotel ID:", hotel.hotelId);
 
     return new Promise(async (resolve, reject) => {
       try {
@@ -296,4 +314,5 @@ module.exports = {
       }
     });
   },
+
 };

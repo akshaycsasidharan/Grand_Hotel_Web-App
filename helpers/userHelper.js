@@ -105,6 +105,22 @@ module.exports = {
     }
   },
 
+  showfacilities:async (hotelid) => {
+
+    console.log("kkkkkkkkkk",hotelid);
+    try {
+      const db = await connectToMongoDB();
+      const hotelfacilities = await db
+        .collection(collection.FACILITY_COLLECTION)
+        .find({ hotelId:hotelid })
+        .toArray();
+      return hotelfacilities;
+    } catch (error) {
+      console.error("Error fetching hotel rooms:", error);
+      throw error; // Propagate the error to the caller
+    }
+  },
+
   roomsDetails: async (roomid) => {
     try {
       const db = await connectToMongoDB();
