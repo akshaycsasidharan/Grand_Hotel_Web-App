@@ -75,17 +75,207 @@ module.exports = {
   },
 
   showdashboard: (hotel) => {
-    console.log("hoooooooteeeeeeeeelll",hotel);
     return new Promise(async (resolve, reject) => {
       try {
         const db = await connectToMongoDB();
+        
         const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
-        resolve(count);
+        const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const roomsCount = await db.collection(collection.ROOMS_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const availableRooms = roomsCount - bookingCount;
+
+        // Calculate total amount from payment collection
+        const paymentAmountCursor = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
+          { $match: { hotelId: hotel.hotelId } },
+          { $group: { _id: null, totalAmount: { $sum: "$amount" } } }
+        ]).toArray();
+
+        const totalAmount = paymentAmountCursor.length > 0 ? paymentAmountCursor[0].totalAmount : 0;
+
+        resolve({ count, availableRooms, totalAmount });
       } catch (error) {
         reject(error);
       }
     });
   },
+  showdashboard: (hotel) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await connectToMongoDB();
+        
+        const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const roomsCount = await db.collection(collection.ROOMS_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const availableRooms = roomsCount - bookingCount;
+
+        // Calculate total amount from payment collection
+        const paymentAmountCursor = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
+          { $match: { hotelId: hotel.hotelId } },
+          { $group: { _id: null, totalAmount: { $sum: "$amount" } } }
+        ]).toArray();
+
+        const totalAmount = paymentAmountCursor.length > 0 ? paymentAmountCursor[0].totalAmount : 0;
+
+        resolve({ count, availableRooms, totalAmount });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  showdashboard: (hotel) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await connectToMongoDB();
+        
+        const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const roomsCount = await db.collection(collection.ROOMS_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const availableRooms = roomsCount - bookingCount;
+
+        // Calculate total amount from payment collection
+        const paymentAmountCursor = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
+          { $match: { hotelId: hotel.hotelId } },
+          { $group: { _id: null, totalAmount: { $sum: "$amount" } } }
+        ]).toArray();
+
+        const totalAmount = paymentAmountCursor.length > 0 ? paymentAmountCursor[0].totalAmount : 0;
+
+        resolve({ count, availableRooms, totalAmount });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  showdashboard: (hotel) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await connectToMongoDB();
+        
+        const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const roomsCount = await db.collection(collection.ROOMS_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const availableRooms = roomsCount - bookingCount;
+
+        // Calculate total amount from payment collection
+        const paymentAmountCursor = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
+          { $match: { hotelId: hotel.hotelId } },
+          { $group: { _id: null, totalAmount: { $sum: "$amount" } } }
+        ]).toArray();
+
+        const totalAmount = paymentAmountCursor.length > 0 ? paymentAmountCursor[0].totalAmount : 0;
+
+        resolve({ count, availableRooms, totalAmount });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  showdashboard: (hotel) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await connectToMongoDB();
+        
+        const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const roomsCount = await db.collection(collection.ROOMS_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const availableRooms = roomsCount - bookingCount;
+
+        // Calculate total amount from payment collection
+        const paymentAmountCursor = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
+          { $match: { hotelId: hotel.hotelId } },
+          { $group: { _id: null, totalAmount: { $sum: "$amount" } } }
+        ]).toArray();
+
+        const totalAmount = paymentAmountCursor.length > 0 ? paymentAmountCursor[0].totalAmount : 0;
+
+        resolve({ count, availableRooms, totalAmount });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  showdashboard: (hotel) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await connectToMongoDB();
+        
+        const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const roomsCount = await db.collection(collection.ROOMS_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const availableRooms = roomsCount - bookingCount;
+
+        // Calculate total amount from payment collection
+        const paymentAmountCursor = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
+          { $match: { hotelId: hotel.hotelId } },
+          { $group: { _id: null, totalAmount: { $sum: "$amount" } } }
+        ]).toArray();
+
+        const totalAmount = paymentAmountCursor.length > 0 ? paymentAmountCursor[0].totalAmount : 0;
+
+        resolve({ count, availableRooms, totalAmount });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+  showdashboard: (hotel) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await connectToMongoDB();
+        
+        const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const roomsCount = await db.collection(collection.ROOMS_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const availableRooms = roomsCount - bookingCount;
+
+        // Calculate total amount from payment collection
+        const paymentAmountCursor = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
+          { $match: { hotelId: hotel.hotelId } },
+          { $group: { _id: null, totalAmount: { $sum: "$amount" } } }
+        ]).toArray();
+
+        const totalAmount = paymentAmountCursor.length > 0 ? paymentAmountCursor[0].totalAmount : 0;
+
+        resolve({ count, availableRooms, totalAmount });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+  
+  showdashboard: (hotel) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const db = await connectToMongoDB();
+        
+        const facilities = await db.collection(collection.FACILITY_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const roomsCount = await db.collection(collection.ROOMS_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
+        const availableRooms = roomsCount - bookingCount;
+
+        // Calculate total amount from payment collection
+
+        const transactionview = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
+          { $match: { hotelId: hotel.hotelId } },
+          { $group: { _id: null, amount: { $sum: "$amount" } } }
+        ]).toArray();
+        // If there are no transactions, set totalAmount to 0
+        const amount = transactionview.length > 0 ? transactionview[0].amount : 0;
+
+        console.log("paymentttttttttt",amount);
+
+        resolve({ count, availableRooms,facilities,amount });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  },
+
+
+
+  
   
   
   

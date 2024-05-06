@@ -69,19 +69,23 @@ module.exports = {
   },
 
   hoteldashboard: (req, res, next) => {
-
     let hotel = req.session.hotel;
 
-    console.log("==============hotel===========",hotel);
-
-    hotelHelper.showdashboard(hotel).then((count) => {
-      console.log("``````````````````````````````````", count);
+    hotelHelper.showdashboard(hotel).then((result) => {
+      console.log("Dashboard Count:", result.count);
+      console.log("Available Rooms:", result.availableRooms);
+      // console.log("Total Amount:", result.amount);
       res.render("hotel/hotelDashboard", {
         hotel,
-        count,
+        count: result.count,
+        availableRooms: result.availableRooms,
+        facilities:result.facilities,
+        amount: result.amount
       });
     });
   },
+
+
 
   addroomspage: (req, res) => {
     res.render("hotel/addRooms");

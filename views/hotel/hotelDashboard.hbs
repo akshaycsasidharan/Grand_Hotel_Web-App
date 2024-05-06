@@ -47,7 +47,7 @@
                             <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
                             <div class="text">
                                 <h6 class="mb-1 card-title">Revenue</h6>
-                                <span>$13,456.5</span>
+                                <span>{{this.amount}}</span>
                                 <span class="text-sm">
                                     <!-- Shipping fees are not included -->
                                 </span>
@@ -60,7 +60,7 @@
                         <article class="icontext">
                             <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
                             <div class="text">
-                                <h6 class="mb-1 card-title">Available Rooms</h6> <span>53</span>
+                                <h6 class="mb-1 card-title">Available Rooms</h6> <span>{{this.availableRooms}}</span>
                                 <!-- <span class="text-sm">
                                     Excluding orders in transit
                                 </span> -->
@@ -73,7 +73,7 @@
                         <article class="icontext">
                             <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
                             <div class="text">
-                                <h6 class="mb-1 card-title">customers</h6> <span>9</span>
+                                <h6 class="mb-1 card-title">customers</h6> <span>{{this.count}}</span>
                                 <span class="text-sm">
                                     <!-- In 19 Categories -->
                                 </span>
@@ -86,7 +86,7 @@
                         <article class="icontext">
                             <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
                             <div class="text">
-                                <h6 class="mb-1 card-title">Monthly Earning</h6> <span>$6,982</span>
+                                <h6 class="mb-1 card-title">Facilities</h6> <span>{{this.facilities}}</span>
                                 <span class="text-sm">
                                     <!-- Based in your local time. -->
                                 </span>
@@ -492,7 +492,7 @@
 
 
         </section> <!-- content-main end// -->
-        <footer class="main-footer font-xs">
+        {{!-- <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
                     <script>
@@ -505,7 +505,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer> --}}
     </main>
     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
