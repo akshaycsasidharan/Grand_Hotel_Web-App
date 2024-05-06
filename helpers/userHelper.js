@@ -230,6 +230,7 @@ module.exports = {
     }
   },
 
+
   payment: async (name, price, hotelId, roomId, userId) => {
     try {
         const options = {
@@ -258,7 +259,7 @@ module.exports = {
             roomId: roomId,
             hotelId: hotelId,
             userId: userId,
-            status: "pending", // Initially set status to 'pending'
+            status: "success", // Initially set status to 'pending'
             payment_date: new Date(), // Store the current date as payment date
         };
 

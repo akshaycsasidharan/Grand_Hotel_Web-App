@@ -62,7 +62,7 @@ module.exports = {
             response.message = "Login Success";
             resolve(response);
           } else {
-            console.log("user not availableeee %%%%%%%%%%5%%%55");
+            // console.log("user not availableeee %%%%%%%%%%5%%%55");
             response.message = "the user cant login";
             resolve({ status: false });
           }
@@ -73,23 +73,23 @@ module.exports = {
     });
   },
 
-  showcustomers: async () => {
+  showcustomers: async (hotel) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       let customerdata = await db
-        .collection(collection.USER_COLLECTION)
-        .find({ booked: true })
+        .collection(collection.BOOKING_COLLECTION)
+        .find({ hotelId: hotel.hotelId })
         .toArray();
       resolve(customerdata);
     });
   },
 
-  addrooms: (roomdata, file, hotelId) => {
+  addrooms: (roomdata, file, hotel) => {
     return new Promise(async (resolve, reject) => {
       let dataroom = {
         roomId: Date.now().toString(16),
 
-        hotelId: hotelId,
+        hotelId:hotel.hotelId,
         Roomnumber: roomdata.Roomnumber,
         RoomType: roomdata.RoomType,
         Floor: roomdata.Floor,
@@ -112,9 +112,23 @@ module.exports = {
     });
   },
 
-  addfacility: (facilitiesdata, file) => {
+  viewrooms: (hotel) => {
+    console.log("=========hotellll",hotel);
+    return new Promise(async (resolve, reject) => {
+      const db = await connectToMongoDB();
+      let roomsview = db
+        .collection(collection.ROOMS_COLLECTION)
+        .find({ deleted: false,hotelId: hotel.hotelId })
+        .toArray();
+      resolve(roomsview);
+    });
+  },
+
+  addfacility: (facilitiesdata, file,hotel) => {
     return new Promise(async (resolve, reject) => {
       let datafacilities = {
+
+        hotelId:hotel.hotelId,
         Facilities: facilitiesdata.Facilities,
         Image: file.filename,
         facility: false,
@@ -131,23 +145,12 @@ module.exports = {
     });
   },
 
-  viewrooms: (id) => {
-    return new Promise(async (resolve, reject) => {
-      const db = await connectToMongoDB();
-      let roomsview = db
-        .collection(collection.ROOMS_COLLECTION)
-        .find({ deleted: false, hotelId: id })
-        .toArray();
-      resolve(roomsview);
-    });
-  },
-
-  viewfacility: () => {
+  viewfacility: (hotel) => {
     return new Promise(async (resolve, reject) => {
       const db = await connectToMongoDB();
       let facilitiesview = db
         .collection(collection.FACILITY_COLLECTION)
-        .find({ facility: false })
+        .find({ facility: false , hotelId: hotel.hotelId })
         .toArray();
       resolve(facilitiesview);
     });

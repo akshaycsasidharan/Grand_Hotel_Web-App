@@ -7,9 +7,10 @@ var hbs = require("express-handlebars");
 let Hbs = require("handlebars");
 const Razorpay = require("razorpay");
 
-const PDFDocument = require('pdfkit');
+// const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
+const puppeteer = require("puppeteer")
 
 
 

@@ -3,18 +3,15 @@ const { render, response } = require("../app");
 const hotelHelper = require("../helpers/hotelHelper");
 const multer = require("multer");
 
-
 module.exports = {
-  
   signuppage: (req, res, next) => {
     res.render("hotel/hotelSignup");
   },
 
   hotelsignup: (req, res) => {
-
     try {
-      hotelHelper.hoteldoSignup(req.body,req.file).then((response) => {
-        console.log("$$$$$$$$$$",response);
+      hotelHelper.hoteldoSignup(req.body, req.file).then((response) => {
+        console.log("$$$$$$$$$$", response);
         res.redirect("/hotel");
       });
     } catch (error) {
@@ -22,58 +19,70 @@ module.exports = {
     }
   },
 
-  hotelloginPage: (req, res, next) => {
+  // hotelloginPage: (req, res, next) => {
 
-    if (req.session.loggedIn) {
-      return res.redirect("hotel/hotelDashboard");
-      } else {
+  //   if (req.session.loggedIn) {
+  //     return res.redirect("/hotelDashboard");
+  //     } else {
+  //     res.render("hotel/hotelLogin", {
+  //       Hotel: true,
+  //       loginErr: req.session.loginErr,
+  //     });
+  //     req.session.loginErr = false;
+  //   }
+
+  // },
+
+  hotelloginPage: (req, res, next) => {
+    if (req.session.HotelLoggedIn) {
+      return res.render("hotel/hotelDashboard");
+    } else {
+      // Check if login error flag is set in session
+      const loginErr = req.session.loginErr ? true : false;
+      req.session.loginErr = false; // Reset login error flag
       res.render("hotel/hotelLogin", {
         Hotel: true,
-        loginErr: req.session.loginErr,
-        block: req.session.block,
+        loginErr: loginErr, // Pass login error flag to the view
       });
-      req.session.loginErr = false;
-      req.session.block = false;
     }
-
   },
 
-  
-
-hotellogin: (req, res, next) => {
-  
-  hotelHelper.hotelLogin(req.body).then((response) => {
-    if(response.status){
-      req.session.loggedIn = true;
-      req.session.hotel = response.hotel;
-      res.render("hotel/hotelDashboard");
-    }else {
-      req.session.loginErr = true;
-      res.render("/", { error: response.message });
+  hotellogin: (req, res, next) => {
+    try {
+      hotelHelper.hotelLogin(req.body).then((response) => {
+        if (response.status) {
+          req.session.HotelLoggedIn = true;
+          req.session.hotel = response.hotel;
+          const hotel = req.session.hotel;
+          res.render("hotel/hotelDashboard",{
+            hotel
+          });
+        } else {
+          req.session.loginErr = true; // Set login error flag in session
+          res.redirect("/hotel"); // Redirect to login page
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.redirect("/"); // Redirect to login page
     }
-  })
-},
+  },
 
-
-  
   hoteldashboard: (req, res, next) => {
-    
     let hotel = req.session.hotel;
-    // console.log("hotelllllllllllll $$$$$",hotel);
+    //  console.log("hotelllllllllllll.... $$$$$",hotel);
     // console.log("====================== session =================",req.session);
 
-    res.render("hotel/hotelDashboard",{
+    res.render("hotel/hotelDashboard", {
       hotel,
-      Hotel : true
+      // Hotel: true,
     });
   },
 
-  addroomspage : (req, res) => {
+  addroomspage: (req, res) => {
     let hotelId = req.params.id;
     // console.log("hotelId",hotelId);
-    res.render("hotel/addRooms",{
-      hotelId
-    });
+    res.render("hotel/addRooms");
   },
 
   addfacilitiespage: (req, res) => {
@@ -81,61 +90,42 @@ hotellogin: (req, res, next) => {
   },
 
   addrooms: (req, res) => {
-
     // console.log("addroomssssssssss ======");
-
-    let hotelId = req.params.id;
-
+    let hotel = req.session.hotel;
     // console.log("reqqqq.params.idd",req.params.id);
-
     try {
-      hotelHelper.addrooms(req.body, req.file,hotelId).then((insertedId) => {
-
-        console.log("Room inserted with ID...............:", insertedId);
-
-        res.redirect("/hotel/rooms" );
-        
-      }).catch((error) => {
-
-        console.error("Error adding room:", error);
-        res.status(500).send("Error adding room");
-
-      });
+      hotelHelper
+        .addrooms(req.body, req.file, hotel)
+        .then((insertedId) => {
+          res.redirect("/hotel/rooms");
+        })
+        .catch((error) => {
+          console.error("Error adding room:", error);
+          res.status(500).send("Error adding room");
+        });
     } catch (error) {
       console.log(error);
       res.status(500).send("Error adding room");
     }
   },
 
-  
   roomspage: (req, res) => {
-
-    // console.log("##########$$#^GGFN B BN BB G");
-
-      let hotel = req.session.hotel;
-
-      // console.log(("========= hotel ======",hotel));
-
-    let hoteldetails = req.params.id;
-
-    // console.log("hoteldetailssss",hoteldetails);
-
-    hotelHelper.viewrooms(hoteldetails).then(async (viewdata) => {
-
-      // console.log("hoteldetails",hoteldetails);
-
+    let hotel = req.session.hotel;
+    hotelHelper.viewrooms(hotel).then(async (viewdata) => {
       res.render("hotel/rooms", {
-
         viewdata,
-        hotel
+        hotel,
       });
     });
   },
 
   addfacilities: (req, res) => {
-    console.log("@@@@@@@@@@@@@@@@@@", req.body);
+
+    let hotel = req.session.hotel;
+
+    // console.log("@@@@@@@@@@@@@@@@@@", req.body);
     try {
-      hotelHelper.addfacility(req.body, req.file).then((response) => {
+      hotelHelper.addfacility(req.body, req.file,hotel).then((response) => {
         // console.log("%%%%%%%%%%%%%%%%%",response);
         res.redirect("/hotel/facilities");
       });
@@ -144,17 +134,18 @@ hotellogin: (req, res, next) => {
     }
   },
 
-
   facilitypage: (req, res) => {
-    console.log("###########33", req.body);
 
-    hotelHelper.viewfacility().then((facilitiesdata) => {
+    let hotel = req.session.hotel;
+
+    // console.log("###########33", req.body);
+
+    hotelHelper.viewfacility(hotel).then((facilitiesdata) => {
       res.render("hotel/facilities", {
-        facilitiesdata,
+        facilitiesdata,hotel
       });
     });
   },
-  
 
   editrooms: (req, res) => {
     let id = req.params.id;
@@ -165,10 +156,18 @@ hotellogin: (req, res, next) => {
   },
 
   roomedit: (req, res) => {
+
     let id = req.params.id;
 
     hotelHelper.roomedit(id, req.body, req.file).then(() => {
       res.redirect("/hotel/rooms");
+    });
+  },
+
+  deleteroom: (req, res) => {
+    let id = req.params.id;
+    hotelHelper.roomdelete(id).then(() => {
+      res.redirect("/hotel/rooms"); // Corrected redirect path
     });
   },
 
@@ -186,13 +185,6 @@ hotellogin: (req, res, next) => {
     });
   },
 
-  deleteroom: (req, res) => {
-    let id = req.params.id;
-    hotelHelper.roomdelete(id).then(() => {
-      res.redirect("/hotel/rooms"); // Corrected redirect path
-    });
-  },
-
   deletefacilities: (req, res) => {
     let id = req.params.id;
     hotelHelper.facilitiesdelete(id).then(() => {
@@ -201,9 +193,12 @@ hotellogin: (req, res, next) => {
   },
 
   customers: (req, res) => {
-    hotelHelper.showcustomers().then(async (customerdata) => {
+
+    let hotel = req.session.hotel;
+    hotelHelper.showcustomers(hotel).then(async (customerdata) => {
       res.render("hotel/hotelCustomers", {
         customerdata,
+        hotel
       });
     });
   },
@@ -211,18 +206,16 @@ hotellogin: (req, res, next) => {
   transactions: (req, res) => {
     let hotel = req.session.hotel;
     hotelHelper.transactiondetails(hotel).then((transactiondata) => {
-      res.render("hotel/transactions", { 
-       transactiondata
+      res.render("hotel/transactions", {
+        transactiondata,
+        hotel
       });
-    })
-
+    });
   },
 
-
-  logout:(req,res) => {
+  logout: (req, res) => {
     req.session.destroy();
     res.redirect("/hotel");
   },
-  
 
 };
