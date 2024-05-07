@@ -62,20 +62,28 @@ module.exports = {
           req.session.hotel = response.hotel;
           const hotel = req.session.hotel;
 
+          hotelHelper.transactiondetails(hotel).then((transactiondata) => {
+            
+
+            // console.log("transactionnnnn---------",transactiondata);
+
           // Call the hoteldashboard function to render the dashboard after successful login
           hotelHelper.showdashboard(hotel).then((result) => {
-            console.log("Dashboard Count:", result.count);
-            console.log("Available Rooms:", result.availableRooms);
-            console.log("paidcustomers:", result.paidcustomers);
+            // console.log("Dashboard Count:", result.customerscount);
+            // console.log("Available Rooms:", result.availableRooms);
+            // console.log("paidcustomers:", result.paidcustomers);
             res.render("hotel/hotelDashboard", {
               hotel,
-              count: result.count,
+              customerscount: result.customerscount,
               availableRooms: result.availableRooms,
               facilities: result.facilities,
-              paidcustomers:result.paidcustomers,
-              amount: result.amount,
+              unpaidcustomers:result.unpaidcustomers,
+              transactiondata:transactiondata
+              // amount: result.amount,
             });
           });
+        });
+
         } else {
           req.session.loginErr = true; // Set login error flag in session
           res.redirect("/hotel"); // Redirect to login page
@@ -90,19 +98,24 @@ module.exports = {
   hoteldashboard: (req, res, next) => {
     let hotel = req.session.hotel;
 
+    hotelHelper.transactiondetails(hotel).then((transactiondata) => {
+
+
     hotelHelper.showdashboard(hotel).then((result) => {
-      console.log("Dashboard Count:", result.count);
-      console.log("Available Rooms:", result.availableRooms);
-      console.log("paidcustomers:", result.paidcustomers);
+      // console.log("Dashboard Count:", result.customerscount);
+      // console.log("Available Rooms:", result.availableRooms);
+      // console.log("paidcustomers:", result.paidcustomers);
       res.render("hotel/hotelDashboard", {
         hotel,
-        count: result.count,
+        customerscount: result.customerscount,
         availableRooms: result.availableRooms,
         facilities: result.facilities,
-        paidcustomers:result.paidcustomers,
+        unpaidcustomers:result.unpaidcustomers,
+        transactiondata:transactiondata
         // amount: result.amount,
       });
     });
+  });
   },
 
   addroomspage: (req, res) => {

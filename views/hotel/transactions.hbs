@@ -60,10 +60,12 @@
                                         {{#each transactiondata}}
 
                                         <tr>
-                                            <td>{{this.hotelId}}</td> 
-                                            <td>{{this.roomId}}</td>
+                                            <td style="color: red;">{{this.hotelId}}</td>
 
-                                            <td>{{this.userId}}</td>
+                                            {{!-- <td><a href="#" class="fw-bold">{{this.hotelId}}</a></td>  --}}
+                                            <td style="color: grey;">{{this.roomId}}</td>
+
+                                            <td style="color: green;">{{this.userId}}</td>
                                             <td><b>{{this.order_id}}</b></td>
                                             <td>{{this.amount}}</td>
                                             <td>                                             
@@ -88,7 +90,7 @@
 
 
         
-        <footer class="main-footer font-xs">
+        {{!-- <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
                     <script>
@@ -101,7 +103,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer> --}}
     </main>
     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>

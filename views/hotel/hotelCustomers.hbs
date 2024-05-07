@@ -23,10 +23,10 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
+                                            <th>UserId</th>
                                             <th>Customer Name</th>
                                             <th>Email</th>
-                                            <th>UserId</th>
-                                            <th>HotelId</th>
+                                            {{!-- <th>HotelId</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -34,10 +34,10 @@
                                         {{#each customerdata}}
 
                                          <tr>
-                                            <td><b>{{this.name}}</b></td>
-                                        <td>{{this.email}}</td>
-                                        <td>{{this.userId}}</td>
-                                        <td>{{this.hotelId}}</td>
+                                         <td><a href="#" class="fw-bold">{{this.userId}}</a></td>
+                                         <td><b>{{this.name}}</b></td>
+                                         <td>{{this.email}}</td>
+                                        {{!-- <td>{{this.hotelId}}</td> --}}
                                         </tr>
 
                                         {{/each}}
@@ -53,7 +53,7 @@
             
         </section>
          <!-- content-main end// -->
-        <footer class="main-footer font-xs">
+        {{!-- <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
                     <script>
@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer> --}}
     </main>
     <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
