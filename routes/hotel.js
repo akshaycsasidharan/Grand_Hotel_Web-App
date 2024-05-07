@@ -46,7 +46,7 @@ router.get("/", hotelloginPage);
 
 router.post("/hotellogin", hotellogin);
 
-router.get("/hoteldashboard",hoteldashboard);
+router.get("/hoteldashboard", hoteldashboard);
 
 router.get("/customers",customers);
 

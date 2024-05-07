@@ -249,6 +249,7 @@ module.exports = {
       try {
         const db = await connectToMongoDB();
         
+        const paidcustomers = await db.collection(collection.PAYMENT_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
         const facilities = await db.collection(collection.FACILITY_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
         const count = await db.collection(collection.USER_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
         const bookingCount = await db.collection(collection.BOOKING_COLLECTION).countDocuments({ hotelId: hotel.hotelId });
@@ -266,7 +267,7 @@ module.exports = {
 
         console.log("paymentttttttttt",amount);
 
-        resolve({ count, availableRooms,facilities,amount });
+        resolve({ count, availableRooms,facilities,paidcustomers });
       } catch (error) {
         reject(error);
       }

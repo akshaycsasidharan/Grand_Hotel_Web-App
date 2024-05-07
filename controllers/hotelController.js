@@ -19,20 +19,6 @@ module.exports = {
     }
   },
 
-  // hotelloginPage: (req, res, next) => {
-
-  //   if (req.session.loggedIn) {
-  //     return res.redirect("/hotelDashboard");
-  //     } else {
-  //     res.render("hotel/hotelLogin", {
-  //       Hotel: true,
-  //       loginErr: req.session.loginErr,
-  //     });
-  //     req.session.loginErr = false;
-  //   }
-
-  // },
-
   hotelloginPage: (req, res, next) => {
     if (req.session.HotelLoggedIn) {
       return res.render("hotel/hotelDashboard");
@@ -47,6 +33,27 @@ module.exports = {
     }
   },
 
+  // hotellogin: (req, res, next) => {
+  //   try {
+  //     hotelHelper.hotelLogin(req.body).then((response) => {
+  //       if (response.status) {
+  //         req.session.HotelLoggedIn = true;
+  //         req.session.hotel = response.hotel;
+  //         const hotel = req.session.hotel;
+  //         res.render("hotel/hotelDashboard", {
+  //           hotel,
+  //         });
+  //       } else {
+  //         req.session.loginErr = true; // Set login error flag in session
+  //         res.redirect("/hotel"); // Redirect to login page
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.redirect("/"); // Redirect to login page
+  //   }
+  // },
+
   hotellogin: (req, res, next) => {
     try {
       hotelHelper.hotelLogin(req.body).then((response) => {
@@ -54,8 +61,20 @@ module.exports = {
           req.session.HotelLoggedIn = true;
           req.session.hotel = response.hotel;
           const hotel = req.session.hotel;
-          res.render("hotel/hotelDashboard", {
-            hotel,
+
+          // Call the hoteldashboard function to render the dashboard after successful login
+          hotelHelper.showdashboard(hotel).then((result) => {
+            console.log("Dashboard Count:", result.count);
+            console.log("Available Rooms:", result.availableRooms);
+            console.log("paidcustomers:", result.paidcustomers);
+            res.render("hotel/hotelDashboard", {
+              hotel,
+              count: result.count,
+              availableRooms: result.availableRooms,
+              facilities: result.facilities,
+              paidcustomers:result.paidcustomers,
+              amount: result.amount,
+            });
           });
         } else {
           req.session.loginErr = true; // Set login error flag in session
@@ -74,18 +93,17 @@ module.exports = {
     hotelHelper.showdashboard(hotel).then((result) => {
       console.log("Dashboard Count:", result.count);
       console.log("Available Rooms:", result.availableRooms);
-      // console.log("Total Amount:", result.amount);
+      console.log("paidcustomers:", result.paidcustomers);
       res.render("hotel/hotelDashboard", {
         hotel,
         count: result.count,
         availableRooms: result.availableRooms,
-        facilities:result.facilities,
-        amount: result.amount
+        facilities: result.facilities,
+        paidcustomers:result.paidcustomers,
+        // amount: result.amount,
       });
     });
   },
-
-
 
   addroomspage: (req, res) => {
     res.render("hotel/addRooms");
@@ -126,7 +144,6 @@ module.exports = {
   },
 
   addfacilities: (req, res) => {
-
     let hotel = req.session.hotel;
 
     // console.log("@@@@@@@@@@@@@@@@@@", req.body);
@@ -200,7 +217,7 @@ module.exports = {
   customers: (req, res) => {
     let hotel = req.session.hotel;
 
-    console.log("111111111111",hotel);
+    console.log("111111111111", hotel);
     hotelHelper.showcustomers(hotel).then(async (customerdata) => {
       res.render("hotel/hotelCustomers", {
         customerdata,
@@ -223,5 +240,4 @@ module.exports = {
     req.session.destroy();
     res.redirect("/hotel");
   },
-
 };
