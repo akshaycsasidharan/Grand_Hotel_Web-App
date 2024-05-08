@@ -34,9 +34,9 @@ updateuser,
 changeuserPasswordpage,
 changeuserpassword
 
-
-
 } = require("../controllers/userController");
+
+
 
 router.get("/generatepdf",generatepdf);
 

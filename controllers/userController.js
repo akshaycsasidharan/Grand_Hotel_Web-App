@@ -298,9 +298,13 @@ module.exports = {
     }
   },
 
+
+
   otploginpage: (req, res) => {
     res.render("user/otplogin");
   },
+
+  
 
   // otpLogin: (req, res) => {
   //   console.log("===============req.body=================");
