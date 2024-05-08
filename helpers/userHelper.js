@@ -365,23 +365,25 @@ module.exports = {
 
   upadateUserdetails: async (userdata, userId) => {
     try {
-      const db = await connectToMongoDB();
-      // Update the user details in the database
-      const userDetails = await db
-        .collection(collection.USER_COLLECTION)
-        .findOne({ userId: userId })
-        .updateOne({
-          $set: {
-            name: userdata.name,
-            email: userdata.email,
-            mobilenumber: userdata.mobile,
-          },
-        });
-      return userDetails;
+        const db = await connectToMongoDB();
+        // Update the user details in the database
+        const userDetails = await db.collection(collection.USER_COLLECTION)
+            .updateOne(
+                { userId: userId }, // Filter based on user ID
+                {
+                    $set: {
+                        name: userdata.name,
+                        email: userdata.email,
+                        mobilenumber: userdata.mobile,
+                    },
+                }
+            );
+        return userDetails;
     } catch (error) {
-      throw error;
+        throw error;
     }
-  },
+},
+
 
   showreceipt: async (userId) => {
     // console.log("$$$$$$$$$$$$$$$4",userId);

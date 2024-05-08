@@ -23,9 +23,7 @@
                 class="text-black-50"
               >{{userDetails.email}}</span><span>
               </span></div>
-            {{!-- <label style="padding-left: 25%;" for="ref">REFERAL CODE</label>
-          <input style="width: 50%;margin-left: 25%;" id="ref" class="form-control  text-center "
-            value={{detail.referal}}> --}}
+
           </div>
           <div class="col-md-6">
             <div class="p-3 py-5">
@@ -34,10 +32,11 @@
               >
                 <h4 class="text-right">Profile Settings</h4>
               </div>
-              <form action="/update" method="get">
+              <form>
                 <div class="">
                   <div class=""><label class="labels">Name</label>
                     <input
+                      style="font-weight:900; color:black"
                       type="text"
                       class="form-control"
                       name="name"
@@ -47,8 +46,11 @@
                   </div>
                 </div>
                 <div class="">
-                  <div class=""><label class="labels">Mobile Number</label>
+                  <div class="" style="margin-top: 15px;"><label
+                      class="labels"
+                    >Mobile Number</label>
                     <input
+                      style="font-weight:900;color:black"
                       type="text"
                       name="mobile"
                       class="form-control"
@@ -58,8 +60,11 @@
                   </div>
                 </div>
                 <div class="">
-                  <div class=""><label class="labels">Email ID</label>
+                  <div class="" style="margin-top: 15px;"><label
+                      class="labels"
+                    >Email ID</label>
                     <input
+                      style="font-weight:900;color:black"
                       type="text"
                       name="email"
                       class="form-control"
@@ -69,14 +74,24 @@
                   </div>
                 </div>
 
+                {{! <button
+                  type="submit"
+                  style="width:100px;height:30px;font-size:small;margin-top:10px";
+                  class="btn btn-primary mt-2"
+                >
+                  Update
+                </button> }}
+
+              </form>
+
+              <form action="/update" method="get" style="display:inline;">
                 <button
                   type="submit"
-                  style="width:100px;height:30px;font-size:small"
+                  style="width:180px;height:30px;font-size:small"
                   class="btn btn-primary mt-2"
                 >
                   Update
                 </button>
-
               </form>
 
               <form
