@@ -25,13 +25,40 @@ const {
   logout,
   receipt,
 otploginpage,
-generatepdf
+generatepdf,
+// otpLogin,
+otpverifypage,
+userprofile,
+updateuserpage,
+updateuser,
+changeuserPasswordpage,
+changeuserpassword
+
+
 
 } = require("../controllers/userController");
 
-router.get("/generatepdf",generatepdf)
+router.get("/generatepdf",generatepdf);
+
+router.get("/userprofile",userprofile);
+
+router.get("/update",updateuserpage);
+
+router.post("/updateuser",updateuser);
+
+router.get("/changeuserPassword",changeuserPasswordpage);
+
+router.post("/changepassword",changeuserpassword);
 
 router.get("/otploginpage",otploginpage);
+
+// router.post("/otpLoginuser",otpLogin);
+
+
+router.get("/otpVerify", otpverifypage);
+
+// router.post("/otpVerify", otpVerify);
+
 
 router.get("/",homepage);
 

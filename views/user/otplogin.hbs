@@ -55,14 +55,27 @@ input {
 </head>
 <body>
 	<div class="form">
-		<h2>OTP  Verification</h2>
-		<input type="email" id="email" placeholder="Enter Email...">
-		<div class="otpverify">
-			<input type="text" id="otp_inp" placeholder="Enter the OTP sent to your Email...">
-			<button class="btn" id="otp-btn">Verify</button>
-		</div>
-		<button class="btn" onclick="sendOTP()">Send OTP</button>
+		<form action="/otpLoginuser" method="post" class="login100-form validate-form">
+					<span class="login100-form-title">
+						OTP Login
+					</span>
+
+					<div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+						<input class="input100" type="number" name="phone" placeholder="Mobile">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-mobile" aria-hidden="true"></i>
+						</span>
+
+					</div>
+
+					<div class="container-login100-form-btn">
+						<button type="submit" class="login100-form-btn">Send OTP
+
+						</button>
+					</div>
+
+				</form>
 	</div>
-	<script src="emailotp.js"></script>
 </body>
 </html>

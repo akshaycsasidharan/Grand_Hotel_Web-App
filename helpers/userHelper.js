@@ -11,8 +11,7 @@ const razorpayInstance = new Razorpay({
 });
 
 module.exports = {
-
-  doSignup: (userData,hotelId,roomId) => {
+  doSignup: (userData, hotelId, roomId) => {
     return new Promise(async (resolve, reject) => {
       //   console.log(userData);
 
@@ -26,11 +25,12 @@ module.exports = {
 
       let signupData = {
         userId: Date.now().toString(16),
-        hotelId:hotelId,
-        roomId:roomId,
+        hotelId: hotelId,
+        roomId: roomId,
         name: userData.name,
         email: userData.email,
         password: encryptedpassword,
+        mobilenumber: userData.mobilenumber,
         blocked: false,
       };
 
@@ -45,14 +45,14 @@ module.exports = {
     });
   },
 
-  doLogin: (loginData,hotelId) => {
+  doLogin: (loginData, hotelId) => {
     return new Promise(async (resolve, reject) => {
       let loginstatus = false;
       let response = {};
       const db = await connectToMongoDB();
       let user = await db
         .collection(collection.USER_COLLECTION)
-        .findOne({ email: loginData.email , hotelId : hotelId});
+        .findOne({ email: loginData.email, hotelId: hotelId });
 
       if (user) {
         bcrypt.compare(loginData.password, user.password).then((status) => {
@@ -96,7 +96,7 @@ module.exports = {
       const db = await connectToMongoDB();
       const hotelrooms = await db
         .collection(collection.ROOMS_COLLECTION)
-        .find({ hotelId: hotelId })
+        .find({ hotelId: hotelId, deleted: false })
         .toArray();
       return hotelrooms;
     } catch (error) {
@@ -105,14 +105,37 @@ module.exports = {
     }
   },
 
-  showfacilities:async (hotelid) => {
+  // doOtpLogin: (userData) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     var response = {};
+  //     console.log("*********userData Helper**********");
+  //     console.log(userData);
+  //     const db = await connectToMongoDB();
+  //     const user = await db
+  //       .collection(collection.USER_COLLECTION)
+  //       .findOne({ mobilenumber: userData });
+  //     console.log(user);
+  //     if (user) {
+  //       console.log("----------otp login successful");
+  //       response.user = user;
+  //       response.acessStatus = true;
+  //       resolve(response);
+  //     } else {
+  //       console.log("otp login failed");
+  //       response.user = "";
+  //       response.acessStatus = false;
+  //       resolve(response);
+  //     }
+  //   });
+  // },
 
-    console.log("kkkkkkkkkk",hotelid);
+  showfacilities: async (hotelid) => {
+    console.log("kkkkkkkkkk", hotelid);
     try {
       const db = await connectToMongoDB();
       const hotelfacilities = await db
         .collection(collection.FACILITY_COLLECTION)
-        .find({ hotelId:hotelid })
+        .find({ hotelId: hotelid, facility: false })
         .toArray();
       return hotelfacilities;
     } catch (error) {
@@ -133,8 +156,7 @@ module.exports = {
     }
   },
 
-  dobooking: (bookingdata, roomId, hotelId,userId) => {
-
+  dobooking: (bookingdata, roomId, hotelId, userId) => {
     return new Promise(async (resolve, reject) => {
       // Extract check-in and checkout dates from the booking data
       const { checkin, checkout } = bookingdata;
@@ -150,7 +172,7 @@ module.exports = {
 
       // Construct the booking object with the array of dates
       let bookingObject = {
-        userId:userId,
+        userId: userId,
         roomId: roomId,
         hotelId: hotelId,
         name: bookingdata.name,
@@ -196,7 +218,6 @@ module.exports = {
   },
 
   dochecking: async (checkin, checkout, roomId) => {
-    
     try {
       const db = await connectToMongoDB();
 
@@ -246,92 +267,149 @@ module.exports = {
     }
   },
 
-
   payment: async (name, price, hotelId, roomId, userId) => {
     try {
-        const options = {
-            amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
-            currency: "INR",
-            receipt: `razorUser_${userId}`, // Use userId in receipt for better tracking
-            payment_capture: 1, // Auto capture the payment when successful
-        };
+      const options = {
+        amount: price * 100, // Amount should be in smallest currency unit (paisa for INR)
+        currency: "INR",
+        receipt: `razorUser_${userId}`, // Use userId in receipt for better tracking
+        payment_capture: 1, // Auto capture the payment when successful
+      };
 
-        // Create Razorpay order
-        const order = await new Promise((resolve, reject) => {
-            razorpayInstance.orders.create(options, (err, order) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(order);
-                }
-            });
+      // Create Razorpay order
+      const order = await new Promise((resolve, reject) => {
+        razorpayInstance.orders.create(options, (err, order) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(order);
+          }
         });
+      });
 
-        // If order creation is successful, save payment details to MongoDB
-        const paymentDetails = {
-            name: name,
-            amount: price,
-            order_id: order.id,
-            roomId: roomId,
-            hotelId: hotelId,
-            userId: userId,
-            status: "success", // Initially set status to 'pending'
-            payment_date: new Date(), // Store the current date as payment date
-        };
+      // If order creation is successful, save payment details to MongoDB
+      const paymentDetails = {
+        name: name,
+        amount: price,
+        order_id: order.id,
+        roomId: roomId,
+        hotelId: hotelId,
+        userId: userId,
+        status: "success", // Initially set status to 'pending'
+        payment_date: new Date(), // Store the current date as payment date
+      };
 
-        // Connect to MongoDB
-        const db = await connectToMongoDB();
+      // Connect to MongoDB
+      const db = await connectToMongoDB();
 
-        // Insert payment details into MongoDB payment collection
-        await db.collection(collection.PAYMENT_COLLECTION).insertOne(paymentDetails);
+      // Insert payment details into MongoDB payment collection
+      await db
+        .collection(collection.PAYMENT_COLLECTION)
+        .insertOne(paymentDetails);
 
-        // Return order details
-        return {
-            success: true,
-            msg: "Order Created",
-            order_id: order.id,
-            amount: options.amount,
-            key_id: "rzp_test_8cTRaG2qyqmSGG",
-            product_name: name,
-        };
+      // Return order details
+      return {
+        success: true,
+        msg: "Order Created",
+        order_id: order.id,
+        amount: options.amount,
+        key_id: "rzp_test_8cTRaG2qyqmSGG",
+        product_name: name,
+      };
     } catch (error) {
-        console.log(error.message);
-        throw error;
+      console.log(error.message);
+      throw error;
     }
-},
+  },
 
+  userprofile: async (userId) => {
+    try {
+      const db = await connectToMongoDB();
+      const userDetails = await db
+        .collection(collection.USER_COLLECTION)
+        .findOne({ userId: userId });
+      return userDetails;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  upadateUserPassword: async (userdata, userId) => {
+    try {
+      const db = await connectToMongoDB();
+      const user = await db
+        .collection(collection.USER_COLLECTION)
+        .findOne({ userId: userId });
+
+      if (user) {
+        // Hash the new password
+        userdata.newpassword = await bcrypt.hash(userdata.newpassword, 10);
+
+        // Update the password in the database
+        const data = await db.collection(collection.USER_COLLECTION).updateOne(
+          { userId: userId }, // Use userId directly if it's already an ObjectId
+          {
+            $set: { password: userdata.newpassword },
+          }
+        );
+        
+        console.log(data);
+        return data;
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  upadateUserdetails: async (userdata, userId) => {
+    try {
+      const db = await connectToMongoDB();
+      // Update the user details in the database
+      const userDetails = await db
+        .collection(collection.USER_COLLECTION)
+        .findOne({ userId: userId })
+        .updateOne({
+          $set: {
+            name: userdata.name,
+            email: userdata.email,
+            mobilenumber: userdata.mobile,
+          },
+        });
+      return userDetails;
+    } catch (error) {
+      throw error;
+    }
+  },
 
   showreceipt: async (userId) => {
     // console.log("$$$$$$$$$$$$$$$4",userId);
 
     try {
-        const db = await connectToMongoDB();
+      const db = await connectToMongoDB();
 
-        // Fetch user details based on the user's ID
-        const userDetails = await db
-            .collection(collection.PAYMENT_COLLECTION)
-            .findOne({ userId: userId });
+      // Fetch user details based on the user's ID
+      const userDetails = await db
+        .collection(collection.PAYMENT_COLLECTION)
+        .findOne({ userId: userId });
 
+      const hotelDetails = await db
+        .collection(collection.HOTEL_COLLECTION)
+        .findOne({ hotelId: userDetails.hotelId });
 
-            const hotelDetails = await db
-            .collection(collection.HOTEL_COLLECTION)
-            .findOne({ hotelId: userDetails.hotelId });
+      const customerDetails = await db
+        .collection(collection.BOOKING_COLLECTION)
+        .findOne({ userId: userId });
 
-        const customerDetails = await db
-            .collection(collection.BOOKING_COLLECTION)
-            .findOne({ userId: userId });    
+      // console.log("2222222222222222222userdetails",userDetails);
+      // console.log("1111111111111111111hoteldetails",hotelDetails);
+      // console.log(("333333333333333333customerdetailss",customerDetails));
 
-
-            // console.log("2222222222222222222userdetails",userDetails);
-            // console.log("1111111111111111111hoteldetails",hotelDetails);
-            // console.log(("333333333333333333customerdetailss",customerDetails));
-
-        return [userDetails, hotelDetails,customerDetails];
-
+      return [userDetails, hotelDetails, customerDetails];
     } catch (error) {
-        console.log(error);
-        throw error;
+      console.log(error);
+      throw error;
     }
-},
-
-}
+  },
+};

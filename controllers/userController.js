@@ -204,7 +204,6 @@ module.exports = {
     });
   },
 
-
   allrooms: (req, res) => {
     let hotelId = req.params.id;
     // console.log("jjjjjjjjjj",hotelId);
@@ -213,7 +212,7 @@ module.exports = {
         // console.log("$$$$$$$$$$$$$$", roomsdata);
         res.render("user/allRooms", {
           roomsdata,
-          hotelId
+          hotelId,
         });
       });
     } catch (error) {
@@ -222,27 +221,19 @@ module.exports = {
     }
   },
 
-  allfacilities: (req,res) => {
+  allfacilities: (req, res) => {
+    const hotelId = req.params.id;
 
-   const hotelId = req.params.id;
-
-   console.log("pppppppppppppp",hotelId);
-
+    //  console.log("pppppppppppppp",hotelId);
 
     try {
       userHelper.showfacilities(hotelId).then((facilitydata) => {
-
-
         res.render("user/facility", {
           facilitydata,
-          hotelId
-        })
-      })
-      
-    } catch (error) {
-      
-    }
-
+          hotelId,
+        });
+      });
+    } catch (error) {}
   },
 
   room: (req, res) => {
@@ -311,30 +302,127 @@ module.exports = {
     res.render("user/otplogin");
   },
 
-  generatepdf:async(req,res) => {
+  // otpLogin: (req, res) => {
+  //   console.log("===============req.body=================");
+  //   console.log(req.body);
+  //   userHelper.doOtpLogin(req.body.phone).then((response) => {
+  //     console.log("==================response==========");
+  //     console.log(response);
+  //     if (response) {
+  //       client.verify
+  //         .services(userHelper.serviceID)
+  //         .verifications.create({
+  //           to: `+91${req.body.phone}`,
+  //           channel: "sms",
+  //         })
+  //         .then((data) => {
+  //           req.session.phone = data.to;
+  //           res.redirect("/otpVerify");
+  //         });
+  //       req.session.user = response.user;
+  //     } else {
+  //       req.session.invalidNumber = "Number is not Registered";
+  //       res.redirect("/otploginpage");
+  //     }
+  //   });
+  // },
 
+  otpverifypage: (req, res) => {
+    res.render("user/otpverify");
+  },
+
+  userprofile: (req, res) => {
     try {
+      if (req.session.loggedIn) {
+        const userId = req.session.user.userId;
 
-      const browser =await puppeteer.launch({headless:true});
+        // console.log("~~~~~~~~~~~~~~~~~``",userId);
+
+        userHelper.userprofile(userId).then((userDetails) => {
+          // console.log("uuuuuuuuuuuuu",userDetails);
+          res.render("user/userprofile", {
+            userDetails,
+          });
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  changeuserPasswordpage: (req, res) => {
+    res.render("user/changepassword");
+  },
+
+  changeuserpassword: (req, res) => {
+    try {
+      if (req.session.loggedIn) {
+        const userId = req.session.user.userId;
+
+        // console.log("~~~~~~~~~~~~~~~~~``",userId);
+
+        // console.log("!!!!!!!!!!!!!!1",req.body);
+
+        userHelper.upadateUserPassword(req.body, userId).then((userDetails) => {
+          console.log("uuuuuuuuuuuuu;;;;;;;;;;;", userDetails);
+          res.redirect("/userprofile");
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  updateuserpage: (req, res) => {
+    res.render("user/update");
+  },
+
+  updateuser: (req, res) => {
+    try {
+      if (req.session.loggedIn) {
+        const userId = req.session.user.userId;
+
+        console.log("reqqqqqqqqqqqqqqq", req.body);
+
+        userHelper.upadateUserdetails(req.body, userId).then(() => {
+          res.redirect("/userprofile");
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  generatepdf: async (req, res) => {
+    try {
+      const browser = await puppeteer.launch({ headless: true });
 
       const page = await browser.newPage();
-      await page.goto(`${req.protocol}://${req.get('host')}`+"/receipt",{
-        waitUntil: "networkidle2"
+      await page.goto(`${req.protocol}://${req.get("host")}` + "/receipt", {
+        waitUntil: "networkidle2",
       });
 
-      await page.setViewport({width:1680,height:1050 });
+      await page.setViewport({ width: 1680, height: 1050 });
 
       const todayDate = new Date();
 
       const pdfn = await page.pdf({
-        path:`${path.join(__dirname,'../public/files',todayDate.getTime()+".pdf")}`,
-        printBackground:true,
-        format:"A4"
+        path: `${path.join(
+          __dirname,
+          "../public/files",
+          todayDate.getTime() + ".pdf"
+        )}`,
+        printBackground: true,
+        format: "A4",
       });
 
       await browser.close();
 
-      const pdfURL = path.join(__dirname,'../public/files',todayDate.getTime()+".pdf");
+      const pdfURL = path.join(
+        __dirname,
+        "../public/files",
+        todayDate.getTime() + ".pdf"
+      );
 
       // res.set({
       //   "content-Type" : "application/pdf",
@@ -342,18 +430,13 @@ module.exports = {
       // })
       // res.sendFile(pdfURL);
 
-      res.download(pdfURL, function(errr){
-        if(errr){
+      res.download(pdfURL, function (errr) {
+        if (errr) {
           console.log(error);
         }
-      })
-
+      });
     } catch (error) {
-
-  console.log(error);
-
+      console.log(error);
     }
-  }
-
-
+  },
 };

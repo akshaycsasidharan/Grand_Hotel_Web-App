@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+    <div class="limiter">
+		<div class="container-login100">
+
+			<div>
+
+				<div class="d-flex justify-content-center align-items-center container">
+					<div class="card py-5 px-3">
+						<h5 class="m-0">OTP Verification</h5><span class="mobile-text">Enter the code we just send on
+							your mobile number <b class="text-danger"></b></span>
+						<span style="color: red;"></span>
+
+
+
+						<form method="post" action="/otpVerify" class="digit-group" data-group-name="code" data-autosubmit="true"
+							autocomplete="off">
+
+
+							<input type="text" id="digit-1" name="code" data-next="digit-2" />
+							<input type="text" id="digit-2" name="code" data-next="digit-3" data-previous="digit-1" />
+							<input type="text" id="digit-3" name="code" data-next="digit-4" data-previous="digit-2" />
+							<input type="text" id="digit-4" name="code" data-next="digit-5" data-previous="digit-3" />
+
+							{{!-- <form method="post" action="/otpverify">
+								<input type="number" name="code">
+								<button type="submit">otpverify</button> --}}
+							</form>
+					</div>
+				</div>
+			</div>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+			<script src="/assets/loggin/js/app.js"></script>
+		</div>
+	</div>
+
+    
+</body>
+</html>
