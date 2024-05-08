@@ -2,11 +2,6 @@ var express = require("express");
 var router = express.Router();
 const {verifyUser ,notVerifyUser} = require("../middleware/userMiddleware");
 
-// const {
-
-//   sendOTP
-
-// }= require ("../public/javascripts/otplogin");
 
 const {
  
@@ -26,19 +21,17 @@ const {
   receipt,
 otploginpage,
 generatepdf,
-// otpLogin,
-otpverifypage,
 userprofile,
 updateuserpage,
 updateuser,
 changeuserPasswordpage,
-changeuserpassword
+changeuserpassword,
+// otplogin
 
 } = require("../controllers/userController");
 
 
 
-router.get("/generatepdf",generatepdf);
 
 router.get("/userprofile",userprofile);
 
@@ -50,14 +43,12 @@ router.get("/changeuserPassword",changeuserPasswordpage);
 
 router.post("/changepassword",changeuserpassword);
 
+
+
 router.get("/otploginpage",otploginpage);
 
-// router.post("/otpLoginuser",otpLogin);
+// router.post("/otpLogin",otplogin);
 
-
-router.get("/otpVerify", otpverifypage);
-
-// router.post("/otpVerify", otpVerify);
 
 
 router.get("/",homepage);

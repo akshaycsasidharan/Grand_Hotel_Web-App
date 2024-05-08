@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>OTP in JS</title>
-	<script src="https://smtpjs.com/v3/smtp.js"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
 	<style>
 
 * {
@@ -51,54 +52,35 @@ input {
 	</style>
 </head>
 <body>
-	<div class="form">
-		<h1>Customer SignIn</h1>
-		<input type="email" id="email" placeholder="Enter Email...">
+
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-pic js-tilt" data-tilt>
+					{{!-- <img src="/assets/loggin/images/img-01.png" alt="IMG"> --}}
+				</div>
+
+				<form action="/otpLogin" method="post" class="login100-form validate-form">
+					<span class="login100-form-title">
+						OTP Login
+					</span>
+
+					<input type="email" id="email" placeholder="Enter Email...">
 		<div class="otpverify">
-			<input type="text" id="otp_inp" placeholder="Enter the OTP sent to your Email...">
+			<input type="text" name="email" placeholder="Enter the OTP sent to your Email...">
 			<button class="btn" id="otp-btn">Verify</button>
 		</div>
-		<button class="btn" onclick="sendOTP()">Send OTP</button>
+
+					<div class="container-login100-form-btn">
+						<button type="submit" class="login100-form-btn">Send OTP
+
+						</button>
+					</div>
+
+				</form>
+			</div>
+		</div>
 	</div>
-	<script>
-		
-function sendOTP() {
-	const email = document.getElementById('email');
-	const otpverify = document.getElementsByClassName('otpverify')[0];
 
-	let otp_val = Math.floor(Math.random() * 10000);
-
-	let emailbody = `<h2>Your OTP is </h2>${otp_val}`;
-	Email.send({
-    SecureToken : "c3b57c95-4e2a-4254-b152-da5c1f51df01",
-    To : email.value,
-    From : "akshaycs0480@gmail.com",
-    Subject : "Email Otp Using Javascript",
-    Body : emailbody,
-}).then(
-
-	  message => {
-		if (message === "OK") {
-			alert("OTP sent to your email " + email.value);
-
-			otpverify.style.display = "flex";
-			const otp_inp = document.getElementById('otp_inp');
-			const otp_btn = document.getElementById('otp-btn');
-
-			otp_btn.addEventListener('click', () => {
-				if (otp_inp.value == otp_val) {
-					alert("Email address verified...");
-				}
-				else {
-					alert("Invalid OTP");
-				}
-			})
-		}
-	  }
-
-);
-}
-
-	</script>
 </body>
 </html>

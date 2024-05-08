@@ -6,6 +6,8 @@ const Razorpay = require("razorpay");
 var { connectToMongoDB } = require("../config/connection");
 const { ObjectId } = require("mongodb");
 var collection = require("../config/collection");
+const nodemailer =require("nodemailer");
+
 
 const puppeteer = require("puppeteer");
 const path = require("path");
@@ -304,36 +306,40 @@ module.exports = {
     res.render("user/otplogin");
   },
 
-  
 
-  // otpLogin: (req, res) => {
-  //   console.log("===============req.body=================");
-  //   console.log(req.body);
-  //   userHelper.doOtpLogin(req.body.phone).then((response) => {
-  //     console.log("==================response==========");
-  //     console.log(response);
-  //     if (response) {
-  //       client.verify
-  //         .services(userHelper.serviceID)
-  //         .verifications.create({
-  //           to: `+91${req.body.phone}`,
-  //           channel: "sms",
-  //         })
-  //         .then((data) => {
-  //           req.session.phone = data.to;
-  //           res.redirect("/otpVerify");
-  //         });
-  //       req.session.user = response.user;
-  //     } else {
-  //       req.session.invalidNumber = "Number is not Registered";
-  //       res.redirect("/otploginpage");
-  //     }
-  //   });
+  // otplogin: async (req, res) => {
+  //   try {
+  //     const { email } = req.body; // Assuming the email is sent as a part of the request body
+
+  //     // Generate random OTP
+  //     const otp = Math.floor(1000 + Math.random() * 9000);
+
+  //     // Construct email body with OTP
+  //     const emailBody = `<h2>Your OTP is: ${otp}</h2>`;
+
+  //     // Send the email
+  //     await sendOTP(email, otp); // Use helper function to send OTP
+
+  //     const transporter = nodemailer.createTransport({
+  //       service: "gmail",
+  //       auth: {
+  //         user: "akshaycs0480@gmail.com",
+  //         pass: "c3b57c95-4e2a-4254-b152-da5c1f51df01",
+  //       },
+  //     });
+
+  //     // Save OTP to the database (you need to implement this method in your helper)
+  //     await userHelper.saveOTP(email, otp);
+
+  //     res.status(200).json({ success: true, message: "OTP sent successfully" });
+  //   } catch (error) {
+  //     console.error("Error sending OTP:", error);
+  //     res.status(500).json({ success: false, message: "Failed to send OTP" });
+  //   }
   // },
 
-  otpverifypage: (req, res) => {
-    res.render("user/otpverify");
-  },
+
+
 
   userprofile: (req, res) => {
     try {
@@ -397,50 +403,8 @@ module.exports = {
     }
   },
 
-  generatepdf: async (req, res) => {
-    try {
-      const browser = await puppeteer.launch({ headless: true });
 
-      const page = await browser.newPage();
-      await page.goto(`${req.protocol}://${req.get("host")}` + "/receipt", {
-        waitUntil: "networkidle2",
-      });
 
-      await page.setViewport({ width: 1680, height: 1050 });
 
-      const todayDate = new Date();
 
-      const pdfn = await page.pdf({
-        path: `${path.join(
-          __dirname,
-          "../public/files",
-          todayDate.getTime() + ".pdf"
-        )}`,
-        printBackground: true,
-        format: "A4",
-      });
-
-      await browser.close();
-
-      const pdfURL = path.join(
-        __dirname,
-        "../public/files",
-        todayDate.getTime() + ".pdf"
-      );
-
-      // res.set({
-      //   "content-Type" : "application/pdf",
-      //   "content-Length":pdfn.length
-      // })
-      // res.sendFile(pdfURL);
-
-      res.download(pdfURL, function (errr) {
-        if (errr) {
-          console.log(error);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  },
 };

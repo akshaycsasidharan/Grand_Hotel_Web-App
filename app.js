@@ -6,9 +6,9 @@ var logger = require("morgan");
 var hbs = require("express-handlebars");
 let Hbs = require("handlebars");
 const Razorpay = require("razorpay");
-
-// const PDFDocument = require('pdfkit');
+const nodemailer =require("nodemailer");
 const fs = require('fs');
+
 
 const puppeteer = require("puppeteer")
 

@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const Razorpay = require("razorpay");
+const nodemailer =require("nodemailer");
+
 
 const razorpayInstance = new Razorpay({
   key_id: "rzp_test_8cTRaG2qyqmSGG",
@@ -414,4 +416,36 @@ module.exports = {
       throw error;
     }
   },
+
+
+
+ 
+
+  // sendOTP = (email, otp) => {
+  //   const mailOptions = {
+  //     from: "your_email@gmail.com",
+  //     to: email,
+  //     subject: "OTP for Login",
+  //     html: `<h2>Your OTP is: ${otp}</h2>`,
+  //   };
+  
+  //   return transporter.sendMail(mailOptions);
+  // },
+  
+  
+    // saveOTP: async (email, otp) => {
+    //   try {
+    //     const db = await connectToMongoDB();
+    //     // Save OTP to the database
+    //     await db.collection("otp").insertOne({ email, otp });
+    //   } catch (error) {
+    //     console.error("Error saving OTP:", error);
+    //     throw error;
+    //   }
+    // },
+  
+  
+
+
+
 };

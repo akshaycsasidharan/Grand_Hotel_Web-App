@@ -11,6 +11,8 @@
     <script
       src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
     ></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <title>pdf</title>
 
     <style>
@@ -103,7 +105,8 @@
 }
     </style>
   </head>
-  <body style="font-family: Georgia, 'Times New Roman', Times, serif;">
+  <body>
+    
 
     <div
       class="col-md-12"
@@ -138,7 +141,7 @@
           </div>
 
 
-
+<div id="invoice">
           <div class="row">
 
         
@@ -163,10 +166,9 @@
             </div>
           </div>
 
-          {{!-- <button class="button button1"> <a href="/generatepdf">Download Pdf</a></button> --}}
 
 
-                <a href="/generatepdf">Download Pdf</a>
+                {{!-- <a href="/generatepdf">Download Pdf</a> --}}
                 
           <div style="margin-top: 150px;">
             <table class="table table-bordered">
@@ -240,10 +242,25 @@
               </div>
             </div>
           </div>
+</div>
 
-        </div>
-      </div>
-    </div>
+<div class="mb-4">
+                <button type="submit" class="btn btn-primary w-100" style="width: 10px;" onclick="generatePdf()">
+                  Download
+                </button>
+              </div>
 
-  </body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+      function generatePdf() {
+        const element = document.getElementById("invoice");
+
+        html2pdf()
+          .from(element)
+          .save();
+      }
+    </script>
+
+
 </html>
