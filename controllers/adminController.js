@@ -32,11 +32,6 @@ module.exports = {
 },
 
 
-dashboard:(req,res) => {
-     res.render("admin/dashBoard")
-},
-
-
 hotelpage: (req,res) => {
   adminHelper.getHotelsData().then(async(hotelsdata) => {
     // console.log("@@@@@@@@@@@@@@@@@@@hotelssssssssssdata",hotelsdata);
@@ -98,10 +93,36 @@ transactionspage: (req, res) => {
 },
 
 
+// dashboard:(req,res) => {
+//   res.render("admin/dashBoard")
+// },
 
-reviewspage:(req,res) => {
-  res.render("admin/reviews");
-}
+
+
+hoteldashboard: (req, res, next) => {
+
+  adminHelper.transactiondetails().then((transactiondata) => {
+
+
+  adminHelper.showhoteldashboard().then((result) => {
+    // console.log("Dashboard Count:", result.customerscount);
+    // console.log("Available Rooms:", result.availableRooms);
+    // console.log("paidcustomers:", result.paidcustomers);
+    res.render("admin/dashBoard", {
+      paymentcount:result.paymentcount,
+      facilitiescount:result.facilitiescount,
+      hotels:result.hotels,
+      customerscount: result.customerscount,
+      roomsCount: result.roomsCount,
+      facilities: result.facilities,
+      transactiondata:transactiondata,
+       bookingCount: result.bookingCount,
+    });
+  });
+ });
+},
+
+
 
 
 

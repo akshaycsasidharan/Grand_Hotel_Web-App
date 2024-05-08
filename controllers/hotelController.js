@@ -63,27 +63,25 @@ module.exports = {
           const hotel = req.session.hotel;
 
           hotelHelper.transactiondetails(hotel).then((transactiondata) => {
-            
-
             // console.log("transactionnnnn---------",transactiondata);
 
-          // Call the hoteldashboard function to render the dashboard after successful login
-          hotelHelper.showdashboard(hotel).then((result) => {
-            // console.log("Dashboard Count:", result.customerscount);
-            // console.log("Available Rooms:", result.availableRooms);
-            // console.log("paidcustomers:", result.paidcustomers);
-            res.render("hotel/hotelDashboard", {
-              hotel,
-              customerscount: result.customerscount,
-              availableRooms: result.availableRooms,
-              facilities: result.facilities,
-              unpaidcustomers:result.unpaidcustomers,
-              transactiondata:transactiondata
-              // amount: result.amount,
+            // Call the hoteldashboard function to render the dashboard after successful login
+            hotelHelper.showdashboard(hotel).then((result) => {
+              // console.log("Dashboard Count:", result.customerscount);
+              // console.log("Available Rooms:", result.availableRooms);
+              // console.log("paidcustomers:", result.paidcustomers);
+              res.render("hotel/hotelDashboard", {
+                hotel,
+                bookingCount: result.bookingCount,
+                customerscount: result.customerscount,
+                availableRooms: result.availableRooms,
+                facilities: result.facilities,
+                paidcustomers: result.paidcustomers,
+                roomsCount: result.roomsCount,
+                transactiondata: transactiondata,
+              });
             });
           });
-        });
-
         } else {
           req.session.loginErr = true; // Set login error flag in session
           res.redirect("/hotel"); // Redirect to login page
@@ -99,23 +97,22 @@ module.exports = {
     let hotel = req.session.hotel;
 
     hotelHelper.transactiondetails(hotel).then((transactiondata) => {
-
-
-    hotelHelper.showdashboard(hotel).then((result) => {
-      // console.log("Dashboard Count:", result.customerscount);
-      // console.log("Available Rooms:", result.availableRooms);
-      // console.log("paidcustomers:", result.paidcustomers);
-      res.render("hotel/hotelDashboard", {
-        hotel,
-        customerscount: result.customerscount,
-        availableRooms: result.availableRooms,
-        facilities: result.facilities,
-        unpaidcustomers:result.unpaidcustomers,
-        transactiondata:transactiondata
-        // amount: result.amount,
+      hotelHelper.showdashboard(hotel).then((result) => {
+        // console.log("Dashboard Count:", result.customerscount);
+        // console.log("Available Rooms:", result.availableRooms);
+        // console.log("paidcustomers:", result.paidcustomers);
+        res.render("hotel/hotelDashboard", {
+          hotel,
+          bookingCount: result.bookingCount,
+          customerscount: result.customerscount,
+          availableRooms: result.availableRooms,
+          facilities: result.facilities,
+          paidcustomers: result.paidcustomers,
+          roomsCount: result.roomsCount,
+          transactiondata: transactiondata,
+        });
       });
     });
-  });
   },
 
   addroomspage: (req, res) => {

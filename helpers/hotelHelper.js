@@ -78,12 +78,12 @@ module.exports = {
       try {
         const db = await connectToMongoDB();
 
-        const unpaidcustomers = await db
-          .collection(collection.BOOKING_COLLECTION)
+        const paidcustomers = await db
+          .collection(collection.PAYMENT_COLLECTION)
           .countDocuments({ hotelId: hotel.hotelId });
         const facilities = await db
           .collection(collection.FACILITY_COLLECTION)
-          .countDocuments({ hotelId: hotel.hotelId });
+          .countDocuments({ hotelId: hotel.hotelId, facility: false });
         const customerscount = await db
           .collection(collection.USER_COLLECTION)
           .countDocuments({ hotelId: hotel.hotelId });
@@ -92,25 +92,17 @@ module.exports = {
           .countDocuments({ hotelId: hotel.hotelId });
         const roomsCount = await db
           .collection(collection.ROOMS_COLLECTION)
-          .countDocuments({ hotelId: hotel.hotelId });
+          .countDocuments({ hotelId: hotel.hotelId, deleted: false });
+
         const availableRooms = roomsCount - bookingCount;
 
-        // Calculate total amount from payment collection
-
-        // const transactionview = await db.collection(collection.PAYMENT_COLLECTION).aggregate([
-        //   { $match: { hotelId: hotel.hotelId } },
-        //   { $group: { _id: null, amount: { $sum: "$amount" } } }
-        // ]).toArray();
-        // // If there are no transactions, set totalAmount to 0
-        // const amount = transactionview.length > 0 ? transactionview[0].amount : 0;
-
-        // console.log("paymentttttttttt",amount);
-
         resolve({
+          bookingCount,
           customerscount,
+          roomsCount,
           availableRooms,
           facilities,
-          unpaidcustomers,
+          paidcustomers,
         });
       } catch (error) {
         reject(error);

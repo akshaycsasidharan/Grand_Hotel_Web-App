@@ -1,42 +1,31 @@
 var express = require("express");
 var router = express.Router();
 
-
-
 const {
   adminloginPage,
   adminlogin,
-  dashboard,
+  hoteldashboard,
   block,
   unblock,
   customers,
   hotelpage,
   transactionspage,
-  reviewspage
-
-
 } = require("../controllers/adminController");
-
-
-
 
 router.get("/", adminloginPage);
 
 router.post("/adminlogin", adminlogin);
 
-router.get("/dashboard", dashboard);
+router.get("/dashboard", hoteldashboard);
 
-router.post("/block/:id",block);
+router.post("/block/:id", block);
 
-router.post("/unblock/:id",unblock);
+router.post("/unblock/:id", unblock);
 
-router.get("/customers",customers);
+router.get("/customers", customers);
 
 router.get("/hotels", hotelpage);
 
 router.get("/transactions", transactionspage);
-
-router.get("/reviews", reviewspage);
-
 
 module.exports = router;
