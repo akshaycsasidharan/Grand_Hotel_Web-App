@@ -117,7 +117,12 @@
         <div
           class="receipt-main col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3"
         >
-          <div class="row">
+          
+
+
+<div id="invoice">
+
+  <div class="row">
             <div class="receipt-header">
               <div class="col-xs-6 col-sm-6 col-md-6">
                 <div class="receipt-left">
@@ -125,7 +130,7 @@
                     class="img-responsive"
                     alt="iamgurdeeposahan"
                     src="https://bootdey.com/img/Content/avatar/avatar6.png"
-                    style="width: 71px; border-radius: 43px;"
+                    style="width: 100px; border-radius: 43px;"
                   />
                 </div>
               </div>
@@ -134,42 +139,12 @@
                   class="receipt-right"
                   style="font-family: Georgia, 'Times New Roman'"
                 >
-                  {{!-- <h5>Hotel Name </h5> --}}
+                  <h1 style="text-align: center;text-decoration: underline;">RECEIPT</h1>
                 </div>
               </div>
             </div>
           </div>
-
-
-<div id="invoice">
-          <div class="row">
-
-        
-            <div class="receipt-header receipt-header-mid">
-              <div class="col-xs-8 col-sm-8 col-md-8 text-left">
-                <div
-                  class="receipt-right"
-                  style="margin-top: 20px;margin-bottom: 20px;font-family: Georgia, 'Times New Roman';"
-                >
-                </div>
-
-                
-              </div>
-              <div class="col-xs-4 col-sm-4 col-md-4">
-                <div
-                  class="receipt-left"
-                  style="font-family: Georgia, 'Times New Roman'"
-                >
-                  {{!-- <h3>Room Booking</h3> --}}
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-                {{!-- <a href="/generatepdf">Download Pdf</a> --}}
-                
+                    
           <div style="margin-top: 150px;">
             <table class="table table-bordered">
               <thead>
@@ -225,13 +200,11 @@
                 </tr>
               </tbody>
             </table>
-          </div>
-
-          <div class="row">
+            <div class="row">
             <div class="receipt-header receipt-header-mid receipt-footer">
               <div class="col-xs-8 col-sm-8 col-md-8 text-left">
                 <div class="receipt-right">
-                  {{!-- <p><b>Date :</b> 15 Aug 2016</p> --}}
+                  <p><b>Date :</b> {{userDetails.payment_date}}</p>
                   <h5 style="color: rgb(140, 140, 140);">Thanks for shopping.!</h5>
                 </div>
               </div>
@@ -242,7 +215,12 @@
               </div>
             </div>
           </div>
+          </div>
+     </div>
+
+          
 </div>
+
 
 <div class="mb-4">
                 <button type="submit" class="btn btn-primary w-100" style="width: 10px;" onclick="generatePdf()">
