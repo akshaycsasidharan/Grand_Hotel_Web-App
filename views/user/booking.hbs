@@ -43,12 +43,12 @@
   <body>
     <main>
       <section class="content-main mt-80 mb-80">
-       
+
         <div class="card mx-auto card-login">
           <div class="room-booking">
-            
+
             <h4 class="card-title mb-4"></h4>
-             {{!-- {{#if loginMessage}}
+            {{!-- {{#if loginMessage}}
 
             <div class="alert alert-success" role="alert">
                         {{loginMessage}}
@@ -58,19 +58,31 @@
             <h4 class="card-title mb-4">Booking</h4>
 
             {{#if loginMessage}}
-                <p class="error font-weight-bold text-success">{{loginMessage}}</p>
-              {{/if}}
-              
-           <form action="/bookingroom/{{roomDetails._id}}" method="post" name="form">
+              <p
+                class="error font-weight-bold text-success"
+              >{{loginMessage}}</p>
+            {{/if}}
+
+            <form
+              action="/bookingroom/{{roomDetails._id}}"
+              method="post"
+              name="form"
+            >
 
               <div class="check-date">
                 <label for="date-in">Username</label>
                 <input name="name" type="text" />
               </div>
+
               <div class="check-date">
                 <label for="date-in">Email</label>
-                <input name="email" type="text" />
+                <input
+                  name="email"
+                  type="text"
+                  style="text-transform: lowercase;"
+                />
               </div>
+
               <div class="check-date">
                 <label for="date-in">Check In:</label>
                 <input
@@ -92,7 +104,6 @@
                 <i class="icon_calendar"></i>
               </div>
 
-
               {{!-- <button type="submit">
                 <a href="/payment/{{roomDetails._id}}">Submit</a>
                 </button> --}}
@@ -103,7 +114,6 @@
 
             </form>
 
-            
           </div>
         </div>
       </section>

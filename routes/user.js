@@ -20,7 +20,6 @@ const {
   logout,
   receipt,
 otploginpage,
-generatepdf,
 userprofile,
 updateuserpage,
 updateuser,

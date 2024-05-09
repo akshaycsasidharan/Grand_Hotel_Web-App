@@ -104,6 +104,46 @@
   color: white;
 }
     </style>
+
+     <div class="menu-item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2">
+                        {{!-- <div class="logo">
+                            <a href="/">
+                                <img src="/public/images/sign-images/" alt="">
+                            </a>
+                        </div> --}}
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="nav-menu">
+                            <nav class="mainmenu">
+                                <ul>
+                                  
+                                    <li>
+
+                                      
+                <button type="submit" class="btn btn-primary w-100" style="width: 10px;margin-left:10px" onclick="generatePdf()">
+                  Download
+                </button>
+                                      </li> 
+                                    <li><a href="/userprofile"><i class="fa fa-user" style="margin-left: 20px;"></i>Profile</a></li> 
+
+                                    <li><a href="/logout"><i class="fa fa-sign-out" style="margin-left:10px;"></i>Logout</a></li>
+                                </ul>
+                            </nav>
+                            {{!-- <div class="nav-right search-switch"> --}}
+                                {{!-- <i class="icon_search"></i> --}}
+                                {{!-- <a href="/logout">Logout</a></p> --}}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
   </head>
   <body>
     
@@ -222,12 +262,13 @@
 </div>
 
 
-<div class="mb-4">
-                <button type="submit" class="btn btn-primary w-100" style="width: 10px;" onclick="generatePdf()">
-                  Download
-                </button>
-              </div>
 
+
+
+
+{{!-- <div class="mb-4">
+                
+              </div> --}}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
