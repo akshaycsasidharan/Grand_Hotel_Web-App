@@ -102,6 +102,34 @@ module.exports = {
     }
   },
 
+
+  successGoogleLogin: async (req, res) => {
+    const roomObjectId = req.params.id;
+
+
+    try {
+      if (req.user) {
+        // If user is authenticated
+        const roomDetails = await userHelper.roomsDetails(roomObjectId);
+
+        // Render the booking page with login success message and room details
+        res.render("user/booking", {
+          loginMessage: "Login Success",
+          roomDetails: roomDetails,
+        });
+      } else {
+        // If user is not authenticated, redirect to failure page
+        res.redirect("/login/" + roomObjectId);
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle error appropriately
+      res.redirect("/failure");
+    }
+  },
+
+  
+
   booking: (req, res) => {
     let id = req.params.id;
     // console.log("innnnnnnnnn",id);
@@ -299,44 +327,10 @@ module.exports = {
     }
   },
 
-
-  otploginpage: (req, res) => {
-    res.render("user/otplogin");
-  },
-
-
-
-   successGoogleLogin : async (req, res) => {
-    try {
-      if (req.user) {
-        // If user is authenticated
-        const roomObjectId = req.params.id; // Assuming you have access to roomObjectId
-        const roomDetails = await userHelper.roomsDetails(roomObjectId);
-        
-        // Render the booking page with login success message and room details
-        res.render("user/booking", {
-          loginMessage: "Login Success",
-          roomDetails: roomDetails,
-        });
-      } else {
-        // If user is not authenticated, redirect to failure page
-        res.redirect("/login/" + roomDetails);
-      }
-    } catch (error) {
-      console.error(error);
-      // Handle error appropriately
-      res.redirect("/failure");
-    }
-  },
-  
-   failureGoogleLogin : (req, res) => {
+  failureGoogleLogin: (req, res) => {
     res.send("Error");
   },
-  
 
-
-
-  
   userprofile: (req, res) => {
     try {
       if (req.session.loggedIn) {
@@ -398,8 +392,4 @@ module.exports = {
       console.log(error);
     }
   },
-
-
-
-
 };

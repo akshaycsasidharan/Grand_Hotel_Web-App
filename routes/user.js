@@ -3,23 +3,16 @@ var router = express.Router();
 const passport = require("passport");
 const { verifyUser, notVerifyUser } = require("../middleware/userMiddleware");
 
-// require('../passport');
-
-
 router.use(passport.initialize());
 router.use(passport.session());
 
-
+const {
+  serializeUser,
+  deserializeUser,
+  useGoogleStrategy,
+} = require("../public/javascripts/passport");
 
 const {
-
-  serializeUser, deserializeUser, useGoogleStrategy 
-
-}= require ("../public/javascripts/passport");
-
-
-
-const { 
   loginPage,
   signuppage,
   signup,
@@ -34,23 +27,21 @@ const {
   checkavailabilty,
   logout,
   receipt,
-  otploginpage,
   userprofile,
   updateuserpage,
   updateuser,
   changeuserPasswordpage,
   changeuserpassword,
   successGoogleLogin,
-  failureGoogleLogin
-  // otplogin
+  failureGoogleLogin,
 } = require("../controllers/userController");
-
-
 
 router.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["email", "profile"] })
 );
+
+
 
 router.get(
   "/auth/google/callback",
@@ -60,11 +51,9 @@ router.get(
   })
 );
 
-router.get("/success", successGoogleLogin); // Use the imported function
-router.get("/failure", failureGoogleLogin); // Use the imported function
+router.get("/success", successGoogleLogin);
 
-
-
+router.get("/failure", failureGoogleLogin);
 
 
 
@@ -78,14 +67,6 @@ router.post("/updateuser", updateuser);
 router.get("/changeuserPassword", changeuserPasswordpage);
 
 router.post("/changepassword", changeuserpassword);
-
-
-
-router.get("/otploginpage", otploginpage);
-
-// router.post("/otpLogin",otplogin);
-
-
 
 router.get("/", homepage);
 
