@@ -6,8 +6,7 @@ const Razorpay = require("razorpay");
 var { connectToMongoDB } = require("../config/connection");
 const { ObjectId } = require("mongodb");
 var collection = require("../config/collection");
-const nodemailer =require("nodemailer");
-
+const nodemailer = require("nodemailer");
 
 const puppeteer = require("puppeteer");
 const path = require("path");
@@ -301,46 +300,43 @@ module.exports = {
   },
 
 
-
   otploginpage: (req, res) => {
     res.render("user/otplogin");
   },
 
 
-  // otplogin: async (req, res) => {
-  //   try {
-  //     const { email } = req.body; // Assuming the email is sent as a part of the request body
 
-  //     // Generate random OTP
-  //     const otp = Math.floor(1000 + Math.random() * 9000);
-
-  //     // Construct email body with OTP
-  //     const emailBody = `<h2>Your OTP is: ${otp}</h2>`;
-
-  //     // Send the email
-  //     await sendOTP(email, otp); // Use helper function to send OTP
-
-  //     const transporter = nodemailer.createTransport({
-  //       service: "gmail",
-  //       auth: {
-  //         user: "akshaycs0480@gmail.com",
-  //         pass: "c3b57c95-4e2a-4254-b152-da5c1f51df01",
-  //       },
-  //     });
-
-  //     // Save OTP to the database (you need to implement this method in your helper)
-  //     await userHelper.saveOTP(email, otp);
-
-  //     res.status(200).json({ success: true, message: "OTP sent successfully" });
-  //   } catch (error) {
-  //     console.error("Error sending OTP:", error);
-  //     res.status(500).json({ success: false, message: "Failed to send OTP" });
-  //   }
-  // },
+   successGoogleLogin : async (req, res) => {
+    try {
+      if (req.user) {
+        // If user is authenticated
+        const roomObjectId = req.params.id; // Assuming you have access to roomObjectId
+        const roomDetails = await userHelper.roomsDetails(roomObjectId);
+        
+        // Render the booking page with login success message and room details
+        res.render("user/booking", {
+          loginMessage: "Login Success",
+          roomDetails: roomDetails,
+        });
+      } else {
+        // If user is not authenticated, redirect to failure page
+        res.redirect("/login/" + roomDetails);
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle error appropriately
+      res.redirect("/failure");
+    }
+  },
+  
+   failureGoogleLogin : (req, res) => {
+    res.send("Error");
+  },
+  
 
 
 
-
+  
   userprofile: (req, res) => {
     try {
       if (req.session.loggedIn) {
@@ -402,7 +398,6 @@ module.exports = {
       console.log(error);
     }
   },
-
 
 
 

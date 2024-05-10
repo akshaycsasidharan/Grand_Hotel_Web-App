@@ -45,6 +45,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(session({ secret: 'Key', cookie: { maxAge: 60000000 } }))
+
+
 const razorpayInstance = new Razorpay({
   key_id: "rzp_test_8cTRaG2qyqmSGG",
   key_secret: "lPhtD4Guxq3dUurYJLs9OwXi"

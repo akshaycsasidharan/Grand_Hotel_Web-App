@@ -11,7 +11,7 @@ module.exports = {
   hotelsignup: (req, res) => {
     try {
       hotelHelper.hoteldoSignup(req.body, req.file).then((response) => {
-        console.log("$$$$$$$$$$", response);
+        // console.log("$$$$$$$$$$", response);
         res.redirect("/hotel");
       });
     } catch (error) {

@@ -48,12 +48,12 @@
           <div class="card-body">
             <h4 class="card-title mb-4"> Customer Sign In</h4>
 
-           {{#if signupMessage}}
+           {{!-- {{#if signupMessage}}
 
             <div class="alert alert-success" role="alert">
                         {{signupMessage}}
                     </div>
-            {{/if}}
+            {{/if}} --}}
 
                 {{#if loginErr}}
                 <p class="error font-weight-bold text-danger">Invalid username
@@ -102,8 +102,10 @@
               <!-- form-group// -->
             </form>
             <p class="text-center small text-muted mb-15">or sign up with</p>
+
+            {{!-- ========================================= --}}
             <div class="d-grid gap-3 mb-4">
-              <a href="/otploginpage" class="btn w-100 btn-light font-sm">
+              <a href="/auth/google" class="btn w-100 btn-light font-sm">
                 <svg
                   aria-hidden="true"
                   class="icon-svg"
@@ -111,7 +113,7 @@
                   height="20"
                   viewBox="0 0 20 20"
                 >
-                  {{!-- <path
+                  <path
                     d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"
                     fill="#4285F4"
                   ></path>
@@ -126,11 +128,15 @@
                   <path
                     d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.3z"
                     fill="#EA4335"
-                  ></path> --}}
+                  ></path>
                 </svg>
-                Sign in using OTP
+                Sign in using Google
               </a>
+
             </div>
+{{!-- ======================================================= --}}
+
+
 
             <p class="text-center mb-4">Don't have account?
               <a href="/signup/{{roomObjectId}}">Sign up</a></p>
@@ -140,5 +146,7 @@
     </main>
 
   </body>
+
+  
 
 </html>

@@ -4,8 +4,7 @@ const bcrypt = require("bcrypt");
 const { ObjectId } = require("mongodb");
 const jwt = require("jsonwebtoken");
 const Razorpay = require("razorpay");
-const nodemailer =require("nodemailer");
-
+const nodemailer = require("nodemailer");
 
 const razorpayInstance = new Razorpay({
   key_id: "rzp_test_8cTRaG2qyqmSGG",
@@ -106,30 +105,6 @@ module.exports = {
       throw error; // Propagate the error to the caller
     }
   },
-
-  // doOtpLogin: (userData) => {
-  //   return new Promise(async (resolve, reject) => {
-  //     var response = {};
-  //     console.log("*********userData Helper**********");
-  //     console.log(userData);
-  //     const db = await connectToMongoDB();
-  //     const user = await db
-  //       .collection(collection.USER_COLLECTION)
-  //       .findOne({ mobilenumber: userData });
-  //     console.log(user);
-  //     if (user) {
-  //       console.log("----------otp login successful");
-  //       response.user = user;
-  //       response.acessStatus = true;
-  //       resolve(response);
-  //     } else {
-  //       console.log("otp login failed");
-  //       response.user = "";
-  //       response.acessStatus = false;
-  //       resolve(response);
-  //     }
-  //   });
-  // },
 
   showfacilities: async (hotelid) => {
     console.log("kkkkkkkkkk", hotelid);
@@ -354,7 +329,7 @@ module.exports = {
             $set: { password: userdata.newpassword },
           }
         );
-        
+
         console.log(data);
         return data;
       } else {
@@ -367,25 +342,25 @@ module.exports = {
 
   upadateUserdetails: async (userdata, userId) => {
     try {
-        const db = await connectToMongoDB();
-        // Update the user details in the database
-        const userDetails = await db.collection(collection.USER_COLLECTION)
-            .updateOne(
-                { userId: userId }, // Filter based on user ID
-                {
-                    $set: {
-                        name: userdata.name,
-                        email: userdata.email,
-                        mobilenumber: userdata.mobile,
-                    },
-                }
-            );
-        return userDetails;
+      const db = await connectToMongoDB();
+      // Update the user details in the database
+      const userDetails = await db
+        .collection(collection.USER_COLLECTION)
+        .updateOne(
+          { userId: userId }, // Filter based on user ID
+          {
+            $set: {
+              name: userdata.name,
+              email: userdata.email,
+              mobilenumber: userdata.mobile,
+            },
+          }
+        );
+      return userDetails;
     } catch (error) {
-        throw error;
+      throw error;
     }
-},
-
+  },
 
   showreceipt: async (userId) => {
     // console.log("$$$$$$$$$$$$$$$4",userId);
@@ -416,36 +391,4 @@ module.exports = {
       throw error;
     }
   },
-
-
-
- 
-
-  // sendOTP = (email, otp) => {
-  //   const mailOptions = {
-  //     from: "your_email@gmail.com",
-  //     to: email,
-  //     subject: "OTP for Login",
-  //     html: `<h2>Your OTP is: ${otp}</h2>`,
-  //   };
-  
-  //   return transporter.sendMail(mailOptions);
-  // },
-  
-  
-    // saveOTP: async (email, otp) => {
-    //   try {
-    //     const db = await connectToMongoDB();
-    //     // Save OTP to the database
-    //     await db.collection("otp").insertOne({ email, otp });
-    //   } catch (error) {
-    //     console.error("Error saving OTP:", error);
-    //     throw error;
-    //   }
-    // },
-  
-  
-
-
-
 };
