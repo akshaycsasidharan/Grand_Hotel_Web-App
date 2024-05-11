@@ -28,8 +28,11 @@ module.exports = {
       req.session.loginErr = false; // Reset login error flag
       res.render("hotel/hotelLogin", {
         Hotel: true,
+        blocked: req.session.blocked,
         loginErr: loginErr, // Pass login error flag to the view
       });
+      req.session.loginErr = false;
+      req.session.blocked = false;
     }
   },
 
@@ -40,8 +43,26 @@ module.exports = {
   //         req.session.HotelLoggedIn = true;
   //         req.session.hotel = response.hotel;
   //         const hotel = req.session.hotel;
-  //         res.render("hotel/hotelDashboard", {
-  //           hotel,
+
+  //         hotelHelper.transactiondetails(hotel).then((transactiondata) => {
+  //           // console.log("transactionnnnn---------",transactiondata);
+
+  //           // Call the hoteldashboard function to render the dashboard after successful login
+  //           hotelHelper.showdashboard(hotel).then((result) => {
+  //             // console.log("Dashboard Count:", result.customerscount);
+  //             // console.log("Available Rooms:", result.availableRooms);
+  //             // console.log("paidcustomers:", result.paidcustomers);
+  //             res.render("hotel/hotelDashboard", {
+  //               hotel,
+  //               bookingCount: result.bookingCount,
+  //               customerscount: result.customerscount,
+  //               availableRooms: result.availableRooms,
+  //               facilities: result.facilities,
+  //               paidcustomers: result.paidcustomers,
+  //               roomsCount: result.roomsCount,
+  //               transactiondata: transactiondata,
+  //             });
+  //           });
   //         });
   //       } else {
   //         req.session.loginErr = true; // Set login error flag in session
@@ -55,11 +76,13 @@ module.exports = {
   // },
 
   hotellogin: (req, res, next) => {
+
     try {
       hotelHelper.hotelLogin(req.body).then((response) => {
         if (response.status) {
           req.session.HotelLoggedIn = true;
           req.session.hotel = response.hotel;
+
           const hotel = req.session.hotel;
 
           hotelHelper.transactiondetails(hotel).then((transactiondata) => {
@@ -82,9 +105,12 @@ module.exports = {
               });
             });
           });
+        } else if (response.blocked) {
+          req.session.blocked = true;
+          res.redirect("/hotel"); // Redirect to login page with blocked message
         } else {
-          req.session.loginErr = true; // Set login error flag in session
-          res.redirect("/hotel"); // Redirect to login page
+          req.session.loginErr = true;
+          res.redirect("/hotel"); // Redirect to login page with login error message
         }
       });
     } catch (error) {

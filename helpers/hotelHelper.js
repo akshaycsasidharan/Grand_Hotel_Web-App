@@ -43,32 +43,64 @@ module.exports = {
     });
   },
 
+  // hotelLogin: (loginData) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     let loginstatus = false;
+  //     let response = {};
+  //     const db = await connectToMongoDB();
+  //     let hotel = await db
+  //       .collection(collection.HOTEL_COLLECTION)
+  //       .findOne({ email: loginData.email });
+
+  //     if (hotel) {
+  //       bcrypt.compare(loginData.password, hotel.password).then((status) => {
+  //         if (status) {
+  //           console.log("login success");
+
+  //           response.hotel = hotel;
+  //           response.status = true;
+  //           response.message = "Login Success";
+  //           resolve(response);
+  //         } else {
+  //           // console.log("user not availableeee %%%%%%%%%%5%%%55");
+  //           response.message = "the user cant login";
+  //           resolve({ status: false });
+  //         }
+  //       });
+  //     } else {
+  //       resolve({ status: false });
+  //     }
+  //   });
+  // },
+
   hotelLogin: (loginData) => {
     return new Promise(async (resolve, reject) => {
-      let loginstatus = false;
-      let response = {};
+      let response = {}; // Initialize response object
+
       const db = await connectToMongoDB();
       let hotel = await db
         .collection(collection.HOTEL_COLLECTION)
         .findOne({ email: loginData.email });
 
       if (hotel) {
-        bcrypt.compare(loginData.password, hotel.password).then((status) => {
-          if (status) {
-            console.log("login success");
-
-            response.hotel = hotel;
-            response.status = true;
-            response.message = "Login Success";
-            resolve(response);
-          } else {
-            // console.log("user not availableeee %%%%%%%%%%5%%%55");
-            response.message = "the user cant login";
-            resolve({ status: false });
-          }
-        });
+        if (hotel.blocked) {
+          response.blocked = true; // Set blocked flag in response
+          resolve(response); // Resolve with blocked response
+        } else {
+          bcrypt.compare(loginData.password, hotel.password).then((status) => {
+            if (status) {
+              response.hotel = hotel;
+              response.status = true;
+              resolve(response); // Resolve with success response
+            } else {
+              response.status = false;
+              resolve(response); // Resolve with failure response
+            }
+          });
+        }
       } else {
-        resolve({ status: false });
+        response.status = false;
+        resolve(response); // Resolve with failure response
       }
     });
   },
