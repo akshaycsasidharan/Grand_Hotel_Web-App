@@ -1,13 +1,55 @@
 # Grand_Hotel_Web-App
-Developement stage of grand hotel webapp 
-## Table of contents
-- [How to setup project](#swagger-API-definition)
-  - [Setup](#setup)
-  - 
-- [Swagger API definition](#swagger-API-definition)
 
-## How to setup project
-### setup
+## Overview
+The Grand Hotel Management System is a Node.js-based application designed to facilitate the management and operation of a hotel. It includes features for user authentication, room and facility management, booking management, and financial transactions. The system utilizes MongoDB for database management and integrates with external services like Razorpay for payment processing.
+
+## Key Features
+### User Authentication
+
+* Register and login functionality for both hotel administrators and customers.<br>
+* Password hashing for secure storage.<br>
+* **Hotel Management**
+
+Hotel administrators can block/unblock users, manage hotel-specific data, and view analytics.
+* **Room Management**
+
+CRUD operations for managing hotel rooms, including adding, editing, and deleting rooms.
+Ability to view available rooms, detailed room information, and handle room bookings.
+**Facility Management**
+
+Manage hotel facilities, including adding new facilities, editing existing ones, and marking facilities as unavailable.
+**Booking Management**
+
+Handle user bookings, including checking room availability, processing bookings, and calculating booking prices based on room rates and duration.
+**Financial Transactions**
+
+Integration with Razorpay for handling payments securely.
+View transaction details and manage payment statuses.
+**Dashboard and Analytics**
+
+Generate reports on hotel occupancy, booking trends, customer statistics, and financial metrics.
+Real-time data updates on room availability and customer bookings.
+**Technologies Used**
+Backend: Node.js, Express.js<br>
+Database: MongoDB<br>
+Authentication: JWT (JSON Web Tokens)<br>
+Payment Integration: Razorpay<br>
+External Libraries: bcrypt (for password hashing), nodemailer (for email communication)
+**Installation and Setup**
+1. Clone the repository from GitHub - EstroTech-Robotics.<br>
+2. Install dependencies using npm: npm install<br>
+3. Set up environment variables:<br>
+* Create a .env file in the root directory.<br>
+* Define the following variables in the .env file:<br>
+MONGODB_URI=your_mongodb_connection_string
+EMAIL=your_admin_email
+PASSWORD=your_admin_password
+Replace your_mongodb_connection_string, your_admin_email, and your_admin_password with appropriate values.
+4. Start the application:
+npm start
+5.Access the application:
+Open your web browser and go to http://localhost:3000.
+
 ## Swagger API definition 
 ```Copy
 openapi: 3.0.3
