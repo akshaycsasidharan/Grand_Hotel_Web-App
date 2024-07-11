@@ -5,42 +5,40 @@ The Grand Hotel Management System is a Node.js-based application designed to fac
 
 ## Key Features
 ### User Authentication
-
-* Register and login functionality for both hotel administrators and customers.<br>
-* Password hashing for secure storage.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Register and login functionality for both hotel administrators and customers.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Password hashing for secure storage.<br>
 * **Hotel Management**<br>
-* Hotel administrators can block/unblock users, manage hotel-specific data, and view analytics.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Hotel administrators can block/unblock users, manage hotel-specific data, and view analytics.<br>
 * **Room Management**<br>
-
-* CRUD operations for managing hotel rooms, including adding, editing, and deleting rooms.<br>
-* Ability to view available rooms, detailed room information, and handle room bookings.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* CRUD operations for managing hotel rooms, including adding, editing, and deleting rooms.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Ability to view available rooms, detailed room information, and handle room bookings.<br>
 **Facility Management**<br>
-*Manage hotel facilities, including adding new facilities, editing existing ones, and marking facilities as unavailable.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*Manage hotel facilities, including adding new facilities, editing existing ones, and marking facilities as unavailable.<br>
 **Booking Management**<br>
-* Handle user bookings, including checking room availability, processing bookings, and calculating booking prices based on room rates and duration.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Handle user bookings, including checking room availability, processing bookings, and calculating booking prices based on room rates and duration.<br>
 **Financial Transactions**<br>
-* Integration with Razorpay for handling payments securely.<br>
-* View transaction details and manage payment statuses.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Integration with Razorpay for handling payments securely.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* View transaction details and manage payment statuses.<br>
 **Dashboard and Analytics**<br>
-* Generate reports on hotel occupancy, booking trends, customer statistics, and financial metrics.<br>
-* Real-time data updates on room availability and customer bookings.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Generate reports on hotel occupancy, booking trends, customer statistics, and financial metrics.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Real-time data updates on room availability and customer bookings.<br>
 **Technologies Used**<br>
-* Backend: Node.js, Express.js<br>
-* Database: MongoDB<br>
-* Authentication: JWT (JSON Web Tokens)<br>
-* Payment Integration: Razorpay<br>
-* External Libraries: bcrypt (for password hashing), nodemailer (for email communication)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Backend: Node.js, Express.js<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Database: MongoDB<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Authentication: JWT (JSON Web Tokens)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Payment Integration: Razorpay<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* External Libraries: bcrypt (for password hashing), nodemailer (for email communication)<br>
 **Installation and Setup**<br>
 1. Clone the repository from GitHub - EstroTech-Robotics.<br>
 2. Install dependencies using npm: npm install<br>
 3. Set up environment variables:<br>
-* Create a .env file in the root directory.<br>
-* Define the following variables in the .env file:<br>
-MONGODB_URI=your_mongodb_connection_string<br>
-EMAIL=your_admin_email<br>
-PASSWORD=your_admin_password<br>
-Replace your_mongodb_connection_string, your_admin_email, and your_admin_password with appropriate values.<br>
-4. Start the application: npm start<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Create a .env file in the root directory.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;* Define the following variables in the .env file:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MONGODB_URI=your_mongodb_connection_string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EMAIL=your_admin_email<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PASSWORD=your_admin_password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Replace your_mongodb_connection_string, your_admin_email, and your_admin_password with appropriate values.<br>
+4. Start the application: npm start
 5.Access the application:<br>
 Open your web browser and go to http://localhost:3000.<br>
 
