@@ -12,23 +12,23 @@ The Grand Hotel Management System is a Node.js-based application designed to fac
 * **Room Management**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* CRUD operations for managing hotel rooms, including adding, editing, and deleting rooms.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Ability to view available rooms, detailed room information, and handle room bookings.<br>
-**Facility Management**<br>
+* **Facility Management**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;*Manage hotel facilities, including adding new facilities, editing existing ones, and marking facilities as unavailable.<br>
-**Booking Management**<br>
+* **Booking Management**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Handle user bookings, including checking room availability, processing bookings, and calculating booking prices based on room rates and duration.<br>
-**Financial Transactions**<br>
+* **Financial Transactions**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Integration with Razorpay for handling payments securely.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* View transaction details and manage payment statuses.<br>
-**Dashboard and Analytics**<br>
+* **Dashboard and Analytics**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Generate reports on hotel occupancy, booking trends, customer statistics, and financial metrics.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Real-time data updates on room availability and customer bookings.<br>
-**Technologies Used**<br>
+* **Technologies Used**<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Backend: Node.js, Express.js<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Database: MongoDB<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Authentication: JWT (JSON Web Tokens)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* Payment Integration: Razorpay<br>
 &nbsp;&nbsp;&nbsp;&nbsp;* External Libraries: bcrypt (for password hashing), nodemailer (for email communication)<br>
-**Installation and Setup**<br>
+* **Installation and Setup**<br>
 1. Clone the repository from GitHub - EstroTech-Robotics.<br>
 2. Install dependencies using npm: npm install<br>
 3. Set up environment variables:<br>
